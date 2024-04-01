@@ -21,38 +21,8 @@ public enum SuccessStatus implements BaseCode {
     MEMBER_JOIN(HttpStatus.OK, "MEMBER2005", "회원가입 성공"),
     MEMBER_LOGIN(HttpStatus.OK, "MEMBER2006", "로그인 성공"),
 
-    //이미지 관련 응답
-    IMAGE_FOUND(HttpStatus.OK, "IMAGE2001","서버에 이미지 저장 성공"),
-
-    // 스케줄 관련 응답
-    SCHEDULE_FOUND(HttpStatus.OK, "SCHEDULE2002", "스케줄 조회 성공입니다."),
-    SCHEDULE_UPDATE(HttpStatus.OK, "SCHEDULE2003", "스케줄 수정 성공입니다."),
-    SCHEDULE_DELETE(HttpStatus.OK, "SCHEDULE2004", "스케줄 삭제 성공입니다."),
-
-    // 카테고리 관련 응답
-    CATEGORY_CREATED(HttpStatus.OK,"CATEGORY2001","카테고리가 추가되었습니다."),
-    CATEGORY_DELETED(HttpStatus.OK,"CATEGORY2002","카테고리가 삭제되었습니다."),
-    CATEGORY_UPDATED(HttpStatus.OK,"CATEGORY2003","카테고리가 수정되었습니다."),
-    CATEGORY_STATUS_CHANGED(HttpStatus.OK,"CATEGORY2004","카테고리 숨김 설정이 변경되었습니다."),
-    CATEGORY_FOUND(HttpStatus.OK,"CATEGORY2005","카테고리를 조회했습니다."),
-
-    // focus 관련 응답
-    FOCUS_FOUND(HttpStatus.OK, "FOCUS2001", "FOCUS 정보 조회 성공입니다"),
-    FOCUS_CREATED(HttpStatus.OK, "FOCUS2011", "FOCUS 정보 생성 성공입니다"),
-    FOCUS_UPDATED(HttpStatus.OK, "FOCUS2012", "FOCUS 정보 업데이트 성공입니다"),
-
-    // meStory 관련 응답
-    MESTORY_FOUND(HttpStatus.OK, "MESTORY2001", "MESTORY 정보 조회 성공입니다"),
-    MESTORY_FOCUSTIME_CREATED(HttpStatus.OK, "MESTORY2011", "MESTORY 집중 시간 생성 성공입니다"),
-    MESTORY_FOCUSTIME_UPDATED(HttpStatus.OK, "MESTORY2012", "MESTORY 집중 시간 갱신 성공입니다"),
-
-
-    //  Token 관련 응답
-    TOKEN_REFRESHED(HttpStatus.OK,"TOKEN2001", "토큰이 갱신되었습니다."),
-
-    // Alarm 관련 응답
-    ALARM_FOUND(HttpStatus.OK, "ALARM2001", "알람 조회 성공입니다."),
-    ALARM_DELETE(HttpStatus.OK, "ALARM2002", "알람 삭제 성공입니다.")
+    //  게시글 관련 응답
+    DAILY_CREATED(HttpStatus.OK, "DAILY2001", "Daily 게시글이 생성되었습니다. "),
 
     ;
 
