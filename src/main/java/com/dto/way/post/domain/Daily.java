@@ -40,4 +40,12 @@ public class Daily extends BaseEntity {
 
         this.memberId = memberId;
     }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateBody(String body) {
+        this.body = body;
+    }
 }

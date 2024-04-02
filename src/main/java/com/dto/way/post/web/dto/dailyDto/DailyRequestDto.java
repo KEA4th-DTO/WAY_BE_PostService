@@ -15,5 +15,9 @@ public class DailyRequestDto {
         private LocalDateTime expiredAt;
     }
 
-
+    @Getter
+    public static class UpdateDailyDto {
+        private String title;
+        private String body;
+    }
 }
