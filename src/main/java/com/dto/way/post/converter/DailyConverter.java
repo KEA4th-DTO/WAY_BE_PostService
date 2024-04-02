@@ -33,4 +33,12 @@ public class DailyConverter {
                 .build();
     }
 
+    public static DailyResponseDto.DeleteDailyResultDto toDeleteDailyResponseDto(Daily daily) {
+        return DailyResponseDto.DeleteDailyResultDto.builder()
+                .id(daily.getId())
+                .title(daily.getTitle())
+                .deletedAt(LocalDateTime.now())
+                .build();
+    }
+
 }
