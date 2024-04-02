@@ -23,7 +23,8 @@ public enum SuccessStatus implements BaseCode {
 
     //  게시글 관련 응답
     DAILY_CREATED(HttpStatus.OK, "DAILY2001", "Daily 게시글이 생성되었습니다."),
-    DAILY_UPDATED(HttpStatus.OK,"DAILY2002","Daily 게시글이 수정되었습니다.")
+    DAILY_UPDATED(HttpStatus.OK,"DAILY2002","Daily 게시글이 수정되었습니다."),
+    DAILY_DELETED(HttpStatus.OK,"DAILY2003","Daily 게시글이 삭제되었습니다.")
     ;
 
 

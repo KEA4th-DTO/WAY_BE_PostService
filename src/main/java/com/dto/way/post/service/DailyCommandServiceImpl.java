@@ -7,11 +7,13 @@ import com.dto.way.post.domain.common.Uuid;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.UuidRepository;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
+import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -65,5 +67,17 @@ public class DailyCommandServiceImpl implements DailyCommandService {
         }
 
         return daily;
+    }
+
+    @Override
+    public DailyResponseDto.DeleteDailyResultDto deleteDaily(Long dailyId) throws IOException {
+
+        Daily daily = dailyRepository.findById(dailyId).orElseThrow(() -> new IllegalArgumentException("데일리가 존재하지 않습니다."));
+        s3Manager.deleteFile(daily.getImageUrl());
+        DailyResponseDto.DeleteDailyResultDto deleteDailyResultDto = DailyConverter.toDeleteDailyResponseDto(daily);
+
+        dailyRepository.delete(daily);
+
+        return deleteDailyResultDto;
     }
 }

@@ -25,4 +25,14 @@ public class DailyResponseDto {
         private String title;
         private LocalDateTime updatedAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DeleteDailyResultDto {
+        private Long id;
+        private String title;
+        private LocalDateTime deletedAt;
+    }
 }

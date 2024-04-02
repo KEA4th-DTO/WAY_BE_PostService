@@ -1,5 +1,6 @@
 package com.dto.way.post.aws.s3;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -31,6 +32,16 @@ public class AmazonS3Manager{
         }
 
         return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
+    }
+
+    public void deleteFile(String fileUrl) throws IOException{
+        int indexOfReviews = fileUrl.indexOf("daily_image/");
+        String fileKey = fileUrl.substring(indexOfReviews);
+        try{
+            amazonS3.deleteObject(amazonConfig.getBucket(),fileKey);
+        }catch (SdkClientException e) {
+            throw new IOException("Error deleting file from S3", e);
+        }
     }
 
     public String generateReviewKeyName(Uuid uuid) {
