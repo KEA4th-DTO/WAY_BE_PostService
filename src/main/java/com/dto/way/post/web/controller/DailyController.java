@@ -23,7 +23,14 @@ public class DailyController {
     public ApiResponse<DailyResponseDto.CreateDailyResultDto> createDaily(@RequestPart(value="image",required = true) MultipartFile image,
                                                                           @RequestPart(value="createDailyDto") DailyRequestDto.CreateDailyDto request) {
         Daily daily = dailyCommandService.createDaily(image, request);
-
         return ApiResponse.of(SuccessStatus.DAILY_CREATED, DailyConverter.toCreateDailyResultDto(daily));
+    }
+
+
+    @PatchMapping("/{dailyId}")
+    public ApiResponse<DailyResponseDto.UpdateDailyResultDto> updateDaily(@PathVariable(name = "dailyId") Long dailyId, @RequestBody DailyRequestDto.UpdateDailyDto request) {
+
+        Daily daily = dailyCommandService.updateDaily(dailyId, request);
+        return ApiResponse.of(SuccessStatus.DAILY_UPDATED, DailyConverter.toUpdateDailyResponseDto(daily));
     }
 }

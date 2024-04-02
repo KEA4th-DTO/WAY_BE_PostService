@@ -15,4 +15,14 @@ public class DailyResponseDto {
         private String title;
         private LocalDateTime createdAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateDailyResultDto {
+        private Long id;
+        private String title;
+        private LocalDateTime updatedAt;
+    }
 }

@@ -24,4 +24,13 @@ public class DailyConverter {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+
+    public static DailyResponseDto.UpdateDailyResultDto toUpdateDailyResponseDto(Daily daily) {
+        return DailyResponseDto.UpdateDailyResultDto.builder()
+                .id(daily.getId())
+                .title(daily.getTitle())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
 }
