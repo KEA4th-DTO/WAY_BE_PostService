@@ -72,9 +72,9 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     }
 
     @Override
-    public DailyResponseDto.DeleteDailyResultDto deleteDaily(Long dailyId) throws IOException {
+    public DailyResponseDto.DeleteDailyResultDto deleteDaily(Long postId) throws IOException {
 
-        Daily daily = dailyRepository.findById(dailyId).orElseThrow(() -> new IllegalArgumentException("데일리가 존재하지 않습니다."));
+        Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("데일리가 존재하지 않습니다."));
         s3Manager.deleteFile(daily.getImageUrl());
         DailyResponseDto.DeleteDailyResultDto deleteDailyResultDto = DailyConverter.toDeleteDailyResponseDto(daily);
 
