@@ -11,7 +11,7 @@ public class DailyResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CreateDailyResultDto {
-        private Long id;
+        private Long postId;
         private String title;
         private LocalDateTime createdAt;
     }
@@ -21,7 +21,7 @@ public class DailyResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UpdateDailyResultDto {
-        private Long id;
+        private Long postId;
         private String title;
         private LocalDateTime updatedAt;
     }
@@ -31,7 +31,7 @@ public class DailyResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class DeleteDailyResultDto {
-        private Long id;
+        private Long postId;
         private String title;
         private LocalDateTime deletedAt;
     }
