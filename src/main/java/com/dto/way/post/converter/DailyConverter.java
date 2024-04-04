@@ -1,6 +1,7 @@
 package com.dto.way.post.converter;
 
 import com.dto.way.post.domain.Daily;
+import com.dto.way.post.domain.Post;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 
@@ -8,18 +9,22 @@ import java.time.LocalDateTime;
 
 public class DailyConverter {
     public static Daily toDaily(String imageUrl, DailyRequestDto.CreateDailyDto request) {
+        Post postRequest = Post.builder()
+                .longitude(request.getLongitude())
+                .latitude(request.getLatitude())
+                .build();
+
         return Daily.builder()
                 .title(request.getTitle())
                 .body(request.getBody())
                 .imageUrl(imageUrl)
-                .latitude(request.getLatitude())
-                .longitude(request.getLongitude())
                 .expiredAt(request.getExpiredAt())
+                .post(postRequest)
                 .build();
     }
     public static DailyResponseDto.CreateDailyResultDto toCreateDailyResultDto(Daily daily) {
         return DailyResponseDto.CreateDailyResultDto.builder()
-                .id(daily.getId())
+                .id(daily.getPostId())
                 .title(daily.getTitle())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -27,7 +32,7 @@ public class DailyConverter {
 
     public static DailyResponseDto.UpdateDailyResultDto toUpdateDailyResponseDto(Daily daily) {
         return DailyResponseDto.UpdateDailyResultDto.builder()
-                .id(daily.getId())
+                .id(daily.getPostId())
                 .title(daily.getTitle())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -35,7 +40,7 @@ public class DailyConverter {
 
     public static DailyResponseDto.DeleteDailyResultDto toDeleteDailyResponseDto(Daily daily) {
         return DailyResponseDto.DeleteDailyResultDto.builder()
-                .id(daily.getId())
+                .id(daily.getPostId())
                 .title(daily.getTitle())
                 .deletedAt(LocalDateTime.now())
                 .build();
