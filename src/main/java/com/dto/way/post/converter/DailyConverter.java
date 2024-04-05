@@ -24,7 +24,7 @@ public class DailyConverter {
     }
     public static DailyResponseDto.CreateDailyResultDto toCreateDailyResultDto(Daily daily) {
         return DailyResponseDto.CreateDailyResultDto.builder()
-                .id(daily.getPostId())
+                .postId(daily.getPostId())
                 .title(daily.getTitle())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -32,7 +32,7 @@ public class DailyConverter {
 
     public static DailyResponseDto.UpdateDailyResultDto toUpdateDailyResponseDto(Daily daily) {
         return DailyResponseDto.UpdateDailyResultDto.builder()
-                .id(daily.getPostId())
+                .postId(daily.getPostId())
                 .title(daily.getTitle())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -40,7 +40,7 @@ public class DailyConverter {
 
     public static DailyResponseDto.DeleteDailyResultDto toDeleteDailyResponseDto(Daily daily) {
         return DailyResponseDto.DeleteDailyResultDto.builder()
-                .id(daily.getPostId())
+                .postId(daily.getPostId())
                 .title(daily.getTitle())
                 .deletedAt(LocalDateTime.now())
                 .build();
