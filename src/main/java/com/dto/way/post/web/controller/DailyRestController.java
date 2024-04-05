@@ -5,6 +5,7 @@ import com.dto.way.post.domain.Daily;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.service.DailyCommandService;
+import com.dto.way.post.service.DailyQueryService;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class DailyRestController {
 
     private final DailyCommandService dailyCommandService;
+    private final DailyQueryService dailyQueryService;
 
     @PostMapping
     public ApiResponse<DailyResponseDto.CreateDailyResultDto> createDaily(@RequestPart(value = "image", required = true) MultipartFile image,
@@ -39,4 +41,11 @@ public class DailyRestController {
     public ApiResponse<DailyResponseDto.DeleteDailyResultDto> deleteDaily(@PathVariable(name = "postId") Long postId) throws IOException {
         return ApiResponse.of(SuccessStatus.DAILY_DELETED, dailyCommandService.deleteDaily(postId));
     }
+
+    @GetMapping("/{postId}")
+    public ApiResponse<DailyResponseDto.GetDailyResultDto> getDaily(@PathVariable(name = "postId") Long postId) throws IOException {
+        Daily daily = dailyQueryService.getDaily(postId);
+        return ApiResponse.of(SuccessStatus.DAILY_FOUND, DailyConverter.toGetDailyResponseDto(daily));
+    }
+
 }

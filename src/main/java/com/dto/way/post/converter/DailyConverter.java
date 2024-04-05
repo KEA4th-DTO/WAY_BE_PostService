@@ -46,4 +46,14 @@ public class DailyConverter {
                 .build();
     }
 
+    public static DailyResponseDto.GetDailyResultDto toGetDailyResponseDto(Daily daily) {
+        return DailyResponseDto.GetDailyResultDto.builder()
+                .title(daily.getTitle())
+                .body(daily.getBody())
+                .imageUrl(daily.getImageUrl())
+                .expiredAt(daily.getExpiredAt())
+                .createdAt(daily.getPost().getCreatedAt())
+                .build();
+    }
+
 }
