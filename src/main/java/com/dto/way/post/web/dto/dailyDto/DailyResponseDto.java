@@ -35,4 +35,18 @@ public class DailyResponseDto {
         private String title;
         private LocalDateTime deletedAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetDailyResultDto { //  작성자 정보(이름, 프로필 사진)을 여기서 가져와야할까?
+        private String title;
+        private String body;
+        private String imageUrl;
+        private LocalDateTime expiredAt;
+        private LocalDateTime createdAt;
+
+    }
+
 }
