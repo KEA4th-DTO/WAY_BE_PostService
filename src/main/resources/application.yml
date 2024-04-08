@@ -6,11 +6,12 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true #To beautify or pretty print the SQL
         show_sql: true #show sql
+        dialect: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
 
 cloud:
   aws:

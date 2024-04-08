@@ -3,6 +3,7 @@ package com.dto.way.post.domain;
 import com.dto.way.post.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Getter
@@ -24,12 +25,16 @@ public class Post extends BaseEntity {
     private Double latitude;
     private Double longitude;
 
+    private Point point;
+
     //연관관계 매핑은 추후에 생각
     //private Member member;
     private Long memberId;
 
     public void setMemberId(Long memberId) {
-
         this.memberId = memberId;
+    }
+    public void setPoint(Point point) {
+        this.point = point;
     }
 }
