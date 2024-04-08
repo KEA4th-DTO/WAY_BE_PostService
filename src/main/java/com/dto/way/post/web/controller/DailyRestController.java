@@ -8,6 +8,7 @@ import com.dto.way.post.service.DailyCommandService;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.io.ParseException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,7 @@ public class DailyRestController {
 
     @PostMapping
     public ApiResponse<DailyResponseDto.CreateDailyResultDto> createDaily(@RequestPart(value = "image", required = true) MultipartFile image,
-                                                                          @RequestPart(value = "createDailyDto") DailyRequestDto.CreateDailyDto request) {
+                                                                          @RequestPart(value = "createDailyDto") DailyRequestDto.CreateDailyDto request) throws ParseException {
         Daily daily = dailyCommandService.createDaily(image, request);
         return ApiResponse.of(SuccessStatus.DAILY_CREATED, DailyConverter.toCreateDailyResultDto(daily));
     }

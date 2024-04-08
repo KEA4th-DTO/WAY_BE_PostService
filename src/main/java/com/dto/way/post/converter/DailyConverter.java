@@ -4,15 +4,18 @@ import com.dto.way.post.domain.Daily;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 
 public class DailyConverter {
-    public static Daily toDaily(String imageUrl, DailyRequestDto.CreateDailyDto request) {
+    public static Daily toDaily(Point point, String imageUrl, DailyRequestDto.CreateDailyDto request) {
         Post postRequest = Post.builder()
                 .longitude(request.getLongitude())
                 .latitude(request.getLatitude())
+                .point(point)
                 .build();
+
 
         return Daily.builder()
                 .title(request.getTitle())
