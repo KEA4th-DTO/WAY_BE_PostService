@@ -1,10 +1,7 @@
 package com.dto.way.post.service.postService;
 
-import com.dto.way.post.domain.Location;
 import com.dto.way.post.domain.Post;
-import com.dto.way.post.domain.enums.Direction;
 import com.dto.way.post.repository.PostRepository;
-import com.dto.way.post.utils.GeometryUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
@@ -36,6 +33,7 @@ public class PostQueryServiceImpl implements PostQueryService {
 
     @Override
     public List<Post> getPostListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
+
         List<Post> posts = postRepository.findByRange(longitude1, latitude1, longitude2, latitude2);
         return posts;
     }
