@@ -1,4 +1,4 @@
-package com.dto.way.post.service;
+package com.dto.way.post.service.dailyService;
 
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.repository.DailyRepository;

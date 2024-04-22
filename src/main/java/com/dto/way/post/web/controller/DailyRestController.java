@@ -4,8 +4,8 @@ import com.dto.way.post.converter.DailyConverter;
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
-import com.dto.way.post.service.DailyCommandService;
-import com.dto.way.post.service.DailyQueryService;
+import com.dto.way.post.service.dailyService.DailyCommandService;
+import com.dto.way.post.service.dailyService.DailyQueryService;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/post-service")
+@RequestMapping("/daily-service")
 @RequiredArgsConstructor
 public class DailyRestController {
 

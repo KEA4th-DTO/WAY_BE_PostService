@@ -6,13 +6,13 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       database: postgresql
       hibernate:
         format_sql: true #To beautify or pretty print the SQL
         show_sql: true #show sql
-
+      database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
 
 cloud:
   aws:

@@ -2,6 +2,7 @@ package com.dto.way.post.converter;
 
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.domain.Post;
+import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import org.locationtech.jts.geom.Point;
@@ -13,6 +14,7 @@ public class DailyConverter {
         Post postRequest = Post.builder()
                 .longitude(request.getLongitude())
                 .latitude(request.getLatitude())
+                .postType(PostType.DAILY)
                 .point(point)
                 .build();
 
@@ -55,7 +57,7 @@ public class DailyConverter {
                 .body(daily.getBody())
                 .imageUrl(daily.getImageUrl())
                 .expiredAt(daily.getExpiredAt())
-                .createdAt(daily.getPost().getCreatedAt())
+                .createdAt(daily.getCreatedAt())
                 .build();
     }
 

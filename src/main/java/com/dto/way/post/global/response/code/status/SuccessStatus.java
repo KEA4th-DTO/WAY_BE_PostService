@@ -21,12 +21,18 @@ public enum SuccessStatus implements BaseCode {
     MEMBER_JOIN(HttpStatus.OK, "MEMBER2005", "회원가입 성공"),
     MEMBER_LOGIN(HttpStatus.OK, "MEMBER2006", "로그인 성공"),
 
-    //  게시글 관련 응답
+    // 게시글 관련 응답
+    POSTS_FOUND_BY_DISTANCE(HttpStatus.OK,"POST2001", "일정 거리 내의 게시글을 조회하였습니다."),
+    POSTS_FOUND_BY_RANGE(HttpStatus.OK,"POST2002", "반경 내의 게시글을 조회하였습니다."),
+
+    //  데일리 관련 응답
     DAILY_CREATED(HttpStatus.OK, "DAILY2001", "Daily 게시글이 생성되었습니다."),
     DAILY_UPDATED(HttpStatus.OK,"DAILY2002","Daily 게시글이 수정되었습니다."),
     DAILY_DELETED(HttpStatus.OK,"DAILY2003","Daily 게시글이 삭제되었습니다."),
     DAILY_FOUND(HttpStatus.OK,"DAILY2004","Daily 게시글이 조회되었습니다.")
     ;
+
+
 
 
     private final HttpStatus httpStatus;

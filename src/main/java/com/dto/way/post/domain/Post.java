@@ -1,6 +1,7 @@
 package com.dto.way.post.domain;
 
 import com.dto.way.post.domain.common.BaseEntity;
+import com.dto.way.post.domain.enums.PostType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
@@ -10,7 +11,7 @@ import org.locationtech.jts.geom.Point;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post extends BaseEntity {
+public class Post  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +26,15 @@ public class Post extends BaseEntity {
     private Double latitude;
     private Double longitude;
 
+    @Column(columnDefinition = "geometry(Point, 4326)") // PostgreSQL
     private Point point;
 
     //연관관계 매핑은 추후에 생각
     //private Member member;
     private Long memberId;
+
+    @Enumerated(value = EnumType.STRING)
+    private PostType postType;
 
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
