@@ -1,6 +1,5 @@
 package com.dto.way.post.domain;
 
-import com.dto.way.post.domain.common.BaseEntity;
 import com.dto.way.post.domain.enums.PostType;
 import jakarta.persistence.*;
 import lombok.*;

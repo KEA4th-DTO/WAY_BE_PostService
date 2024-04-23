@@ -37,4 +37,14 @@ public class PostRestController {
         List<Post> postList = postQueryService.getPostListByRange(latitude1, longitude1, latitude2,longitude2);
         return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE, PostConverter.toGetPostListResultDto(postList));
     }
+
+    @GetMapping("/pin/range")
+    public ApiResponse<PostResponseDto.GetPinListResultDto> getPinsByRange(@RequestParam Double latitude1,
+                                                                             @RequestParam Double longitude1,
+                                                                             @RequestParam Double latitude2,
+                                                                             @RequestParam Double longitude2) {
+
+        PostResponseDto.GetPinListResultDto pinList = postQueryService.getPinListByRange(latitude1, longitude1, latitude2,longitude2);
+        return ApiResponse.of(SuccessStatus.PINS_FOUND_BY_RANGE, pinList);
+    }
 }
