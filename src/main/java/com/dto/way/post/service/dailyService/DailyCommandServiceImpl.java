@@ -1,4 +1,4 @@
-package com.dto.way.post.service;
+package com.dto.way.post.service.dailyService;
 
 import com.dto.way.post.aws.s3.AmazonS3Manager;
 import com.dto.way.post.converter.DailyConverter;
@@ -57,7 +57,6 @@ public class DailyCommandServiceImpl implements DailyCommandService {
 
         //  여기서 member 유효성 검증 처리하던지, setMemberId에서 처리하던지 -> 회원서비스 구현 후 처리
         post.setMemberId(1L);
-
 
         return dailyRepository.save(daily);
     }

@@ -35,6 +35,8 @@ dependencies {
 
 	implementation 'org.hibernate:hibernate-spatial:6.4.4.Final'
 
+	implementation 'org.postgresql:postgresql:42.6.0'
+
 }
 
 tasks.named('test') {
