@@ -3,16 +3,14 @@ package com.dto.way.post.converter;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.web.dto.postDto.PostResponseDto;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PostConverter {
 
     public static PostResponseDto.GetPostResultDto toGetPostResultDto(Post post) {
         return PostResponseDto.GetPostResultDto.builder()
-                .id(post.getId())
+                .postId(post.getId())
                 .memberId(post.getMemberId())
                 .title(post.getDaily().getTitle())
                 .body(post.getDaily().getBody())

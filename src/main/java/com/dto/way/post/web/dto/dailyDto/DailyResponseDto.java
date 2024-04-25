@@ -3,6 +3,7 @@ package com.dto.way.post.web.dto.dailyDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class DailyResponseDto {
 
@@ -37,17 +38,31 @@ public class DailyResponseDto {
     }
 
     @Getter
+    @Setter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDailyResultDto { //  작성자 정보(이름, 프로필 사진)을 여기서 가져와야할까?
+    public static class GetDailyResultDto {
+        /**
+         * 작성자에 대한 정보
+         * 프로필이미지, 닉네임
+         */
+        private Long postId;
+        private Long writerId;
         private String title;
         private String body;
         private String imageUrl;
         private LocalDateTime expiredAt;
         private LocalDateTime createdAt;
-
     }
 
 
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class GetDailyListResultDto {
+
+        private List<GetDailyResultDto> dailyResultDtoList;
+    }
 }

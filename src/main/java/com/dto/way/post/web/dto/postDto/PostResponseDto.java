@@ -15,7 +15,7 @@ public class PostResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetPostResultDto {
-        private Long id;
+        private Long postId;
         private Long memberId;
         private Double latitude;
         private Double longitude;

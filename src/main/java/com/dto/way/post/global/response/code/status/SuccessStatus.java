@@ -30,7 +30,8 @@ public enum SuccessStatus implements BaseCode {
     DAILY_CREATED(HttpStatus.OK, "DAILY2001", "Daily 게시글이 생성되었습니다."),
     DAILY_UPDATED(HttpStatus.OK,"DAILY2002","Daily 게시글이 수정되었습니다."),
     DAILY_DELETED(HttpStatus.OK,"DAILY2003","Daily 게시글이 삭제되었습니다."),
-    DAILY_FOUND(HttpStatus.OK,"DAILY2004","Daily 게시글이 조회되었습니다.")
+    DAILY_FOUND(HttpStatus.OK,"DAILY2004","Daily 게시글이 조회되었습니다."),
+    DAILY_LIST_FOUND_BY_RANGE(HttpStatus.OK,"DAILY2005","반경 내 Daily 게시글 목록이 조회되었습니다.")
     ;
 
 

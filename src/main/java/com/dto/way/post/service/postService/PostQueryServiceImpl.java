@@ -1,6 +1,5 @@
 package com.dto.way.post.service.postService;
 
-import com.dto.way.post.converter.PostConverter;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.repository.PostRepository;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 public class PostQueryServiceImpl implements PostQueryService {
 
     private final PostRepository postRepository;
-
     private final EntityManager entityManager;
 
 
