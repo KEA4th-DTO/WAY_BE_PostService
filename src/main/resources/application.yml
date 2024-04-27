@@ -19,7 +19,9 @@ cloud:
     s3:
       bucket: way-post-images
       path:
-        daily: daily_image
+        daily_image: daily_image
+        history_body: history_body
+        history_thumbnail: history_thumbnail
     region:
       static: ap-northeast-2
     stack:
