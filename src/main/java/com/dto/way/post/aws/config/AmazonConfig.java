@@ -1,4 +1,4 @@
-package com.dto.way.post.global.config;
+package com.dto.way.post.aws.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;

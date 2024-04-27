@@ -4,10 +4,10 @@ import com.dto.way.post.aws.s3.AmazonS3Manager;
 import com.dto.way.post.converter.DailyConverter;
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.domain.Post;
-import com.dto.way.post.domain.common.Uuid;
-import com.dto.way.post.global.config.AmazonConfig;
+import com.dto.way.post.aws.config.AmazonConfig;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.UuidRepository;
+import com.dto.way.post.utils.UuidCreator;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +30,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     private final AmazonS3Manager s3Manager;
     private final UuidRepository uuidRepository;
     private final AmazonConfig amazonConfig;
+    private final UuidCreator uuidCreator;
 
     @Override
     @Transactional
@@ -39,12 +39,12 @@ public class DailyCommandServiceImpl implements DailyCommandService {
          *  회원 서비스 구현 완료되면 memberId는 JWT claim에서 가져오는 것으로 변경 필요
          *  memberId 가져온 후 userService로 api 날려서 조회 로직
          */
-        String uuid = UUID.randomUUID().toString();
-        Uuid savedUuid = uuidRepository.save(Uuid.builder()
-                .uuid(uuid)
-                .build());
+//        String uuid = UUID.randomUUID().toString();
+//        Uuid savedUuid = uuidRepository.save(Uuid.builder()
+//                .uuid(uuid)
+//                .build());
 
-        String imageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getDailyImagePath(), savedUuid.getUuid(), image);
+        String imageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getDailyImagePath(), uuidCreator.createUuid(), image);
 
 
         // 위도, 경도를 Point로 변환하여 저장.

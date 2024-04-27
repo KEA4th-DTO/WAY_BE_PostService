@@ -4,6 +4,7 @@ package com.dto.way.post.domain.common;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Entity
 @Builder
 @Getter
@@ -16,4 +17,6 @@ public class Uuid extends BaseEntity {
 
     @Column(unique = true)
     private String uuid;
+
+
 }
