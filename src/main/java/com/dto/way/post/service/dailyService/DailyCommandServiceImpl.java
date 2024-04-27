@@ -5,6 +5,7 @@ import com.dto.way.post.converter.DailyConverter;
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.domain.common.Uuid;
+import com.dto.way.post.global.config.AmazonConfig;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.UuidRepository;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
@@ -29,6 +30,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     private final DailyRepository dailyRepository;
     private final AmazonS3Manager s3Manager;
     private final UuidRepository uuidRepository;
+    private final AmazonConfig amazonConfig;
 
     @Override
     @Transactional
@@ -42,7 +44,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
                 .uuid(uuid)
                 .build());
 
-        String imageUrl = s3Manager.uploadFile(s3Manager.generateReviewKeyName(savedUuid), image);
+        String imageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getDailyImagePath(), savedUuid.getUuid(), image);
 
 
         // 위도, 경도를 Point로 변환하여 저장.
@@ -85,7 +87,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     public DailyResponseDto.DeleteDailyResultDto deleteDaily(Long postId) throws IOException {
 
         Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("데일리가 존재하지 않습니다."));
-        s3Manager.deleteFile(daily.getImageUrl());
+        s3Manager.deleteFile(amazonConfig.getDailyImagePath(), daily.getImageUrl());
         DailyResponseDto.DeleteDailyResultDto deleteDailyResultDto = DailyConverter.toDeleteDailyResponseDto(daily);
 
         dailyRepository.delete(daily);

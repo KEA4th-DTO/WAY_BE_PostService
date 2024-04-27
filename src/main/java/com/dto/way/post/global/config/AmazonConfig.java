@@ -31,8 +31,14 @@ public class AmazonConfig {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.path.daily}")
+    @Value("${cloud.aws.s3.path.daily_image}")
     private String dailyImagePath;
+
+    @Value("${cloud.aws.s3.path.history_body}")
+    private String historyBodyPath;
+
+    @Value("${cloud.aws.s3.path.history_thumbnail}")
+    private String historyThumbnailPath;
 
     @PostConstruct
     public void init() {
