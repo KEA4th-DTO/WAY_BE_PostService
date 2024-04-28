@@ -9,13 +9,24 @@ import java.time.LocalDateTime;
 
 public class HistoryResponseDto {
 
+
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateHistoryResponseDto {
+    public static class CreateHistoryResultDto {
         private Long postId;
         private String title;
         private LocalDateTime createAt;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DeleteHistoryResultDto {
+        private Long postId;
+        private String title;
+        private LocalDateTime deletedAt;
     }
 }

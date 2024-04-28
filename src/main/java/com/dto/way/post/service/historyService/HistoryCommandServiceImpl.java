@@ -8,12 +8,15 @@ import com.dto.way.post.aws.config.AmazonConfig;
 import com.dto.way.post.repository.HistoryRepository;
 import com.dto.way.post.utils.UuidCreator;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
+import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +46,18 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
         post.setMemberId(1L);
 
         return historyRepository.save(history);
+    }
+
+    @Override
+    public HistoryResponseDto.DeleteHistoryResultDto deleteHistory(Long postId) throws IOException {
+
+        History history = historyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다."));
+        s3Manager.deleteFile(amazonConfig.getHistoryThumbnailPath(), history.getThumbnailImageUrl());
+        s3Manager.deleteFile(amazonConfig.getHistoryBodyPath(), history.getBodyHtmlUrl());
+        HistoryResponseDto.DeleteHistoryResultDto deleteHistoryResultDto = HistoryConverter.toDeleteHistoryResultDto(history);
+
+        historyRepository.delete(history);
+
+        return deleteHistoryResultDto;
     }
 }
