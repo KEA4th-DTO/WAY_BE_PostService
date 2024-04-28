@@ -26,11 +26,19 @@ public class HistoryConverter {
                 .build();
     }
 
-    public static HistoryResponseDto.CreateHistoryResponseDto toCreateHistoryResponseDto(History history) {
-        return HistoryResponseDto.CreateHistoryResponseDto.builder()
+    public static HistoryResponseDto.CreateHistoryResultDto toCreateHistoryResponseDto(History history) {
+        return HistoryResponseDto.CreateHistoryResultDto.builder()
                 .postId(history.getPostId())
                 .title(history.getTitle())
                 .createAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static HistoryResponseDto.DeleteHistoryResultDto toDeleteHistoryResultDto(History history) {
+        return HistoryResponseDto.DeleteHistoryResultDto.builder()
+                .postId(history.getPostId())
+                .title(history.getTitle())
+                .deletedAt(LocalDateTime.now())
                 .build();
     }
 
