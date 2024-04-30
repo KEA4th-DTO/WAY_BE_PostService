@@ -9,6 +9,7 @@ import com.dto.way.post.service.postService.PostQueryService;
 import com.dto.way.post.web.dto.likeDto.LikeResponseDto;
 import com.dto.way.post.web.dto.postDto.PostResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,8 +51,8 @@ public class PostRestController {
 
     @PostMapping("/like/{postId}")
     public ApiResponse<LikeResponseDto.LikeResultDto> likePost(@PathVariable(name = "postId") Long postId,
-                                                               @RequestParam String email) {
-        Boolean isLiked = likeCommandService.likePost(email, postId);
+                                                               Authentication auth) {
+        Boolean isLiked = likeCommandService.likePost(auth, postId);
         LikeResponseDto.LikeResultDto dto = new LikeResponseDto.LikeResultDto(postId, likeCommandService.countLikes(postId));
 
         return ApiResponse.of(SuccessStatus._OK,dto);
