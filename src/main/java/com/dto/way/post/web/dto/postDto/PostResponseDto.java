@@ -17,13 +17,11 @@ public class PostResponseDto {
     public static class GetPostResultDto {
         private Long postId;
         private Long memberId;
-        private Double latitude;
-        private Double longitude;
         private String title;
-        private String body;
         private String imageUrl;
-        private LocalDateTime expiredAt;
         private PostType postType;
+        private Long likesCount;
+        private LocalDateTime expiredOrCreatedDate;
         //TODO: 생성일자 추가하기
     }
 
