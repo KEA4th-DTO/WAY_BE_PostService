@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -34,6 +37,9 @@ public class Post  {
 
     @Enumerated(value = EnumType.STRING)
     private PostType postType;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Like> likes = new ArrayList<>();
 
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
