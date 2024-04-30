@@ -23,6 +23,10 @@ public class Post  {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Daily daily;
 
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private History history;
+
+
     //TODO: 프론트에서 좌표로 받을 건지, 주소로 받아서 벡에서 좌표로 변환할건지 논의 필요
     // -> 좌표로 받는게 훨씬 편할 거 같긴한데 뭐가 맞는거지
     private Double latitude;

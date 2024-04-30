@@ -25,11 +25,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                                @Param("y1") Double left_y,
                                @Param("x2") Double right_x,
                                @Param("y2") Double right_y);
-
-    @Query(value = "SELECT new com.dto.way.post.web.dto.postDto.PostResponseDto.GetPinResultDto(p.id,  p.latitude, p.longitude,p.postType) FROM Post p " +
-            "WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true",nativeQuery = true)
-    List<PostResponseDto.GetPinResultDto> findPinByRange(@Param("x1") Double left_x,
-                                                         @Param("y1") Double left_y,
-                                                         @Param("x2") Double right_x,
-                                                         @Param("y2") Double right_y);
 }

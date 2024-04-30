@@ -1,6 +1,7 @@
 package com.dto.way.post.converter;
 
 import com.dto.way.post.domain.Post;
+import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.web.dto.postDto.PostResponseDto;
 
 import java.util.List;
@@ -9,16 +10,26 @@ import java.util.stream.Collectors;
 public class PostConverter {
 
     public static PostResponseDto.GetPostResultDto toGetPostResultDto(Post post) {
-        return PostResponseDto.GetPostResultDto.builder()
-                .postId(post.getId())
-                .memberId(post.getMemberId())
-                .title(post.getDaily().getTitle())
-                .body(post.getDaily().getBody())
-                .imageUrl(post.getDaily().getImageUrl())
-                .longitude(post.getLongitude())
-                .latitude(post.getLatitude())
-                .postType(post.getPostType())
-                .expiredAt(post.getDaily().getExpiredAt()).build();
+        if(post.getPostType()== PostType.DAILY){
+            return PostResponseDto.GetPostResultDto.builder()
+                    .postId(post.getId())
+                    .memberId(post.getMemberId())
+                    .title(post.getDaily().getTitle())
+                    .imageUrl(post.getDaily().getImageUrl())
+                    .postType(post.getPostType())
+                    .likesCount((long) post.getLikes().size())
+                    .build();
+        }else {
+            return PostResponseDto.GetPostResultDto.builder()
+                    .postId(post.getId())
+                    .memberId(post.getMemberId())
+                    .title(post.getHistory().getTitle())
+                    .imageUrl(post.getHistory().getThumbnailImageUrl())
+                    .postType(post.getPostType())
+                    .likesCount((long) post.getLikes().size())
+                    .build();
+        }
+
     }
 
     public static PostResponseDto.GetPostListResultDto toGetPostListResultDto(List<Post> posts) {
