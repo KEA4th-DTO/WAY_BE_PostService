@@ -35,14 +35,6 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     @Override
     @Transactional
     public Daily createDaily(MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException {
-        /**
-         *  회원 서비스 구현 완료되면 memberId는 JWT claim에서 가져오는 것으로 변경 필요
-         *  memberId 가져온 후 userService로 api 날려서 조회 로직
-         */
-//        String uuid = UUID.randomUUID().toString();
-//        Uuid savedUuid = uuidRepository.save(Uuid.builder()
-//                .uuid(uuid)
-//                .build());
 
         String imageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getDailyImagePath(), uuidCreator.createUuid(), image);
 
