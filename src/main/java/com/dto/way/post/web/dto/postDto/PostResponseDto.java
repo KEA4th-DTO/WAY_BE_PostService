@@ -21,6 +21,7 @@ public class PostResponseDto {
         private String imageUrl;
         private PostType postType;
         private Long likesCount;
+        private LocalDateTime expiredOrCreatedDate;
         //TODO: 생성일자 추가하기
     }
 

@@ -18,6 +18,7 @@ public class PostConverter {
                     .imageUrl(post.getDaily().getImageUrl())
                     .postType(post.getPostType())
                     .likesCount((long) post.getLikes().size())
+                    .expiredOrCreatedDate(post.getDaily().getExpiredAt())
                     .build();
         }else {
             return PostResponseDto.GetPostResultDto.builder()
@@ -27,6 +28,7 @@ public class PostConverter {
                     .imageUrl(post.getHistory().getThumbnailImageUrl())
                     .postType(post.getPostType())
                     .likesCount((long) post.getLikes().size())
+                    .expiredOrCreatedDate(post.getHistory().getCreatedAt())
                     .build();
         }
 
