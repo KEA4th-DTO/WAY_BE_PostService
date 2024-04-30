@@ -25,7 +25,7 @@ public enum SuccessStatus implements BaseCode {
     POSTS_FOUND_BY_DISTANCE(HttpStatus.OK,"POST2001", "일정 거리 내의 게시글을 조회하였습니다."),
     POSTS_FOUND_BY_RANGE(HttpStatus.OK,"POST2002", "반경 내의 게시글을 조회하였습니다."),
     PINS_FOUND_BY_RANGE(HttpStatus.OK,"POST2003", "반경 내의 핀을 조회하였습니다."),
-    POST_LIKE(HttpStatus.OK,"POST2004","게시글 좋아요 처리가 되었습니다. "),
+    POST_LIKE(HttpStatus.OK,"POST2004","게시글 좋아요 처리가 되었습니다."),
     POST_UNLIKE(HttpStatus.OK,"POST2005","게시글 좋아요 취소 처리가 되었습니다."),
 
     //  데일리 관련 응답

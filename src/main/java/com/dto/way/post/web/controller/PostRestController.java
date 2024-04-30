@@ -54,7 +54,10 @@ public class PostRestController {
                                                                Authentication auth) {
         Boolean isLiked = likeCommandService.likePost(auth, postId);
         LikeResponseDto.LikeResultDto dto = new LikeResponseDto.LikeResultDto(postId, likeCommandService.countLikes(postId));
+        SuccessStatus status;
+        if (isLiked) status = SuccessStatus.POST_LIKE;
+        else status = SuccessStatus.POST_UNLIKE;
 
-        return ApiResponse.of(SuccessStatus._OK,dto);
+        return ApiResponse.of(status, dto);
     }
 }
