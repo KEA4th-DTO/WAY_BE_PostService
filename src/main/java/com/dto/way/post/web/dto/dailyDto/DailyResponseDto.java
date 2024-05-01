@@ -43,12 +43,8 @@ public class DailyResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetDailyResultDto {
-        /**
-         * 작성자에 대한 정보
-         * 프로필이미지, 닉네임
-         */
         private Long postId;
-        private Long writerId;
+        private String writerEmail;
         private String title;
         private String body;
         private String imageUrl;

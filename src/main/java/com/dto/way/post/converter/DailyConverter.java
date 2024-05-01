@@ -54,7 +54,7 @@ public class DailyConverter {
     public static DailyResponseDto.GetDailyResultDto toGetDailyResponseDto(Daily daily) {
         return DailyResponseDto.GetDailyResultDto.builder()
                 .postId(daily.getPostId())
-                .writerId(daily.getPost().getMemberId())
+                .writerEmail(daily.getPost().getMemberEmail())
                 .title(daily.getTitle())
                 .body(daily.getBody())
                 .imageUrl(daily.getImageUrl())
