@@ -9,6 +9,7 @@ import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,15 +23,17 @@ public class HistoryRestController {
     private final HistoryCommandService historyCommandService;
 
     @PostMapping
-    public ApiResponse<HistoryResponseDto.CreateHistoryResultDto> createHistory(@RequestPart(value = "image",required = true) MultipartFile thumbnailImage,
+    public ApiResponse<HistoryResponseDto.CreateHistoryResultDto> createHistory(Authentication auth,
+                                                                                @RequestPart(value = "image",required = true) MultipartFile thumbnailImage,
                                                                                 @RequestPart(value = "html",required = true) MultipartFile bodyHtml,
                                                                                 @RequestPart(value = "createHistoryDto", required = true)HistoryRequestDto.CreateHistoryDto request) throws ParseException {
-        History history = historyCommandService.createHistory(thumbnailImage, bodyHtml, request);
+        History history = historyCommandService.createHistory(auth, thumbnailImage, bodyHtml, request);
         return ApiResponse.of(SuccessStatus.HISTORY_CREATED, HistoryConverter.toCreateHistoryResponseDto(history));
     }
 
     @DeleteMapping("/{postId}")
-    public ApiResponse<HistoryResponseDto.DeleteHistoryResultDto> deleteHistory(@PathVariable(name = "postId") Long postId) throws IOException {
-        return ApiResponse.of(SuccessStatus.HISTORY_DELETED, historyCommandService.deleteHistory(postId));
+    public ApiResponse<HistoryResponseDto.DeleteHistoryResultDto> deleteHistory(Authentication auth,
+                                                                                @PathVariable(name = "postId") Long postId) throws IOException {
+        return ApiResponse.of(SuccessStatus.HISTORY_DELETED, historyCommandService.deleteHistory(auth, postId));
     }
 }

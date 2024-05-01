@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,7 +31,8 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
 
     @Override
-    public History createHistory(MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.CreateHistoryDto createHistoryDto) throws ParseException {
+    @Transactional
+    public History createHistory(Authentication auth, MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.CreateHistoryDto createHistoryDto) throws ParseException {
 
         String thumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(), uuidCreator.createUuid(), thumbnailImage);
         String bodyHtmlUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryBodyPath(), uuidCreator.createUuid(), bodyHtml);
@@ -43,20 +46,28 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
         History history = HistoryConverter.toHistory(point, thumbnailImageUrl, bodyHtmlUrl, createHistoryDto);
         Post post = history.getPost();
 
-        post.setMemberId(1L);
+        post.setMemberEmail(auth.getName());
 
         return historyRepository.save(history);
     }
 
     @Override
-    public HistoryResponseDto.DeleteHistoryResultDto deleteHistory(Long postId) throws IOException {
+    @Transactional
+    public HistoryResponseDto.DeleteHistoryResultDto deleteHistory(Authentication auth, Long postId) throws IOException {
 
+        String email = auth.getName();
         History history = historyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다."));
-        s3Manager.deleteFile(amazonConfig.getHistoryThumbnailPath(), history.getThumbnailImageUrl());
-        s3Manager.deleteFile(amazonConfig.getHistoryBodyPath(), history.getBodyHtmlUrl());
         HistoryResponseDto.DeleteHistoryResultDto deleteHistoryResultDto = HistoryConverter.toDeleteHistoryResultDto(history);
 
-        historyRepository.delete(history);
+        if (email.equals(history.getPost().getMemberEmail())) {
+            s3Manager.deleteFile(amazonConfig.getHistoryThumbnailPath(), history.getThumbnailImageUrl());
+            s3Manager.deleteFile(amazonConfig.getHistoryBodyPath(), history.getBodyHtmlUrl());
+            historyRepository.delete(history);
+        } else {
+            //  사용자와 작성자가 다르면 예외처리
+            throw new IllegalArgumentException("게시글은 작성자만 삭제할 수 있습니다.");
+        }
+
 
         return deleteHistoryResultDto;
     }

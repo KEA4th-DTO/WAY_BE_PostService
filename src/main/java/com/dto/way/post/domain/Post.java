@@ -39,16 +39,15 @@ public class Post  {
     //private Member member;
     private Long memberId;
 
+    private String memberEmail;
+
     @Enumerated(value = EnumType.STRING)
     private PostType postType;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-    public void setPoint(Point point) {
-        this.point = point;
+    public void setMemberEmail(String memberEmail) {
+        this.memberEmail = memberEmail;
     }
 }

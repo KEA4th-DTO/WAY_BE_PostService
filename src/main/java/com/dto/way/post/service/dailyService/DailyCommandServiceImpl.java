@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +36,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
 
     @Override
     @Transactional
-    public Daily createDaily(MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException {
+    public Daily createDaily(Authentication auth, MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException {
 
         String imageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getDailyImagePath(), uuidCreator.createUuid(), image);
 
@@ -49,40 +51,55 @@ public class DailyCommandServiceImpl implements DailyCommandService {
         Daily daily = DailyConverter.toDaily(point, imageUrl, requestDto);
         Post post = daily.getPost();
 
-        //  여기서 member 유효성 검증 처리하던지, setMemberId에서 처리하던지 -> 회원서비스 구현 후 처리
-        post.setMemberId(1L);
+        post.setMemberEmail(auth.getName());
 
         return dailyRepository.save(daily);
     }
 
     @Override
     @Transactional
-    public Daily updateDaily(Long postId, DailyRequestDto.UpdateDailyDto requestDto) {
+    public Daily updateDaily(Authentication auth, Long postId, DailyRequestDto.UpdateDailyDto requestDto) {
 
-        //  member 유효성 검사 추가 필요
+        String email = auth.getName();
         Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 데일리가 존재하지 않습니다."));
-        if (daily.getExpiredAt().isBefore(LocalDateTime.now())) {
-            throw new DateTimeException("만료시간이 지난 게시글은 수정할 수 없습니다.");
+
+        if (email.equals(daily.getPost().getMemberEmail())) {
+            //  작성자와 사용자가 같으면 수정 가능
+            if (daily.getExpiredAt().isBefore(LocalDateTime.now())) {
+                throw new DateTimeException("만료시간이 지난 게시글은 수정할 수 없습니다.");
+            } else {
+                if (requestDto.getTitle() != null) {
+                    daily.updateTitle(requestDto.getTitle());
+                }
+                if (requestDto.getBody() != null) {
+                    daily.updateBody(requestDto.getBody());
+                }
+            }
         } else {
-            if (requestDto.getTitle() != null) {
-                daily.updateTitle(requestDto.getTitle());
-            }
-            if (requestDto.getBody() != null) {
-                daily.updateBody(requestDto.getBody());
-            }
+            //  작성자와 사용자가 다르면 예외 처리
+            throw new IllegalArgumentException("게시글은 작성자만 수정할 수 있습니다.");
         }
+
 
         return daily;
     }
 
     @Override
-    public DailyResponseDto.DeleteDailyResultDto deleteDaily(Long postId) throws IOException {
+    @Transactional
+    public DailyResponseDto.DeleteDailyResultDto deleteDaily(Authentication auth, Long postId) throws IOException {
 
-        Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("데일리가 존재하지 않습니다."));
-        s3Manager.deleteFile(amazonConfig.getDailyImagePath(), daily.getImageUrl());
+        String email = auth.getName();
+        Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 데일리가 존재하지 않습니다."));
         DailyResponseDto.DeleteDailyResultDto deleteDailyResultDto = DailyConverter.toDeleteDailyResponseDto(daily);
 
-        dailyRepository.delete(daily);
+        if (email.equals(daily.getPost().getMemberEmail())) {
+            //  사용자와 작성자가 같으면 삭제 가능
+            s3Manager.deleteFile(amazonConfig.getDailyImagePath(), daily.getImageUrl());
+            dailyRepository.delete(daily);
+        } else {
+            //  사용자와 작성자가 다르면 예외처리
+            throw new IllegalArgumentException("게시글은 작성자만 삭제할 수 있습니다.");
+        }
 
         return deleteDailyResultDto;
     }
