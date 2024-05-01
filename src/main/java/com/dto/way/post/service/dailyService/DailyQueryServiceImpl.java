@@ -32,7 +32,7 @@ public class DailyQueryServiceImpl implements DailyQueryService {
     @Override
     public DailyResponseDto.GetDailyListResultDto getDailyListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
 
-        String sql = "SELECT p.member_id, p.post_id, d.title, d.image_url, d.body, d.created_at, d.expired_at FROM post p JOIN daily d ON d.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
+        String sql = "SELECT p.member_email, p.post_id, d.title, d.image_url, d.body, d.created_at, d.expired_at FROM post p JOIN daily d ON d.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter("x1", longitude1);
         query.setParameter("y1", latitude1);
@@ -43,7 +43,7 @@ public class DailyQueryServiceImpl implements DailyQueryService {
         List<DailyResponseDto.GetDailyResultDto> dtoList = rawResultList.stream()
                 .map(result -> {
                     DailyResponseDto.GetDailyResultDto dto = new DailyResponseDto.GetDailyResultDto();
-                    dto.setWriterId((Long) result[0]);
+                    dto.setWriterEmail((String) result[0]);
                     dto.setPostId((Long) result[1]);
                     dto.setTitle((String) result[2]);
                     dto.setImageUrl((String) result[3]);

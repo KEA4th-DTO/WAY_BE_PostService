@@ -35,9 +35,7 @@ public class Post  {
     @Column(columnDefinition = "geometry(Point, 4326)") // PostgreSQL
     private Point point;
 
-    //연관관계 매핑은 추후에 생각
-    //private Member member;
-    private Long memberId;
+    private String memberEmail;
 
     @Enumerated(value = EnumType.STRING)
     private PostType postType;
@@ -45,10 +43,7 @@ public class Post  {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-    public void setPoint(Point point) {
-        this.point = point;
+    public void setMemberEmail(String memberEmail) {
+        this.memberEmail = memberEmail;
     }
 }

@@ -10,6 +10,7 @@ import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,9 +33,10 @@ public class DailyRestController {
      * @throws ParseException
      */
     @PostMapping
-    public ApiResponse<DailyResponseDto.CreateDailyResultDto> createDaily(@RequestPart(value = "image", required = true) MultipartFile image,
+    public ApiResponse<DailyResponseDto.CreateDailyResultDto> createDaily(Authentication auth,
+                                                                          @RequestPart(value = "image", required = true) MultipartFile image,
                                                                           @RequestPart(value = "createDailyDto") DailyRequestDto.CreateDailyDto request) throws ParseException {
-        Daily daily = dailyCommandService.createDaily(image, request);
+        Daily daily = dailyCommandService.createDaily(auth, image, request);
         return ApiResponse.of(SuccessStatus.DAILY_CREATED, DailyConverter.toCreateDailyResultDto(daily));
     }
 
@@ -46,9 +48,11 @@ public class DailyRestController {
      * @return
      */
     @PatchMapping("/{postId}")
-    public ApiResponse<DailyResponseDto.UpdateDailyResultDto> updateDaily(@PathVariable(name = "postId") Long postId, @RequestBody DailyRequestDto.UpdateDailyDto request) {
+    public ApiResponse<DailyResponseDto.UpdateDailyResultDto> updateDaily(Authentication auth,
+                                                                          @PathVariable(name = "postId") Long postId,
+                                                                          @RequestBody DailyRequestDto.UpdateDailyDto request) {
 
-        Daily daily = dailyCommandService.updateDaily(postId, request);
+        Daily daily = dailyCommandService.updateDaily(auth, postId, request);
         return ApiResponse.of(SuccessStatus.DAILY_UPDATED, DailyConverter.toUpdateDailyResponseDto(daily));
     }
 
@@ -60,8 +64,9 @@ public class DailyRestController {
      * @throws IOException
      */
     @DeleteMapping("/{postId}")
-    public ApiResponse<DailyResponseDto.DeleteDailyResultDto> deleteDaily(@PathVariable(name = "postId") Long postId) throws IOException {
-        return ApiResponse.of(SuccessStatus.DAILY_DELETED, dailyCommandService.deleteDaily(postId));
+    public ApiResponse<DailyResponseDto.DeleteDailyResultDto> deleteDaily(Authentication auth,
+                                                                          @PathVariable(name = "postId") Long postId) throws IOException {
+        return ApiResponse.of(SuccessStatus.DAILY_DELETED, dailyCommandService.deleteDaily(auth, postId));
     }
 
     /**
