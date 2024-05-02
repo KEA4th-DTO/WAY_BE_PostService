@@ -69,4 +69,11 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
         return commentRepository.save(comment);
     }
+
+    @Override
+    public Long countComment(Long postId) {
+        History history = historyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        return commentRepository.countByHistory(history);
+    }
 }

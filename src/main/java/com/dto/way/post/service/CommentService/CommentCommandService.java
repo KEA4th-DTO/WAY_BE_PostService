@@ -11,4 +11,6 @@ public interface CommentCommandService {
     CommentResponseDto.DeleteCommentResultDto deleteComment(Authentication auth, Long commentId);
 
     Comment updateComment(Authentication auth, Long commentId, CommentRequestDto.UpdateCommentDto updateCommentDto);
+
+    Long countComment(Long postId);
 }

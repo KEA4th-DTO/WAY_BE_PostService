@@ -42,13 +42,13 @@ public class HistoryConverter {
                 .build();
     }
 
-    public static HistoryResponseDto.GetHistoryResultDto toGetHistoryResultDto(History history) {
+    public static HistoryResponseDto.GetHistoryResultDto toGetHistoryResultDto(History history,Long countComment) {
         return HistoryResponseDto.GetHistoryResultDto.builder()
                 .postId(history.getPostId())
                 .memberEmail(history.getPost().getMemberEmail())
                 .title(history.getTitle())
                 .bodyHtmlUrl(history.getBodyHtmlUrl())
-                .commentsCount(999L)
+                .commentsCount(countComment)
                 .createdAt(history.getCreatedAt()).build();
     }
 

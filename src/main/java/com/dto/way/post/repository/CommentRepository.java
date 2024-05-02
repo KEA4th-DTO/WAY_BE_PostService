@@ -14,4 +14,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByHistory(History history);
 
+    Long countByHistory(History history);
 }
