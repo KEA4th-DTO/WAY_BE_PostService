@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CommentResponseDto {
 
@@ -34,6 +35,25 @@ public class CommentResponseDto {
     public static class UpdateCommentResultDto{
         private Long commentId;
         private LocalDateTime updatedAt;
+    }
+
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class GetCommentResultDto{
+        private String memberEmail;
+        private String body;
+        private LocalDateTime createdAt;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class GetCommentListResultDto{
+        private List<GetCommentResultDto> commentResultDtoList;
     }
 
 }

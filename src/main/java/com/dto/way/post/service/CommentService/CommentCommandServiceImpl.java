@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentCommandServiceImpl implements CommentCommandService {
 
-    private final PostRepository postRepository;
     private final HistoryRepository historyRepository;
     private final CommentRepository commentRepository;
 
@@ -46,7 +45,6 @@ public class CommentCommandServiceImpl implements CommentCommandService {
         } else {
             throw new SecurityException("댓글 작성자만 댓글을 삭제할 수 있습니다. ");
         }
-
 
         return deleteCommentResultDto;
     }

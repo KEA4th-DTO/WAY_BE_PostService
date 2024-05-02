@@ -46,6 +46,7 @@ public enum SuccessStatus implements BaseCode {
     COMMENT_CREATED(HttpStatus.OK, "COMMENT2001", "댓글이 생성되었습니다."),
     COMMENT_DELETED(HttpStatus.OK, "COMMENT2002", "댓글이 삭제되었습니다."),
     COMMENT_UPDATED(HttpStatus.OK, "COMMENT2003", "댓글이 수정되었습니다."),
+    COMMENT_LIST_FOUND(HttpStatus.OK, "COMMENT2004", "댓글 목록이 조회되었습니다."),
 
     ;
 

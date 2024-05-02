@@ -7,6 +7,8 @@ import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommentConverter {
 
@@ -35,5 +37,20 @@ public class CommentConverter {
         return CommentResponseDto.UpdateCommentResultDto.builder()
                 .commentId(comment.getCommentId())
                 .updatedAt(comment.getUpdatedAt()).build();
+    }
+
+    public static CommentResponseDto.GetCommentResultDto toGetCommentResultDto(Comment comment) {
+        return CommentResponseDto.GetCommentResultDto.builder()
+                .memberEmail(comment.getMemberEmail())
+                .body(comment.getBody())
+                .createdAt(comment.getCreatedAt())
+                .build();
+    }
+
+    public static CommentResponseDto.GetCommentListResultDto toGetCommentListResultDto(List<Comment> comments) {
+        List<CommentResponseDto.GetCommentResultDto> commentResultDtoList = comments.stream()
+                .map(CommentConverter::toGetCommentResultDto).collect(Collectors.toList());
+        return CommentResponseDto.GetCommentListResultDto.builder()
+                .commentResultDtoList(commentResultDtoList).build();
     }
 }
