@@ -38,8 +38,8 @@ public enum SuccessStatus implements BaseCode {
     //  히스토리 관련 응답
     HISTORY_CREATED(HttpStatus.OK, "HISTORY2001", "History 게시글이 생성되었습니다."),
     HISTORY_DELETED(HttpStatus.OK, "HISTORY2002", "History 게시글이 삭제되었습니다."),
-
-
+    //  히스토리 수정 응답 HISTORY2003
+    HISTORY_FOUND(HttpStatus.OK,"HISTORY2004","History 게시글이 조회되었습니다."),
 
     ;
 

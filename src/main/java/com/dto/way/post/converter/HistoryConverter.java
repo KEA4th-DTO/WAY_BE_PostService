@@ -42,4 +42,14 @@ public class HistoryConverter {
                 .build();
     }
 
+    public static HistoryResponseDto.GetHistoryResultDto toGetHistoryResultDto(History history) {
+        return HistoryResponseDto.GetHistoryResultDto.builder()
+                .postId(history.getPostId())
+                .memberEmail(history.getPost().getMemberEmail())
+                .title(history.getTitle())
+                .bodyHtmlUrl(history.getBodyHtmlUrl())
+                .commentsCount(999L)
+                .createdAt(history.getCreatedAt()).build();
+    }
+
 }

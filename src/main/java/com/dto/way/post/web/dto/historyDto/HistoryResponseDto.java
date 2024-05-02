@@ -29,4 +29,17 @@ public class HistoryResponseDto {
         private String title;
         private LocalDateTime deletedAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetHistoryResultDto {
+        private Long postId;
+        private String memberEmail;
+        private String title;
+        private String bodyHtmlUrl;
+        private Long commentsCount;
+        private LocalDateTime createdAt;
+    }
 }
