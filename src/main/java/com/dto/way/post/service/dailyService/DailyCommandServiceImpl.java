@@ -77,7 +77,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
             }
         } else {
             //  작성자와 사용자가 다르면 예외 처리
-            throw new IllegalArgumentException("게시글은 작성자만 수정할 수 있습니다.");
+            throw new SecurityException("게시글은 작성자만 수정할 수 있습니다.");
         }
 
 
@@ -98,7 +98,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
             dailyRepository.delete(daily);
         } else {
             //  사용자와 작성자가 다르면 예외처리
-            throw new IllegalArgumentException("게시글은 작성자만 삭제할 수 있습니다.");
+            throw new SecurityException("게시글은 작성자만 삭제할 수 있습니다.");
         }
 
         return deleteDailyResultDto;
