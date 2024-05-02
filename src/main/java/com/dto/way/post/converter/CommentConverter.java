@@ -1,6 +1,7 @@
 package com.dto.way.post.converter;
 
 import com.dto.way.post.domain.Comment;
+import com.dto.way.post.domain.History;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
@@ -9,10 +10,10 @@ import java.time.LocalDateTime;
 
 public class CommentConverter {
 
-    public  static Comment toComment(String email, Post post, CommentRequestDto.CreateCommentDto request) {
+    public  static Comment toComment(String email, History history, CommentRequestDto.CreateCommentDto request) {
         return Comment.builder()
                 .memberEmail(email)
-                .post(post)
+                .history(history)
                 .body(request.getBody())
                 .build();
     }

@@ -2,8 +2,10 @@ package com.dto.way.post.service.CommentService;
 
 import com.dto.way.post.converter.CommentConverter;
 import com.dto.way.post.domain.Comment;
+import com.dto.way.post.domain.History;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.repository.CommentRepository;
+import com.dto.way.post.repository.HistoryRepository;
 import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentCommandServiceImpl implements CommentCommandService {
 
     private final PostRepository postRepository;
+    private final HistoryRepository historyRepository;
     private final CommentRepository commentRepository;
 
     @Override
@@ -24,9 +27,9 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     public Comment createComment(Authentication auth, Long postId, CommentRequestDto.CreateCommentDto createCommentDto) {
 
         String email = auth.getName();
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        History history = historyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
 
-        Comment comment = CommentConverter.toComment(email, post, createCommentDto);
+        Comment comment = CommentConverter.toComment(email, history, createCommentDto);
 
         return commentRepository.save(comment);
     }
