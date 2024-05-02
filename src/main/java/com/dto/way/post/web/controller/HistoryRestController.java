@@ -19,7 +19,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/history-service")
+@RequestMapping("/post-service/history")
 public class HistoryRestController {
     private final HistoryCommandService historyCommandService;
     private final HistoryQueryService historyQueryService;
