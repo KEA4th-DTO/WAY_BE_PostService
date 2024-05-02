@@ -8,7 +8,6 @@ import com.dto.way.post.service.CommentService.CommentCommandService;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,5 +24,11 @@ public class CommentRestController {
                                                                                 @RequestBody CommentRequestDto.CreateCommentDto request) {
         Comment comment = commentCommandService.createComment(auth, postId, request);
         return ApiResponse.of(SuccessStatus.COMMENT_CREATED, CommentConverter.toCreateCommentResultDto(comment));
+    }
+
+    @DeleteMapping("/{postId}")
+    public ApiResponse<CommentResponseDto.DeleteCommentResultDto> createComment(Authentication auth,
+                                                                                @PathVariable(name = "postId") Long postId) {
+        return ApiResponse.of(SuccessStatus.COMMENT_DELETED, commentCommandService.deleteComment(auth, postId));
     }
 }

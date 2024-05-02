@@ -5,6 +5,8 @@ import com.dto.way.post.domain.Post;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
 
+import java.time.LocalDateTime;
+
 public class CommentConverter {
 
     public  static Comment toComment(String email, Post post, CommentRequestDto.CreateCommentDto request) {
@@ -19,5 +21,12 @@ public class CommentConverter {
         return CommentResponseDto.CreateCommentResultDto.builder()
                 .commentId(comment.getCommentId())
                 .createAt(comment.getCreatedAt()).build();
+    }
+
+    public static CommentResponseDto.DeleteCommentResultDto toDeleteCommentResultDto(Comment comment) {
+        return CommentResponseDto.DeleteCommentResultDto.builder()
+                .commentId(comment.getCommentId())
+                .deletedAt(LocalDateTime.now())
+                .build();
     }
 }
