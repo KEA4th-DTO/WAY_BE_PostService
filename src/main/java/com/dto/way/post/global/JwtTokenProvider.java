@@ -27,7 +27,7 @@ public class JwtTokenProvider {
     private final Key key;
 
     // application.yml에서 secret 값 가져와서 key에 저장
-    public JwtTokenProvider(@Value("e9caf9e059da3ae65f50ef782115ec956422ef5ce30838059523cbe77e93ecbe") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
