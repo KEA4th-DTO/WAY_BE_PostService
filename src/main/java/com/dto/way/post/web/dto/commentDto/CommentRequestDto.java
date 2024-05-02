@@ -14,4 +14,12 @@ public class CommentRequestDto {
     public static class CreateCommentDto {
         private String body;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdateCommentDto {
+        private String body;
+    }
 }

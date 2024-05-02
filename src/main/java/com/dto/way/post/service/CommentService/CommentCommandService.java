@@ -9,4 +9,6 @@ public interface CommentCommandService {
     Comment createComment(Authentication auth, Long postId, CommentRequestDto.CreateCommentDto createCommentDto);
 
     CommentResponseDto.DeleteCommentResultDto deleteComment(Authentication auth, Long commentId);
+
+    Comment updateComment(Authentication auth, Long commentId, CommentRequestDto.UpdateCommentDto updateCommentDto);
 }

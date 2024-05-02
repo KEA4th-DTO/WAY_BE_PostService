@@ -26,4 +26,14 @@ public class CommentResponseDto {
         private Long commentId;
         private LocalDateTime deletedAt;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdateCommentResultDto{
+        private Long commentId;
+        private LocalDateTime updatedAt;
+    }
+
 }

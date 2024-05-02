@@ -23,5 +23,7 @@ public class Comment extends BaseEntity {
 
     private String memberEmail;
 
-
+    public void updateBody(String body) {
+        this.body = body;
+    }
 }

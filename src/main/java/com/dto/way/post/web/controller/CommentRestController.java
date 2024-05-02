@@ -26,9 +26,17 @@ public class CommentRestController {
         return ApiResponse.of(SuccessStatus.COMMENT_CREATED, CommentConverter.toCreateCommentResultDto(comment));
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping("/{commentId}")
     public ApiResponse<CommentResponseDto.DeleteCommentResultDto> createComment(Authentication auth,
-                                                                                @PathVariable(name = "postId") Long postId) {
-        return ApiResponse.of(SuccessStatus.COMMENT_DELETED, commentCommandService.deleteComment(auth, postId));
+                                                                                @PathVariable(name = "commentId") Long commentId) {
+        return ApiResponse.of(SuccessStatus.COMMENT_DELETED, commentCommandService.deleteComment(auth, commentId));
+    }
+
+    @PatchMapping("/{commentId}")
+    public ApiResponse<CommentResponseDto.UpdateCommentResultDto> updateComment(Authentication auth,
+                                                                         @PathVariable(name = "commentId") Long commentId,
+                                                                         @RequestBody CommentRequestDto.UpdateCommentDto request) {
+        Comment comment = commentCommandService.updateComment(auth, commentId, request);
+        return ApiResponse.of(SuccessStatus.COMMENT_UPDATED, CommentConverter.toUpdateCommentResultDto(comment));
     }
 }

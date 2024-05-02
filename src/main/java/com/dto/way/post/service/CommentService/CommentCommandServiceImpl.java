@@ -47,4 +47,25 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
         return deleteCommentResultDto;
     }
+
+    @Override
+    @Transactional
+    public Comment updateComment(Authentication auth, Long commentId, CommentRequestDto.UpdateCommentDto updateCommentDto) {
+
+        String email = auth.getName();
+        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+
+        if (email.equals(comment.getMemberEmail())) {
+            if (updateCommentDto.getBody() != null) {
+                comment.updateBody(updateCommentDto.getBody());
+            } else {
+                throw new IllegalArgumentException("수정할 내용을 입력해주세요.");
+            }
+        } else {
+            throw new SecurityException("작성자만 댓글을 수정할 수 있습니다.");
+
+        }
+
+        return commentRepository.save(comment);
+    }
 }

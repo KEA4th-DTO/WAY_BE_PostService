@@ -29,4 +29,10 @@ public class CommentConverter {
                 .deletedAt(LocalDateTime.now())
                 .build();
     }
+
+    public static CommentResponseDto.UpdateCommentResultDto toUpdateCommentResultDto(Comment comment) {
+        return CommentResponseDto.UpdateCommentResultDto.builder()
+                .commentId(comment.getCommentId())
+                .updatedAt(comment.getUpdatedAt()).build();
+    }
 }
