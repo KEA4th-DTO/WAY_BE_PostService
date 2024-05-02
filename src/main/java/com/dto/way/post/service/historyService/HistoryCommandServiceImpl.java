@@ -65,7 +65,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
             historyRepository.delete(history);
         } else {
             //  사용자와 작성자가 다르면 예외처리
-            throw new IllegalArgumentException("게시글은 작성자만 삭제할 수 있습니다.");
+            throw new SecurityException("게시글은 작성자만 삭제할 수 있습니다.");
         }
 
 

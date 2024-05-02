@@ -4,6 +4,7 @@ import com.dto.way.post.converter.HistoryConverter;
 import com.dto.way.post.domain.History;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
+import com.dto.way.post.service.CommentService.CommentCommandService;
 import com.dto.way.post.service.historyService.HistoryCommandService;
 import com.dto.way.post.service.historyService.HistoryQueryService;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
@@ -19,10 +20,11 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/history-service")
+@RequestMapping("/post-service/history")
 public class HistoryRestController {
     private final HistoryCommandService historyCommandService;
     private final HistoryQueryService historyQueryService;
+    private final CommentCommandService commentCommandService;
 
     @PostMapping
     public ApiResponse<HistoryResponseDto.CreateHistoryResultDto> createHistory(Authentication auth,
@@ -43,7 +45,7 @@ public class HistoryRestController {
     public ApiResponse<HistoryResponseDto.GetHistoryResultDto> getHistory(@PathVariable(name = "postId") Long postId) {
 
         History history = historyQueryService.getHistory(postId);
-        HistoryResponseDto.GetHistoryResultDto getHistoryResultDto = HistoryConverter.toGetHistoryResultDto(history);
+        HistoryResponseDto.GetHistoryResultDto getHistoryResultDto = HistoryConverter.toGetHistoryResultDto(history, commentCommandService.countComment(postId));
         return ApiResponse.of(SuccessStatus.HISTORY_FOUND, getHistoryResultDto);
     }
 }
