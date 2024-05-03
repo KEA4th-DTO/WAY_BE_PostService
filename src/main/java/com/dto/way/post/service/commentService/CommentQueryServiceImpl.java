@@ -1,10 +1,9 @@
-package com.dto.way.post.service.CommentService;
+package com.dto.way.post.service.commentService;
 
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.History;
 import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.HistoryRepository;
-import com.dto.way.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
