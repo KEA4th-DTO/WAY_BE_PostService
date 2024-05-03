@@ -1,4 +1,4 @@
-package com.dto.way.post.service.CommentService;
+package com.dto.way.post.service.commentService;
 
 import com.dto.way.post.domain.Comment;
 

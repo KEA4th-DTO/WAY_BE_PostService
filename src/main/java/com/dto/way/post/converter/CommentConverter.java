@@ -2,7 +2,6 @@ package com.dto.way.post.converter;
 
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.History;
-import com.dto.way.post.domain.Post;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
 
@@ -43,6 +42,7 @@ public class CommentConverter {
         return CommentResponseDto.GetCommentResultDto.builder()
                 .memberEmail(comment.getMemberEmail())
                 .body(comment.getBody())
+                .replyCounts((long)comment.getReplyList().size())
                 .createdAt(comment.getCreatedAt())
                 .build();
     }

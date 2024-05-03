@@ -1,12 +1,10 @@
-package com.dto.way.post.service.CommentService;
+package com.dto.way.post.service.commentService;
 
 import com.dto.way.post.converter.CommentConverter;
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.History;
-import com.dto.way.post.domain.Post;
 import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.HistoryRepository;
-import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
 import lombok.RequiredArgsConstructor;

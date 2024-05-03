@@ -4,7 +4,7 @@ import com.dto.way.post.converter.HistoryConverter;
 import com.dto.way.post.domain.History;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
-import com.dto.way.post.service.CommentService.CommentCommandService;
+import com.dto.way.post.service.commentService.CommentCommandService;
 import com.dto.way.post.service.historyService.HistoryCommandService;
 import com.dto.way.post.service.historyService.HistoryQueryService;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;

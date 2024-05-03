@@ -1,4 +1,4 @@
-package com.dto.way.post.web.dto.commentDto;
+package com.dto.way.post.web.dto.replyDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class CommentResponseDto {
+public class ReplyResponseDto {
 
     @Builder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CreateCommentResultDto{
-        private Long commentId;
+    public static class CreateReplyResultDto{
+        private Long replyId;
         private LocalDateTime createAt;
     }
 
@@ -23,8 +23,8 @@ public class CommentResponseDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class DeleteCommentResultDto{
-        private Long commentId;
+    public static class DeleteReplyResultDto{
+        private Long replyId;
         private LocalDateTime deletedAt;
     }
 
@@ -32,8 +32,8 @@ public class CommentResponseDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class UpdateCommentResultDto{
-        private Long commentId;
+    public static class UpdateReplyResultDto{
+        private Long replyId;
         private LocalDateTime updatedAt;
     }
 
@@ -42,10 +42,9 @@ public class CommentResponseDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class GetCommentResultDto{
+    public static class GetReplyResultDto{
         private String memberEmail;
         private String body;
-        private Long replyCounts;
         private LocalDateTime createdAt;
     }
 
@@ -53,8 +52,12 @@ public class CommentResponseDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class GetCommentListResultDto{
-        private List<GetCommentResultDto> commentResultDtoList;
+    public static class GetReplyListResultDto{
+        private List<ReplyResponseDto.GetReplyResultDto> replyResultDtoList;
     }
 
 }
+
+
+
+
