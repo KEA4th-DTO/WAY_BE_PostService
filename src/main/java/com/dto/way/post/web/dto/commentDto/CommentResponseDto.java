@@ -45,6 +45,7 @@ public class CommentResponseDto {
     public static class GetCommentResultDto{
         private String memberEmail;
         private String body;
+        private Long replyCounts;
         private LocalDateTime createdAt;
     }
 
