@@ -54,6 +54,11 @@ public enum SuccessStatus implements BaseCode {
     REPLY_UPDATED(HttpStatus.OK, "REPLY2003", "대댓글이 수정되었습니다."),
     REPLY_LIST_FOUND(HttpStatus.OK, "REPLY2004", "대댓글 목록이 조회되었습니다."),
 
+
+    //  신고 관련 응답
+    REPORT_CREATED(HttpStatus.OK, "REPORT2001", "신고 목록에 추가되었습니다."),
+
+
     ;
 
 
