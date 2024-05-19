@@ -19,7 +19,6 @@ import java.io.IOException;
 
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RequestMapping("/post-service/history")
 public class HistoryRestController {

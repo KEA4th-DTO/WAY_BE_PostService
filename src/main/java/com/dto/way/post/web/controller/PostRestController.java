@@ -1,10 +1,13 @@
 package com.dto.way.post.web.controller;
 
+import com.dto.way.message.NotificationMessage;
 import com.dto.way.post.converter.PostConverter;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.service.likeService.LikeCommandService;
+import com.dto.way.post.service.notificationService.NotificationService;
+import com.dto.way.post.service.postService.PostCommandService;
 import com.dto.way.post.service.postService.PostQueryService;
 import com.dto.way.post.web.dto.likeDto.LikeResponseDto;
 import com.dto.way.post.web.dto.postDto.PostResponseDto;
@@ -15,12 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/post-service/posts")
 @RequiredArgsConstructor
 public class PostRestController {
     private final PostQueryService postQueryService;
     private final LikeCommandService likeCommandService;
+    private final PostCommandService postCommandService;
+    private final NotificationService notificationService;
 
     @GetMapping("/distance")
     public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByDistance(@RequestParam Double latitude,
@@ -55,9 +59,24 @@ public class PostRestController {
                                                                Authentication auth) {
         Boolean isLiked = likeCommandService.likePost(auth, postId);
         LikeResponseDto.LikeResultDto dto = new LikeResponseDto.LikeResultDto(postId, likeCommandService.countLikes(postId));
+
         SuccessStatus status;
-        if (isLiked) status = SuccessStatus.POST_LIKE;
-        else status = SuccessStatus.POST_UNLIKE;
+        String message;
+
+        String writerEmail = postCommandService.findWriterEmailByPostId(postId);
+        String title = postCommandService.findPostTitleByPostId(postId);
+
+        if (isLiked) {
+            status = SuccessStatus.POST_LIKE;
+            message = auth.getName() + "님이 \"" + title + "\"에 좋아요를 눌렀습니다. ";
+            NotificationMessage notificationMessage = notificationService.createNotificationMessage(writerEmail, message);
+
+            // Kafka로 메세지 전송
+            notificationService.postNotificationCreate(notificationMessage);
+        }
+        else {
+            status = SuccessStatus.POST_UNLIKE;
+        }
 
         return ApiResponse.of(status, dto);
     }
