@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface CommentQueryService {
 
+    Comment getComment(Long commentId);
+
     List<Comment> getCommentList(Long postId);
 }

@@ -45,8 +45,15 @@ public class CommentRestController {
         return ApiResponse.of(SuccessStatus.COMMENT_UPDATED, CommentConverter.toUpdateCommentResultDto(comment));
     }
 
+    @GetMapping("/{commentId}")
+    public ApiResponse<CommentResponseDto.GetCommentResultDto> getComment(@PathVariable(name = "commentId") Long commentId) {
+        Comment comment = commentQueryService.getComment(commentId);
+        return ApiResponse.of(SuccessStatus.COMMENT_FOUND, CommentConverter.toGetCommentResultDto(comment));
+    }
+
     @GetMapping("/list/{postId}")
     public ApiResponse<CommentResponseDto.GetCommentListResultDto> getCommentList(@PathVariable(name = "postId") Long postId) {
+
         List<Comment> commentList = commentQueryService.getCommentList(postId);
 
         return ApiResponse.of(SuccessStatus.COMMENT_LIST_FOUND, CommentConverter.toGetCommentListResultDto(commentList));

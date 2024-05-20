@@ -4,6 +4,7 @@ import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.History;
 import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.HistoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,13 @@ import java.util.List;
 public class CommentQueryServiceImpl implements CommentQueryService {
     private final CommentRepository commentRepository;
     private final HistoryRepository historyRepository;
+
+    @Override
+    public Comment getComment(Long postId) {
+        Comment comment = commentRepository.findByCommentId(postId).orElseThrow(() -> new EntityNotFoundException("댓글이 존재하지 않습니다."));
+        return comment;
+    }
+
     @Override
     public List<Comment> getCommentList(Long postId) {
 
