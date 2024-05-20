@@ -40,4 +40,4 @@ cloud:
       accessKey: ${AWS_S3_ACCESS_KEY}
       secretKey: ${AWS_S3_SECRET_KEY}
 server:
-  port: 8081
+  port: 8080
