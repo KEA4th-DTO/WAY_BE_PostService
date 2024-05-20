@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-@Slf4j(topic = "post")
+@Slf4j(topic = "like")
 @RequiredArgsConstructor
 public class NotificationService {
     private final KafkaTemplate<String, NotificationMessage> kafkaTemplate;
