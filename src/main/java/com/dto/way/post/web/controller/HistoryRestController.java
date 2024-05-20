@@ -9,6 +9,7 @@ import com.dto.way.post.service.historyService.HistoryCommandService;
 import com.dto.way.post.service.historyService.HistoryQueryService;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
 import org.springframework.security.core.Authentication;
@@ -30,7 +31,7 @@ public class HistoryRestController {
     public ApiResponse<HistoryResponseDto.CreateHistoryResultDto> createHistory(Authentication auth,
                                                                                 @RequestPart(value = "image", required = true) MultipartFile thumbnailImage,
                                                                                 @RequestPart(value = "html", required = true) MultipartFile bodyHtml,
-                                                                                @RequestPart(value = "createHistoryDto", required = true) HistoryRequestDto.CreateHistoryDto request) throws ParseException {
+                                                                                @Valid @RequestPart(value = "createHistoryDto", required = true) HistoryRequestDto.CreateHistoryDto request) throws ParseException {
         History history = historyCommandService.createHistory(auth, thumbnailImage, bodyHtml, request);
         return ApiResponse.of(SuccessStatus.HISTORY_CREATED, HistoryConverter.toCreateHistoryResponseDto(history));
     }

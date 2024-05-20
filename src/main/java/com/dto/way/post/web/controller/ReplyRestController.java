@@ -8,6 +8,7 @@ import com.dto.way.post.service.replyService.ReplyCommandService;
 import com.dto.way.post.service.replyService.ReplyQueryService;
 import com.dto.way.post.web.dto.replyDto.ReplyRequestDto;
 import com.dto.way.post.web.dto.replyDto.ReplyResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class ReplyRestController {
     @PostMapping("/{commentId}")
     public ApiResponse<ReplyResponseDto.CreateReplyResultDto> createReply(Authentication auth,
                                                                           @PathVariable(name = "commentId") Long commentId,
-                                                                          @RequestBody ReplyRequestDto.CreateReplyDto request) {
+                                                                          @Valid @RequestBody ReplyRequestDto.CreateReplyDto request) {
 
         Reply reply = replyCommandService.createReply(auth, commentId, request);
         return ApiResponse.of(SuccessStatus.REPLY_CREATED, ReplyConverter.toCreateReplyResultDto(reply));
@@ -39,7 +40,7 @@ public class ReplyRestController {
     @PatchMapping("/{replyId}")
     public ApiResponse<ReplyResponseDto.UpdateReplyResultDto> updateReply(Authentication auth,
                                                                           @PathVariable(name = "replyId") Long replyId,
-                                                                          @RequestBody ReplyRequestDto.UpdateReplyDto request) {
+                                                                          @Valid @RequestBody ReplyRequestDto.UpdateReplyDto request) {
         Reply reply = replyCommandService.updateReply(auth, replyId, request);
         return ApiResponse.of(SuccessStatus.REPLY_UPDATED, ReplyConverter.toUpdateReplyResultDto(reply));
     }

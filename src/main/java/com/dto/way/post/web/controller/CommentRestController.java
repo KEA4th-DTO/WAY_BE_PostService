@@ -8,6 +8,7 @@ import com.dto.way.post.service.commentService.CommentCommandService;
 import com.dto.way.post.service.commentService.CommentQueryService;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class CommentRestController {
     @PostMapping("/{postId}")
     public ApiResponse<CommentResponseDto.CreateCommentResultDto> createComment(Authentication auth,
                                                                                 @PathVariable(name = "postId") Long postId,
-                                                                                @RequestBody CommentRequestDto.CreateCommentDto request) {
+                                                                                @Valid @RequestBody CommentRequestDto.CreateCommentDto request) {
         Comment comment = commentCommandService.createComment(auth, postId, request);
         return ApiResponse.of(SuccessStatus.COMMENT_CREATED, CommentConverter.toCreateCommentResultDto(comment));
     }
@@ -38,8 +39,8 @@ public class CommentRestController {
 
     @PatchMapping("/{commentId}")
     public ApiResponse<CommentResponseDto.UpdateCommentResultDto> updateComment(Authentication auth,
-                                                                         @PathVariable(name = "commentId") Long commentId,
-                                                                         @RequestBody CommentRequestDto.UpdateCommentDto request) {
+                                                                                @PathVariable(name = "commentId") Long commentId,
+                                                                                @Valid @RequestBody CommentRequestDto.UpdateCommentDto request) {
         Comment comment = commentCommandService.updateComment(auth, commentId, request);
         return ApiResponse.of(SuccessStatus.COMMENT_UPDATED, CommentConverter.toUpdateCommentResultDto(comment));
     }

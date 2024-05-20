@@ -8,6 +8,7 @@ import com.dto.way.post.service.dailyService.DailyCommandService;
 import com.dto.way.post.service.dailyService.DailyQueryService;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
 import org.springframework.security.core.Authentication;
@@ -34,8 +35,8 @@ public class DailyRestController {
      */
     @PostMapping
     public ApiResponse<DailyResponseDto.CreateDailyResultDto> createDaily(Authentication auth,
-                                                                          @RequestPart(value = "image", required = true) MultipartFile image,
-                                                                          @RequestPart(value = "createDailyDto") DailyRequestDto.CreateDailyDto request) throws ParseException {
+                                                                          @Valid @RequestPart(value = "image", required = true) MultipartFile image,
+                                                                          @Valid @RequestPart(value = "createDailyDto") DailyRequestDto.CreateDailyDto request) throws ParseException {
         Daily daily = dailyCommandService.createDaily(auth, image, request);
         return ApiResponse.of(SuccessStatus.DAILY_CREATED, DailyConverter.toCreateDailyResultDto(daily));
     }
@@ -50,7 +51,7 @@ public class DailyRestController {
     @PatchMapping("/{postId}")
     public ApiResponse<DailyResponseDto.UpdateDailyResultDto> updateDaily(Authentication auth,
                                                                           @PathVariable(name = "postId") Long postId,
-                                                                          @RequestBody DailyRequestDto.UpdateDailyDto request) {
+                                                                          @Valid @RequestBody DailyRequestDto.UpdateDailyDto request) {
 
         Daily daily = dailyCommandService.updateDaily(auth, postId, request);
         return ApiResponse.of(SuccessStatus.DAILY_UPDATED, DailyConverter.toUpdateDailyResponseDto(daily));
