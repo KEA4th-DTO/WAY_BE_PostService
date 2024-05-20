@@ -2,7 +2,7 @@ name: WAY-post
 run-name: WAY post
 on:
   push:
-    paths:
+    branches:
       - '*'
 
 jobs:
