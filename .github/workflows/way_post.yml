@@ -1,5 +1,5 @@
-name: WAY-member
-run-name: WAY member
+name: WAY-post
+run-name: WAY post
 on:
   push:
     paths:
