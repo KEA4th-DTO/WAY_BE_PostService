@@ -45,7 +45,13 @@ public class ReplyRestController {
         return ApiResponse.of(SuccessStatus.REPLY_UPDATED, ReplyConverter.toUpdateReplyResultDto(reply));
     }
 
-    @GetMapping("/{commentId}")
+    @GetMapping("/{replyId}")
+    public ApiResponse<ReplyResponseDto.GetReplyResultDto> getReply(@PathVariable(name = "replyId") Long replyId) {
+        Reply reply = replyQueryService.getReply(replyId);
+        return ApiResponse.of(SuccessStatus.REPLY_FOUND, ReplyConverter.toGetReplyResultDto(reply));
+    }
+
+    @GetMapping("/list/{commentId}")
     public ApiResponse<ReplyResponseDto.GetReplyListResultDto> getReplyList(@PathVariable(name = "commentId") Long commentId) {
         List<Reply> replyList = replyQueryService.getReplyList(commentId);
 

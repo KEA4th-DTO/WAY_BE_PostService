@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface ReplyQueryService {
 
+    Reply getReply(Long replyId);
+
     List<Reply> getReplyList(Long commentId);
 }
