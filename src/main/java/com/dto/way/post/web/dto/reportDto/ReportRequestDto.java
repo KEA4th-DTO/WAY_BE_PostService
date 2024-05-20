@@ -14,6 +14,7 @@ public class ReportRequestDto {
     @NoArgsConstructor
     public static class CreateReportDto {
         private ReportType type;
+        private String title;
         private String description;
     }
 }
