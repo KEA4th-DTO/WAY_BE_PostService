@@ -13,6 +13,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class PostQueryServiceImpl implements PostQueryService {
     }
 
     @Override
-    public List<Post> getPostListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
+    public List<Post> getPostListByRange( Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
 
         List<Post> posts = postRepository.findPostByRange(longitude1, latitude1, longitude2, latitude2);
         return posts;
@@ -83,12 +84,11 @@ public class PostQueryServiceImpl implements PostQueryService {
     public PostResponseDto.GetPinListResultDto getPersonalPinListByRange(String memberEmail) {
 
         List<Post> posts = postRepository.findByMemberEmail(memberEmail);
-        List <PostResponseDto.GetPinResultDto> dtoList = posts.stream()
+        List<PostResponseDto.GetPinResultDto> dtoList = posts.stream()
                 .map(PostConverter::toGetPinResultDto).collect(Collectors.toList());
 
         PostResponseDto.GetPinListResultDto result = new PostResponseDto.GetPinListResultDto(dtoList);
         return result;
-
     }
 
 

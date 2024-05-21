@@ -23,6 +23,7 @@ public class PostResponseDto {
         private Long likesCount;
         private LocalDateTime expiredOrCreatedDate;
         //TODO: 생성일자 추가하기
+        private Boolean inOwned;
     }
 
     @Builder
@@ -42,7 +43,6 @@ public class PostResponseDto {
         private Long postId;
         private Double latitude;
         private Double longitude;
-
         @Enumerated(value = EnumType.STRING)
         private PostType postType;
 

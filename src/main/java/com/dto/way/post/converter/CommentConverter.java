@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class CommentConverter {
 
-    public  static Comment toComment(String email, History history, CommentRequestDto.CreateCommentDto request) {
+    public static Comment toComment(String email, History history, CommentRequestDto.CreateCommentDto request) {
         return Comment.builder()
                 .memberEmail(email)
                 .history(history)
@@ -38,18 +38,22 @@ public class CommentConverter {
                 .updatedAt(comment.getUpdatedAt()).build();
     }
 
-    public static CommentResponseDto.GetCommentResultDto toGetCommentResultDto(Comment comment) {
+    public static CommentResponseDto.GetCommentResultDto toGetCommentResultDto(String loginMemberEmail, Comment comment) {
+
+        Boolean isOwned = comment.getMemberEmail().equals(loginMemberEmail);
+
         return CommentResponseDto.GetCommentResultDto.builder()
                 .memberEmail(comment.getMemberEmail())
                 .body(comment.getBody())
-                .replyCounts((long)comment.getReplyList().size())
+                .isOwned(isOwned)
+                .replyCounts((long) comment.getReplyList().size())
                 .createdAt(comment.getCreatedAt())
                 .build();
     }
 
-    public static CommentResponseDto.GetCommentListResultDto toGetCommentListResultDto(List<Comment> comments) {
+    public static CommentResponseDto.GetCommentListResultDto toGetCommentListResultDto(String loginMemberEmail, List<Comment> comments) {
         List<CommentResponseDto.GetCommentResultDto> commentResultDtoList = comments.stream()
-                .map(CommentConverter::toGetCommentResultDto).collect(Collectors.toList());
+                .map(comment -> CommentConverter.toGetCommentResultDto(loginMemberEmail, comment)).collect(Collectors.toList());
         return CommentResponseDto.GetCommentListResultDto.builder()
                 .commentResultDtoList(commentResultDtoList).build();
     }

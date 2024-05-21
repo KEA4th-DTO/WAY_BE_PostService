@@ -46,16 +46,20 @@ public class CommentRestController {
     }
 
     @GetMapping("/{commentId}")
-    public ApiResponse<CommentResponseDto.GetCommentResultDto> getComment(@PathVariable(name = "commentId") Long commentId) {
+    public ApiResponse<CommentResponseDto.GetCommentResultDto> getComment(Authentication auth,
+                                                                          @PathVariable(name = "commentId") Long commentId) {
         Comment comment = commentQueryService.getComment(commentId);
-        return ApiResponse.of(SuccessStatus.COMMENT_FOUND, CommentConverter.toGetCommentResultDto(comment));
+        String loginMemberEmail = auth.getName();
+        return ApiResponse.of(SuccessStatus.COMMENT_FOUND, CommentConverter.toGetCommentResultDto(loginMemberEmail, comment));
     }
 
     @GetMapping("/list/{postId}")
-    public ApiResponse<CommentResponseDto.GetCommentListResultDto> getCommentList(@PathVariable(name = "postId") Long postId) {
+    public ApiResponse<CommentResponseDto.GetCommentListResultDto> getCommentList(Authentication auth,
+                                                                                  @PathVariable(name = "postId") Long postId) {
 
         List<Comment> commentList = commentQueryService.getCommentList(postId);
+        String loginMemberEmail = auth.getName();
 
-        return ApiResponse.of(SuccessStatus.COMMENT_LIST_FOUND, CommentConverter.toGetCommentListResultDto(commentList));
+        return ApiResponse.of(SuccessStatus.COMMENT_LIST_FOUND, CommentConverter.toGetCommentListResultDto(loginMemberEmail, commentList));
     }
 }

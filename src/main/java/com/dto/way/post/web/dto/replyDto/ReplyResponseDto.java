@@ -46,6 +46,7 @@ public class ReplyResponseDto {
         private String memberEmail;
         private String body;
         private LocalDateTime createdAt;
+        private Boolean isOwned;
     }
 
     @Builder

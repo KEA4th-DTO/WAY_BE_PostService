@@ -17,8 +17,11 @@ public class PostConverter {
                 .postId(post.getId()).build();
     }
 
-    public static PostResponseDto.GetPostResultDto toGetPostResultDto(Post post) {
-        if(post.getPostType()== PostType.DAILY){
+    public static PostResponseDto.GetPostResultDto toGetPostResultDto(String memberEmail, Post post) {
+
+        Boolean isOwned= post.getMemberEmail().equals(memberEmail);
+
+        if (post.getPostType() == PostType.DAILY) {
             return PostResponseDto.GetPostResultDto.builder()
                     .postId(post.getId())
                     .memberEmail(post.getMemberEmail())
@@ -26,9 +29,10 @@ public class PostConverter {
                     .imageUrl(post.getDaily().getImageUrl())
                     .postType(post.getPostType())
                     .likesCount((long) post.getLikes().size())
+                    .inOwned(isOwned)
                     .expiredOrCreatedDate(post.getDaily().getExpiredAt())
                     .build();
-        }else {
+        } else {
             return PostResponseDto.GetPostResultDto.builder()
                     .postId(post.getId())
                     .memberEmail(post.getMemberEmail())
@@ -36,15 +40,16 @@ public class PostConverter {
                     .imageUrl(post.getHistory().getThumbnailImageUrl())
                     .postType(post.getPostType())
                     .likesCount((long) post.getLikes().size())
+                    .inOwned(isOwned)
                     .expiredOrCreatedDate(post.getHistory().getCreatedAt())
                     .build();
         }
 
     }
 
-    public static PostResponseDto.GetPostListResultDto toGetPostListResultDto(List<Post> posts) {
+    public static PostResponseDto.GetPostListResultDto toGetPostListResultDto(String memberEmail, List<Post> posts) {
         List<PostResponseDto.GetPostResultDto> postResultDtoList = posts.stream()
-                .map(PostConverter::toGetPostResultDto).collect(Collectors.toList());
+                .map(post -> PostConverter.toGetPostResultDto(memberEmail, post)).collect(Collectors.toList());
         return PostResponseDto.GetPostListResultDto.builder()
                 .postResultDtoList(postResultDtoList).build();
     }

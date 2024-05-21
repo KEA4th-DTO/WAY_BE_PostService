@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.kafka.common.protocol.types.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,6 +47,7 @@ public class CommentResponseDto {
         private String memberEmail;
         private String body;
         private Long replyCounts;
+        private Boolean isOwned;
         private LocalDateTime createdAt;
     }
 

@@ -40,17 +40,21 @@ public class ReplyConverter {
                 .updatedAt(reply.getUpdatedAt())
                 .build();
     }
-    public static ReplyResponseDto.GetReplyResultDto toGetReplyResultDto(Reply reply) {
+    public static ReplyResponseDto.GetReplyResultDto toGetReplyResultDto(String loginMemberEmail, Reply reply) {
+
+        Boolean isOwned = reply.getMemberEmail().equals(loginMemberEmail);
+
         return ReplyResponseDto.GetReplyResultDto.builder()
                 .memberEmail(reply.getMemberEmail())
                 .body(reply.getBody())
+                .isOwned(isOwned)
                 .createdAt(reply.getCreatedAt())
                 .build();
     }
-    public static ReplyResponseDto.GetReplyListResultDto toGetReplyListResultDto(List<Reply> replyList) {
+    public static ReplyResponseDto.GetReplyListResultDto toGetReplyListResultDto(String loginMemberEmail, List<Reply> replyList) {
 
         List<ReplyResponseDto.GetReplyResultDto> replyResultDtoLsit = replyList.stream()
-                .map(ReplyConverter::toGetReplyResultDto).collect(Collectors.toList());
+                .map(reply -> ReplyConverter.toGetReplyResultDto(loginMemberEmail,reply)).collect(Collectors.toList());
         return ReplyResponseDto.GetReplyListResultDto.builder()
                 .replyResultDtoList(replyResultDtoLsit)
                 .build();
