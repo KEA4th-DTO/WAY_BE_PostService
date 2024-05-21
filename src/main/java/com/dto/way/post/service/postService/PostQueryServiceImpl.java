@@ -1,5 +1,6 @@
 package com.dto.way.post.service.postService;
 
+import com.dto.way.post.converter.PostConverter;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.repository.PostRepository;
@@ -62,7 +63,7 @@ public class PostQueryServiceImpl implements PostQueryService {
                     dto.setPostId((Long) result[0]);
                     dto.setLatitude((Double) result[1]);
                     dto.setLongitude((Double) result[2]);
-                    dto.setPostType(Enum.valueOf(PostType.class,(String) result[3]));
+                    dto.setPostType(Enum.valueOf(PostType.class, (String) result[3]));
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -70,5 +71,25 @@ public class PostQueryServiceImpl implements PostQueryService {
         PostResponseDto.GetPinListResultDto result = new PostResponseDto.GetPinListResultDto(dtoList);
         return result;
     }
+
+    @Override
+    public List<Post> getPersonalPostListByRange(String memberEmail) {
+
+        List<Post> posts = postRepository.findByMemberEmail(memberEmail);
+        return posts;
+    }
+
+    @Override
+    public PostResponseDto.GetPinListResultDto getPersonalPinListByRange(String memberEmail) {
+
+        List<Post> posts = postRepository.findByMemberEmail(memberEmail);
+        List <PostResponseDto.GetPinResultDto> dtoList = posts.stream()
+                .map(PostConverter::toGetPinResultDto).collect(Collectors.toList());
+
+        PostResponseDto.GetPinListResultDto result = new PostResponseDto.GetPinListResultDto(dtoList);
+        return result;
+
+    }
+
 
 }
