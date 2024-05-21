@@ -10,4 +10,7 @@ public interface PostQueryService {
 
     List<Post> getPostListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2);
     PostResponseDto.GetPinListResultDto getPinListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2);
+    List<Post> getPersonalPostListByRange(String memberEmail);
+    PostResponseDto.GetPinListResultDto getPersonalPinListByRange(String memberEmail);
+
 }

@@ -9,6 +9,14 @@ import java.util.stream.Collectors;
 
 public class PostConverter {
 
+    public static PostResponseDto.GetPinResultDto toGetPinResultDto(Post post) {
+        return PostResponseDto.GetPinResultDto.builder()
+                .postType(post.getPostType())
+                .latitude(post.getLatitude())
+                .longitude(post.getLongitude())
+                .postId(post.getId()).build();
+    }
+
     public static PostResponseDto.GetPostResultDto toGetPostResultDto(Post post) {
         if(post.getPostType()== PostType.DAILY){
             return PostResponseDto.GetPostResultDto.builder()

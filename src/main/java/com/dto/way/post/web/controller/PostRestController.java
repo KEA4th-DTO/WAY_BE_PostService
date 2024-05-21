@@ -26,6 +26,8 @@ public class PostRestController {
     private final PostCommandService postCommandService;
     private final NotificationService notificationService;
 
+
+    //   사용 안함
     @GetMapping("/distance")
     public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByDistance(@RequestParam Double latitude,
                                                                                 @RequestParam Double longitude,
@@ -44,6 +46,12 @@ public class PostRestController {
         return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE, PostConverter.toGetPostListResultDto(postList));
     }
 
+    @GetMapping("/range/{memberEmail}")
+    public ApiResponse<PostResponseDto.GetPostListResultDto> getPersonalPostsByRange(@PathVariable(name = "memberEmail") String memberEmail) {
+        List<Post> postList = postQueryService.getPersonalPostListByRange(memberEmail);
+        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE_PERSONAL, PostConverter.toGetPostListResultDto(postList));
+    }
+
     @GetMapping("/pin/range")
     public ApiResponse<PostResponseDto.GetPinListResultDto> getPinsByRange(@RequestParam Double latitude1,
                                                                            @RequestParam Double longitude1,
@@ -52,6 +60,13 @@ public class PostRestController {
 
         PostResponseDto.GetPinListResultDto pinList = postQueryService.getPinListByRange(latitude1, longitude1, latitude2, longitude2);
         return ApiResponse.of(SuccessStatus.PINS_FOUND_BY_RANGE, pinList);
+    }
+
+    @GetMapping("/pin/{memberEmail}")
+    public ApiResponse<PostResponseDto.GetPinListResultDto> getPersonalPinsByRange(@PathVariable(name = "memberEmail") String memberEmail) {
+
+        PostResponseDto.GetPinListResultDto pinList = postQueryService.getPersonalPinListByRange(memberEmail);
+        return ApiResponse.of(SuccessStatus.PINS_FOUND_BY_RANGE_PERSONAL, pinList);
     }
 
     @PostMapping("/like/{postId}")
@@ -73,8 +88,7 @@ public class PostRestController {
 
             // Kafka로 메세지 전송
             notificationService.postNotificationCreate(notificationMessage);
-        }
-        else {
+        } else {
             status = SuccessStatus.POST_UNLIKE;
         }
 
