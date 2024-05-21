@@ -26,6 +26,9 @@ public class DailyRequestDto {
         @NotNull(message = "경도 좌표를 입력해주세요.")
         private Double longitude;
 
+        @NotBlank(message = "주소를 입력해주세요.")
+        private String address;
+
         @NotNull(message = "만료 날짜를 입력해주세요.")
         private LocalDateTime expiredAt;
     }

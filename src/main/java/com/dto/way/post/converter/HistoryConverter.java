@@ -16,6 +16,7 @@ public class HistoryConverter {
                 .latitude(createHistoryDto.getLatitude())
                 .longitude(createHistoryDto.getLongitude())
                 .postType(PostType.HISTORY)
+                .address(createHistoryDto.getAddress())
                 .point(point).build();
 
         return History.builder()
@@ -30,7 +31,7 @@ public class HistoryConverter {
         return HistoryResponseDto.CreateHistoryResultDto.builder()
                 .postId(history.getPostId())
                 .title(history.getTitle())
-                .createAt(LocalDateTime.now())
+                .createAt(history.getCreatedAt())
                 .build();
     }
 

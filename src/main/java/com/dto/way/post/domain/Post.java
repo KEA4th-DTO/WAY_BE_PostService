@@ -2,6 +2,7 @@ package com.dto.way.post.domain;
 
 import com.dto.way.post.domain.enums.PostType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
 
@@ -39,6 +40,8 @@ public class Post  {
 
     @Enumerated(value = EnumType.STRING)
     private PostType postType;
+
+    private String address;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
