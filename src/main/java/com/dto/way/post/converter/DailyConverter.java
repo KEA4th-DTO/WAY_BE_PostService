@@ -16,6 +16,7 @@ public class DailyConverter {
                 .latitude(request.getLatitude())
                 .postType(PostType.DAILY)
                 .point(point)
+                .address(request.getAddress())
                 .build();
 
 
@@ -31,7 +32,7 @@ public class DailyConverter {
         return DailyResponseDto.CreateDailyResultDto.builder()
                 .postId(daily.getPostId())
                 .title(daily.getTitle())
-                .createdAt(LocalDateTime.now())
+                .createdAt(daily.getCreatedAt())
                 .build();
     }
 
