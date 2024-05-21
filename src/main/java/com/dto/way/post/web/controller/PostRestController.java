@@ -29,27 +29,34 @@ public class PostRestController {
 
     //   사용 안함
     @GetMapping("/distance")
-    public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByDistance(@RequestParam Double latitude,
+    public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByDistance(Authentication auth,
+                                                                                @RequestParam Double latitude,
                                                                                 @RequestParam Double longitude,
                                                                                 @RequestParam Integer distance) {
+
+        String loginMemberEmail = auth.getName();
         List<Post> postList = postQueryService.getPostListByDistance(latitude, longitude, distance);
-        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_DISTANCE, PostConverter.toGetPostListResultDto(postList));
+        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_DISTANCE, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
     }
 
     @GetMapping("/range")
-    public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByRange(@RequestParam Double latitude1,
+    public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByRange(Authentication auth,
+                                                                             @RequestParam Double latitude1,
                                                                              @RequestParam Double longitude1,
                                                                              @RequestParam Double latitude2,
                                                                              @RequestParam Double longitude2) {
-
+        String loginMemberEmail = auth.getName();
         List<Post> postList = postQueryService.getPostListByRange(latitude1, longitude1, latitude2, longitude2);
-        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE, PostConverter.toGetPostListResultDto(postList));
+        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
     }
 
     @GetMapping("/range/{memberEmail}")
-    public ApiResponse<PostResponseDto.GetPostListResultDto> getPersonalPostsByRange(@PathVariable(name = "memberEmail") String memberEmail) {
+    public ApiResponse<PostResponseDto.GetPostListResultDto> getPersonalPostsByRange(Authentication auth,
+                                                                                     @PathVariable(name = "memberEmail") String memberEmail) {
         List<Post> postList = postQueryService.getPersonalPostListByRange(memberEmail);
-        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE_PERSONAL, PostConverter.toGetPostListResultDto(postList));
+        String loginMemberEmail = auth.getName();
+
+        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE_PERSONAL, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
     }
 
     @GetMapping("/pin/range")
@@ -63,7 +70,8 @@ public class PostRestController {
     }
 
     @GetMapping("/pin/{memberEmail}")
-    public ApiResponse<PostResponseDto.GetPinListResultDto> getPersonalPinsByRange(@PathVariable(name = "memberEmail") String memberEmail) {
+    public ApiResponse<PostResponseDto.GetPinListResultDto> getPersonalPinsByRange(
+            @PathVariable(name = "memberEmail") String memberEmail) {
 
         PostResponseDto.GetPinListResultDto pinList = postQueryService.getPersonalPinListByRange(memberEmail);
         return ApiResponse.of(SuccessStatus.PINS_FOUND_BY_RANGE_PERSONAL, pinList);

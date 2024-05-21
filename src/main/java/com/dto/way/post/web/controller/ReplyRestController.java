@@ -46,16 +46,21 @@ public class ReplyRestController {
     }
 
     @GetMapping("/{replyId}")
-    public ApiResponse<ReplyResponseDto.GetReplyResultDto> getReply(@PathVariable(name = "replyId") Long replyId) {
+    public ApiResponse<ReplyResponseDto.GetReplyResultDto> getReply(Authentication auth,
+                                                                    @PathVariable(name = "replyId") Long replyId) {
         Reply reply = replyQueryService.getReply(replyId);
-        return ApiResponse.of(SuccessStatus.REPLY_FOUND, ReplyConverter.toGetReplyResultDto(reply));
+        String loginMemberEmail = auth.getName();
+
+        return ApiResponse.of(SuccessStatus.REPLY_FOUND, ReplyConverter.toGetReplyResultDto(loginMemberEmail,reply));
     }
 
     @GetMapping("/list/{commentId}")
-    public ApiResponse<ReplyResponseDto.GetReplyListResultDto> getReplyList(@PathVariable(name = "commentId") Long commentId) {
+    public ApiResponse<ReplyResponseDto.GetReplyListResultDto> getReplyList(Authentication auth,
+                                                                            @PathVariable(name = "commentId") Long commentId) {
         List<Reply> replyList = replyQueryService.getReplyList(commentId);
+        String loginMemberEmail = auth.getName();
 
-        return ApiResponse.of(SuccessStatus.REPLY_LIST_FOUND, ReplyConverter.toGetReplyListResultDto(replyList));
+        return ApiResponse.of(SuccessStatus.REPLY_LIST_FOUND, ReplyConverter.toGetReplyListResultDto(loginMemberEmail,replyList));
     }
 
 }
