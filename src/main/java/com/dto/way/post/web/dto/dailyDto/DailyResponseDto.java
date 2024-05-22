@@ -48,6 +48,7 @@ public class DailyResponseDto {
         private String title;
         private String body;
         private String imageUrl;
+        private Boolean isOwned;
         private LocalDateTime expiredAt;
         private LocalDateTime createdAt;
     }

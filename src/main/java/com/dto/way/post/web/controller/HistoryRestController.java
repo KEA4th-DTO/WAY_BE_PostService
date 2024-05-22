@@ -49,4 +49,15 @@ public class HistoryRestController {
         HistoryResponseDto.GetHistoryResultDto getHistoryResultDto = HistoryConverter.toGetHistoryResultDto(history, commentCommandService.countComment(postId));
         return ApiResponse.of(SuccessStatus.HISTORY_FOUND, getHistoryResultDto);
     }
+
+    @GetMapping("/history-list")
+    public ApiResponse<HistoryResponseDto.GetHistoryListResultDto> getHistoryList(Authentication auth,
+                                                                                  @RequestParam Double latitude1,
+                                                                                  @RequestParam Double longitude1,
+                                                                                  @RequestParam Double latitude2,
+                                                                                  @RequestParam Double longitude2) {
+
+        HistoryResponseDto.GetHistoryListResultDto historyDtoList = historyQueryService.getHistoryListByRange(auth, latitude1, longitude1, latitude2, longitude2);
+        return ApiResponse.of(SuccessStatus.HISTORY_LIST_FOUND_BY_RANGE, historyDtoList);
+    }
 }
