@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ public class DailyQueryServiceImpl implements DailyQueryService {
     }
 
     @Override
-    public DailyResponseDto.GetDailyListResultDto getDailyListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
+    public DailyResponseDto.GetDailyListResultDto getDailyListByRange(Authentication auth, Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
 
         String sql = "SELECT p.member_email, p.post_id, d.title, d.image_url, d.body, d.created_at, d.expired_at FROM post p JOIN daily d ON d.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
         Query query = entityManager.createNativeQuery(sql);
@@ -39,10 +40,14 @@ public class DailyQueryServiceImpl implements DailyQueryService {
         query.setParameter("x2", longitude2);
         query.setParameter("y2", latitude2);
 
+        String loginMemberEmail = auth.getName();
+
         List<Object[]> rawResultList = query.getResultList();
         List<DailyResponseDto.GetDailyResultDto> dtoList = rawResultList.stream()
                 .map(result -> {
                     DailyResponseDto.GetDailyResultDto dto = new DailyResponseDto.GetDailyResultDto();
+                    Boolean isOwned = ((String) result[0]).equals(loginMemberEmail);
+                    dto.setIsOwned(isOwned);
                     dto.setWriterEmail((String) result[0]);
                     dto.setPostId((Long) result[1]);
                     dto.setTitle((String) result[2]);

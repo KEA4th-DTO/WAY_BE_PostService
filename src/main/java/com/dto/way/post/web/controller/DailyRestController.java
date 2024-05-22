@@ -86,12 +86,13 @@ public class DailyRestController {
 
     // 반경 내 데일리 목록 조회 API
     @GetMapping("/posts")
-    public ApiResponse<DailyResponseDto.GetDailyListResultDto> getDailyList(@RequestParam Double latitude1,
+    public ApiResponse<DailyResponseDto.GetDailyListResultDto> getDailyList(Authentication auth,
+                                                                            @RequestParam Double latitude1,
                                                                             @RequestParam Double longitude1,
                                                                             @RequestParam Double latitude2,
                                                                             @RequestParam Double longitude2) {
 
-        DailyResponseDto.GetDailyListResultDto dailyList = dailyQueryService.getDailyListByRange(latitude1, longitude1, latitude2, longitude2);
-        return ApiResponse.of(SuccessStatus.PINS_FOUND_BY_RANGE, dailyList);
+        DailyResponseDto.GetDailyListResultDto dailyList = dailyQueryService.getDailyListByRange(auth, latitude1, longitude1, latitude2, longitude2);
+        return ApiResponse.of(SuccessStatus.DAILY_LIST_FOUND_BY_RANGE, dailyList);
     }
 }

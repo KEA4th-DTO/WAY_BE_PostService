@@ -1,11 +1,9 @@
 package com.dto.way.post.web.dto.historyDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class HistoryResponseDto {
 
@@ -31,6 +29,7 @@ public class HistoryResponseDto {
     }
 
     @Getter
+    @Setter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -40,6 +39,16 @@ public class HistoryResponseDto {
         private String title;
         private String bodyHtmlUrl;
         private Long commentsCount;
+        private Boolean isOwned;
         private LocalDateTime createdAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetHistoryListResultDto {
+        private List<GetHistoryResultDto> historyResultDtoList;
+    }
+
 }
