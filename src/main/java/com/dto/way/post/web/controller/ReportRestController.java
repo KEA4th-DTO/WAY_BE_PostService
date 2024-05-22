@@ -8,6 +8,7 @@ import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.service.reportService.ReportCommandService;
 import com.dto.way.post.web.dto.reportDto.ReportRequestDto;
 import com.dto.way.post.web.dto.reportDto.ReportResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ public class ReportRestController {
 
     private final ReportCommandService reportCommandService;
 
+    @Operation(summary = "신고 API", description = "게시글, 댓글, 대댓글을 신고하는 API 입니다. PathVariable 으로 신고할 대상의 id(postId or commentId or replyId), RequestBody 으로 신고 내용을 전송해주세요. ")
     @PostMapping("/{targetId}")
     public ApiResponse<ReportResponseDto.CreateReportResultDto> createReport(Authentication auth,
                                                                              @PathVariable(name = "targetId") Long targetId,
