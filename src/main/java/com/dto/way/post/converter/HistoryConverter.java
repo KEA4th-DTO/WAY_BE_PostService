@@ -43,14 +43,14 @@ public class HistoryConverter {
                 .build();
     }
 
-    public static HistoryResponseDto.GetHistoryResultDto toGetHistoryResultDto(History history,Long countComment) {
+    public static HistoryResponseDto.GetHistoryResultDto toGetHistoryResultDto(History history,Long countComment,Long countLike) {
         return HistoryResponseDto.GetHistoryResultDto.builder()
                 .postId(history.getPostId())
                 .memberEmail(history.getPost().getMemberEmail())
                 .title(history.getTitle())
                 .bodyHtmlUrl(history.getBodyHtmlUrl())
+                .likesCount(countLike)
                 .commentsCount(countComment)
                 .createdAt(history.getCreatedAt()).build();
     }
-
 }

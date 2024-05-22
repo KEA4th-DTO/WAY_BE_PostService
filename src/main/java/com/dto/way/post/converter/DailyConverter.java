@@ -28,6 +28,7 @@ public class DailyConverter {
                 .post(postRequest)
                 .build();
     }
+
     public static DailyResponseDto.CreateDailyResultDto toCreateDailyResultDto(Daily daily) {
         return DailyResponseDto.CreateDailyResultDto.builder()
                 .postId(daily.getPostId())
@@ -58,12 +59,11 @@ public class DailyConverter {
                 .writerEmail(daily.getPost().getMemberEmail())
                 .title(daily.getTitle())
                 .body(daily.getBody())
+                .likesCount((long) daily.getPost().getLikes().size())
                 .imageUrl(daily.getImageUrl())
                 .expiredAt(daily.getExpiredAt())
                 .createdAt(daily.getCreatedAt())
                 .build();
     }
-
-
 
 }

@@ -7,6 +7,7 @@ import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.service.commentService.CommentCommandService;
 import com.dto.way.post.service.historyService.HistoryCommandService;
 import com.dto.way.post.service.historyService.HistoryQueryService;
+import com.dto.way.post.service.likeService.LikeCommandService;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,6 +29,7 @@ public class HistoryRestController {
     private final HistoryCommandService historyCommandService;
     private final HistoryQueryService historyQueryService;
     private final CommentCommandService commentCommandService;
+    private final LikeCommandService likeCommandService;
 
     @Operation(summary = "History 게시글 생성 API", description = "form-data 형식으로 썸네일 이미지(image), 본문 html(bodyHtml), createHistoryDtod을 전송해주세요.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -51,7 +53,7 @@ public class HistoryRestController {
     public ApiResponse<HistoryResponseDto.GetHistoryResultDto> getHistory(@PathVariable(name = "postId") Long postId) {
 
         History history = historyQueryService.getHistory(postId);
-        HistoryResponseDto.GetHistoryResultDto getHistoryResultDto = HistoryConverter.toGetHistoryResultDto(history, commentCommandService.countComment(postId));
+        HistoryResponseDto.GetHistoryResultDto getHistoryResultDto = HistoryConverter.toGetHistoryResultDto(history, commentCommandService.countComment(postId),likeCommandService.countLikes(postId));
         return ApiResponse.of(SuccessStatus.HISTORY_FOUND, getHistoryResultDto);
     }
 
