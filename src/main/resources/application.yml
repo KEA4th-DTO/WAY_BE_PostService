@@ -27,7 +27,7 @@ jwt:
 cloud:
   aws:
     s3:
-      bucket: way-post-images
+      bucket: way-bucket-s3
       path:
         daily_image: daily_image
         history_body: history_body
