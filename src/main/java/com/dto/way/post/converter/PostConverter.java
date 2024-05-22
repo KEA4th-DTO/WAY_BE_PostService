@@ -19,7 +19,7 @@ public class PostConverter {
 
     public static PostResponseDto.GetPostResultDto toGetPostResultDto(String memberEmail, Post post) {
 
-        Boolean isOwned= post.getMemberEmail().equals(memberEmail);
+        Boolean isOwned = post.getMemberEmail().equals(memberEmail);
 
         if (post.getPostType() == PostType.DAILY) {
             return PostResponseDto.GetPostResultDto.builder()
@@ -29,8 +29,10 @@ public class PostConverter {
                     .imageUrl(post.getDaily().getImageUrl())
                     .postType(post.getPostType())
                     .likesCount((long) post.getLikes().size())
+                    .commentsCount(null)
                     .inOwned(isOwned)
-                    .expiredOrCreatedDate(post.getDaily().getExpiredAt())
+                    .createdAt(post.getDaily().getCreatedAt())
+                    .expiredAt(post.getDaily().getExpiredAt())
                     .build();
         } else {
             return PostResponseDto.GetPostResultDto.builder()
@@ -40,8 +42,9 @@ public class PostConverter {
                     .imageUrl(post.getHistory().getThumbnailImageUrl())
                     .postType(post.getPostType())
                     .likesCount((long) post.getLikes().size())
+                    .commentsCount((long) post.getHistory().getComments().size())
                     .inOwned(isOwned)
-                    .expiredOrCreatedDate(post.getHistory().getCreatedAt())
+                    .createdAt(post.getHistory().getCreatedAt())
                     .build();
         }
 

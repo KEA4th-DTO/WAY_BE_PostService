@@ -41,3 +41,9 @@ cloud:
       secretKey: ${AWS_S3_SECRET_KEY}
 server:
   port: 8080
+
+springdoc:
+  api-docs:
+    path: /post-service/v3/api-docs
+  swagger-ui:
+    path: /post-service/swagger-ui.html

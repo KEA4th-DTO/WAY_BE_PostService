@@ -47,6 +47,7 @@ public class DailyResponseDto {
         private String writerEmail;
         private String title;
         private String body;
+        private Long likesCount;
         private String imageUrl;
         private Boolean isOwned;
         private LocalDateTime expiredAt;
