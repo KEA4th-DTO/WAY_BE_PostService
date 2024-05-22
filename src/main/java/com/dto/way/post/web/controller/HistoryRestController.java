@@ -9,9 +9,11 @@ import com.dto.way.post.service.historyService.HistoryCommandService;
 import com.dto.way.post.service.historyService.HistoryQueryService;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +29,8 @@ public class HistoryRestController {
     private final HistoryQueryService historyQueryService;
     private final CommentCommandService commentCommandService;
 
-    @PostMapping
+    @Operation(summary = "History 게시글 생성 API", description = "form-data 형식으로 썸네일 이미지(image), 본문 html(bodyHtml), createHistoryDtod을 전송해주세요.")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<HistoryResponseDto.CreateHistoryResultDto> createHistory(Authentication auth,
                                                                                 @RequestPart(value = "image", required = true) MultipartFile thumbnailImage,
                                                                                 @RequestPart(value = "html", required = true) MultipartFile bodyHtml,
@@ -36,12 +39,14 @@ public class HistoryRestController {
         return ApiResponse.of(SuccessStatus.HISTORY_CREATED, HistoryConverter.toCreateHistoryResponseDto(history));
     }
 
+    @Operation(summary = "History 게시글 삭제 API", description = "PathVariable 으로 삭제할 History postId를 전송해주세요.")
     @DeleteMapping("/{postId}")
     public ApiResponse<HistoryResponseDto.DeleteHistoryResultDto> deleteHistory(Authentication auth,
                                                                                 @PathVariable(name = "postId") Long postId) throws IOException {
         return ApiResponse.of(SuccessStatus.HISTORY_DELETED, historyCommandService.deleteHistory(auth, postId));
     }
 
+    @Operation(summary = "History 게시글 상세 조회(단건) API", description = "PathVariable 으로 조회할 History postId를 전송해주세요.")
     @GetMapping("/{postId}")
     public ApiResponse<HistoryResponseDto.GetHistoryResultDto> getHistory(@PathVariable(name = "postId") Long postId) {
 
@@ -50,6 +55,7 @@ public class HistoryRestController {
         return ApiResponse.of(SuccessStatus.HISTORY_FOUND, getHistoryResultDto);
     }
 
+    @Operation(summary = "History 게시글 반경 조회 API", description = "RequestParam 형식으로 지도의 좌하단 좌표, 우상단 좌표를 전송해주세요.")
     @GetMapping("/list")
     public ApiResponse<HistoryResponseDto.GetHistoryListResultDto> getHistoryList(Authentication auth,
                                                                                   @RequestParam Double latitude1,

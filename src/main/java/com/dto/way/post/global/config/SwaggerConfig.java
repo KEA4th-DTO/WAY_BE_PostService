@@ -16,8 +16,8 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
 
         Info info = new Info()
-                .title("WAY POST_SERVICE API")
-                .description("WAY POST_SERVICE API 명세서")
+                .title("WAY POST-SERVICE API")
+                .description("WAY POST-SERVICE API 명세서")
                 .version("1.0.0");
 
         String jwtSchemeName = "JWT TOKEN";

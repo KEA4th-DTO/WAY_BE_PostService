@@ -11,6 +11,7 @@ import com.dto.way.post.service.postService.PostCommandService;
 import com.dto.way.post.service.postService.PostQueryService;
 import com.dto.way.post.web.dto.likeDto.LikeResponseDto;
 import com.dto.way.post.web.dto.postDto.PostResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class PostRestController {
     private final NotificationService notificationService;
 
 
-    //   사용 안함
+    @Operation(summary = "(사용하지 않음)게시글 목록 거리로 조회 API", description = "RequestParam 으로 현재 위치와 조회할 거리를 전송해주세요.")
     @GetMapping("/distance")
     public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByDistance(Authentication auth,
                                                                                 @RequestParam Double latitude,
@@ -39,7 +40,8 @@ public class PostRestController {
         return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_DISTANCE, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
     }
 
-    @GetMapping("/range")
+    @Operation(summary = "게시글(Daily, History) 목록을 범위로 조회 API", description = "로컬맵 화면에서 게시글 목록을 조회하기 위한 API 입니다. RequestParam 형식으로 지도의 좌하단 좌표, 우상단 좌표를 전송해주세요.")
+    @GetMapping("/list/range")
     public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByRange(Authentication auth,
                                                                              @RequestParam Double latitude1,
                                                                              @RequestParam Double longitude1,
@@ -50,7 +52,8 @@ public class PostRestController {
         return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
     }
 
-    @GetMapping("/range/{memberEmail}")
+    @Operation(summary = "게시글(Daily, History) 목록을 사용자 정보로 조회 API", description = "마이맵 화면에서 게시글 목록을 조회하기 위한 API 입니다. PathVariable 으로 사용자 정보를 전송해주세요.")
+    @GetMapping("/list/{memberEmail}")
     public ApiResponse<PostResponseDto.GetPostListResultDto> getPersonalPostsByRange(Authentication auth,
                                                                                      @PathVariable(name = "memberEmail") String memberEmail) {
         List<Post> postList = postQueryService.getPersonalPostListByRange(memberEmail);
@@ -59,6 +62,7 @@ public class PostRestController {
         return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE_PERSONAL, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
     }
 
+    @Operation(summary = "핀 목록을 범위로 조회 API", description = "로컬맵의 지도에 핀을 띄우기 위한 API 입니다. RequestParam 형식으로 지도의 좌하단 좌표, 우상단 좌표를 전송해주세요.")
     @GetMapping("/pin/range")
     public ApiResponse<PostResponseDto.GetPinListResultDto> getPinsByRange(@RequestParam Double latitude1,
                                                                            @RequestParam Double longitude1,
@@ -69,14 +73,16 @@ public class PostRestController {
         return ApiResponse.of(SuccessStatus.PINS_FOUND_BY_RANGE, pinList);
     }
 
+
+    @Operation(summary = "핀 목록을 범위, 사용자 정보를 사용하여 조회 API", description = "마이맵의 지도에 핀을 띄우기 위한 API 입니다. PathVariable 으로 사용자 정보를 전송해주세요.")
     @GetMapping("/pin/{memberEmail}")
-    public ApiResponse<PostResponseDto.GetPinListResultDto> getPersonalPinsByRange(
-            @PathVariable(name = "memberEmail") String memberEmail) {
+    public ApiResponse<PostResponseDto.GetPinListResultDto> getPersonalPinsByRange(@PathVariable(name = "memberEmail") String memberEmail) {
 
         PostResponseDto.GetPinListResultDto pinList = postQueryService.getPersonalPinListByRange(memberEmail);
         return ApiResponse.of(SuccessStatus.PINS_FOUND_BY_RANGE_PERSONAL, pinList);
     }
 
+    @Operation(summary = "게시글(Daily, History) 좋아요 기능 API", description = "게시글에 좋아요/좋아요 취소 기능을 하는 API 입니다. PathVariable 으로 좋아요 처리를 할 게시글의 postId 를 전송해주세요.")
     @PostMapping("/like/{postId}")
     public ApiResponse<LikeResponseDto.LikeResultDto> likePost(@PathVariable(name = "postId") Long postId,
                                                                Authentication auth) {

@@ -8,9 +8,11 @@ import com.dto.way.post.service.dailyService.DailyCommandService;
 import com.dto.way.post.service.dailyService.DailyQueryService;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,15 +27,8 @@ public class DailyRestController {
     private final DailyCommandService dailyCommandService;
     private final DailyQueryService dailyQueryService;
 
-    /**
-     * 데일리 생성 API
-     *
-     * @param image
-     * @param request
-     * @return
-     * @throws ParseException
-     */
-    @PostMapping
+    @Operation(summary = "Daily 게시글 생성 API", description = "form-data 형식으로 image와 createDailyDto을 전송해주세요.")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<DailyResponseDto.CreateDailyResultDto> createDaily(Authentication auth,
                                                                           @Valid @RequestPart(value = "image", required = true) MultipartFile image,
                                                                           @Valid @RequestPart(value = "createDailyDto") DailyRequestDto.CreateDailyDto request) throws ParseException {
@@ -41,13 +36,7 @@ public class DailyRestController {
         return ApiResponse.of(SuccessStatus.DAILY_CREATED, DailyConverter.toCreateDailyResultDto(daily));
     }
 
-    /**
-     * 데일리 수정 API
-     *
-     * @param postId
-     * @param request
-     * @return
-     */
+    @Operation(summary = "Daily 게시글 수정 API", description = "PathVariable 형식으로 수정할 Daily 게시글 postId, RequestBody로 수정 내역을 전송해주세요.")
     @PatchMapping("/{postId}")
     public ApiResponse<DailyResponseDto.UpdateDailyResultDto> updateDaily(Authentication auth,
                                                                           @PathVariable(name = "postId") Long postId,
@@ -57,26 +46,16 @@ public class DailyRestController {
         return ApiResponse.of(SuccessStatus.DAILY_UPDATED, DailyConverter.toUpdateDailyResponseDto(daily));
     }
 
-    /**
-     * 데일리 삭제 API
-     *
-     * @param postId
-     * @return
-     * @throws IOException
-     */
+
+    @Operation(summary = "Daily 게시글 삭제 API", description = "PathVariable 형식으로 삭제할 Daily 게시글 postId를 전송해주세요.")
     @DeleteMapping("/{postId}")
     public ApiResponse<DailyResponseDto.DeleteDailyResultDto> deleteDaily(Authentication auth,
                                                                           @PathVariable(name = "postId") Long postId) throws IOException {
         return ApiResponse.of(SuccessStatus.DAILY_DELETED, dailyCommandService.deleteDaily(auth, postId));
     }
 
-    /**
-     * 데일리 단건 조회 API
-     *
-     * @param postId
-     * @return
-     * @throws IOException
-     */
+
+    @Operation(summary = "Daily 게시글 상세 조회(단건) API", description = "PathVariable 형식으로 상세조회할 Daily 게시글 postId를 전송해주세요.")
     @GetMapping("/{postId}")
     public ApiResponse<DailyResponseDto.GetDailyResultDto> getDaily(@PathVariable(name = "postId") Long postId) throws IOException {
         Daily daily = dailyQueryService.getDaily(postId);
@@ -85,6 +64,7 @@ public class DailyRestController {
 
 
     // 반경 내 데일리 목록 조회 API
+    @Operation(summary = "Daily 게시글 반경 조회 API", description = "RequestParam 형식으로 지도의 좌하단 좌표, 우상단 좌표를 전송해주세요.")
     @GetMapping("/list")
     public ApiResponse<DailyResponseDto.GetDailyListResultDto> getDailyList(Authentication auth,
                                                                             @RequestParam Double latitude1,
