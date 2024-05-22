@@ -28,5 +28,6 @@ public class History extends BaseEntity {
     private String title;
     private String bodyHtmlUrl;
     private String thumbnailImageUrl;
+    private String bodyPreview;
 
 }

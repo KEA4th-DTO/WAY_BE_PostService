@@ -23,6 +23,9 @@ public class HistoryRequestDto {
         @NotBlank(message = "주소를 입력해주세요.")
         private String address;
 
+        @NotBlank(message = "미리보기를 입력해주세요.")
+        private String bodyPreview;
+
     }
 
 }

@@ -23,6 +23,7 @@ public class PostConverter {
 
         if (post.getPostType() == PostType.DAILY) {
             return PostResponseDto.GetPostResultDto.builder()
+                    .bodyPreview(post.getDaily().getBody())
                     .postId(post.getId())
                     .memberEmail(post.getMemberEmail())
                     .title(post.getDaily().getTitle())
@@ -38,6 +39,7 @@ public class PostConverter {
             return PostResponseDto.GetPostResultDto.builder()
                     .postId(post.getId())
                     .memberEmail(post.getMemberEmail())
+                    .bodyPreview(post.getHistory().getBodyPreview())
                     .title(post.getHistory().getTitle())
                     .imageUrl(post.getHistory().getThumbnailImageUrl())
                     .postType(post.getPostType())

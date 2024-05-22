@@ -21,6 +21,7 @@ public class HistoryConverter {
 
         return History.builder()
                 .title(createHistoryDto.getTitle())
+                .bodyPreview(createHistoryDto.getBodyPreview())
                 .bodyHtmlUrl(bodyHtmlUrl)
                 .thumbnailImageUrl(thumbnailImageUrl)
                 .post(post)

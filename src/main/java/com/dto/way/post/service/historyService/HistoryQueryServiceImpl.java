@@ -31,7 +31,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
 
     @Override
     public HistoryResponseDto.GetHistoryListResultDto getHistoryListByRange(Authentication auth, Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
-        String sql = "SELECT p.member_email, p.post_id, h.title, h.body_html_url, h.created_at FROM post p JOIN history h ON h.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
+        String sql = "SELECT p.member_email, p.post_id, h.title, h.body_html_url, h.created_at,h.body_preview FROM post p JOIN history h ON h.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter("x1", longitude1);
         query.setParameter("y1", latitude1);
@@ -51,6 +51,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                     dto.setTitle((String) result[2]);
                     dto.setBodyHtmlUrl((String) result[3]);
                     dto.setCreatedAt(((Timestamp) result[4]).toLocalDateTime());
+                    dto.setBodyPreview((String) result[5]);
                     return dto;
                 })
                 .collect(Collectors.toList());
