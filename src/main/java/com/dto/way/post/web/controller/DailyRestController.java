@@ -85,7 +85,7 @@ public class DailyRestController {
 
 
     // 반경 내 데일리 목록 조회 API
-    @GetMapping("/posts")
+    @GetMapping("/list")
     public ApiResponse<DailyResponseDto.GetDailyListResultDto> getDailyList(Authentication auth,
                                                                             @RequestParam Double latitude1,
                                                                             @RequestParam Double longitude1,

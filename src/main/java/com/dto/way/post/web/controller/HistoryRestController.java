@@ -50,7 +50,7 @@ public class HistoryRestController {
         return ApiResponse.of(SuccessStatus.HISTORY_FOUND, getHistoryResultDto);
     }
 
-    @GetMapping("/history-list")
+    @GetMapping("/list")
     public ApiResponse<HistoryResponseDto.GetHistoryListResultDto> getHistoryList(Authentication auth,
                                                                                   @RequestParam Double latitude1,
                                                                                   @RequestParam Double longitude1,
