@@ -71,4 +71,14 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
         return deleteHistoryResultDto;
     }
+
+    @Override
+    public String historyImageUrl(MultipartFile historyImage) {
+
+        String historyImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryImagePath(), uuidCreator.createUuid(), historyImage);
+
+        return historyImageUrl;
+    }
+
+
 }

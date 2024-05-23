@@ -15,4 +15,6 @@ public interface HistoryCommandService {
 
     HistoryResponseDto.DeleteHistoryResultDto deleteHistory(Authentication auth, Long postId) throws IOException;
 
+    String historyImageUrl(MultipartFile historyImage);
+
 }

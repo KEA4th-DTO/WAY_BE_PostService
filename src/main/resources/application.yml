@@ -32,6 +32,7 @@ cloud:
         daily_image: daily_image
         history_body: history_body
         history_thumbnail: history_thumbnail
+        history_image: history_image
     region:
       static: ap-northeast-2
     stack:

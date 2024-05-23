@@ -68,4 +68,12 @@ public class HistoryRestController {
         HistoryResponseDto.GetHistoryListResultDto historyDtoList = historyQueryService.getHistoryListByRange(auth, latitude1, longitude1, latitude2, longitude2);
         return ApiResponse.of(SuccessStatus.HISTORY_LIST_FOUND_BY_RANGE, historyDtoList);
     }
+
+    @Operation(summary = "History 이미지를 url로 변환하는 API",description = "Requestbody의 form-data 형식으로 변환할 이미지 파일을 전송해주세요. ")
+    @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<String> getImageUrlFromS3(@RequestParam(name = "historyImage") MultipartFile historyImage) {
+
+        String historyImageUrl = historyCommandService.historyImageUrl(historyImage);
+        return ApiResponse.of(SuccessStatus.HISTORY_IMAGE_URL,historyImageUrl);
+    }
 }
