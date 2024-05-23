@@ -24,6 +24,7 @@ public class AmazonS3Manager {
         String fullKeyName = directoryPath + "/" + keyName;
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
         try {
             amazonS3.putObject(new PutObjectRequest(amazonConfig.getBucket(), fullKeyName, file.getInputStream(), metadata));
         } catch (IOException e) {

@@ -40,6 +40,9 @@ public class AmazonConfig {
     @Value("${cloud.aws.s3.path.history_thumbnail}")
     private String historyThumbnailPath;
 
+    @Value("${cloud.aws.s3.path.history_image}")
+    private String historyImagePath;
+
     @PostConstruct
     public void init() {
         this.awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
