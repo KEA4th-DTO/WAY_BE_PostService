@@ -13,6 +13,7 @@ import com.dto.way.post.web.dto.likeDto.LikeResponseDto;
 import com.dto.way.post.web.dto.postDto.PostResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -108,4 +109,5 @@ public class PostRestController {
 
         return ApiResponse.of(status, dto);
     }
+
 }
