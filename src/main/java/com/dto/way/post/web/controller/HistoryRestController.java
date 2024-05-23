@@ -10,9 +10,14 @@ import com.dto.way.post.service.historyService.HistoryQueryService;
 import com.dto.way.post.service.likeService.LikeCommandService;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
+import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
+import com.dto.way.post.web.feign.MemberClient;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.io.ParseException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -22,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post-service/history")
@@ -30,6 +36,9 @@ public class HistoryRestController {
     private final HistoryQueryService historyQueryService;
     private final CommentCommandService commentCommandService;
     private final LikeCommandService likeCommandService;
+
+    private final MemberClient memberClient;
+
 
     @Operation(summary = "History 게시글 생성 API", description = "form-data 형식으로 썸네일 이미지(image), 본문 html(bodyHtml), createHistoryDtod을 전송해주세요.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -75,5 +84,13 @@ public class HistoryRestController {
 
         String historyImageUrl = historyCommandService.historyImageUrl(historyImage);
         return ApiResponse.of(SuccessStatus.HISTORY_IMAGE_URL,historyImageUrl);
+    }
+
+    @GetMapping("/feign-test")
+    public void feignTest() {
+        MemberResponseDto.GetMemberResultDto dto = memberClient.findMemberByEmail("naeric7@naver.com");
+        log.info("feign name: "+ dto.getName());
+        log.info("feign nickname: "+ dto.getNickname());
+        log.info("feign profile image: "+ dto.getProfileImageUrl());
     }
 }
