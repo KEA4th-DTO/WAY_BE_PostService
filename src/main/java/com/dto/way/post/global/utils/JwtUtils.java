@@ -1,0 +1,43 @@
+package com.dto.way.post.global.utils;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+@Component
+public class JwtUtils {
+
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+
+    // HttpRequest의 Authorization header에서 Bearer prefix를 제거한 토큰을 뽑아낸다.
+    public String getJwtFromHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+
+        return null;
+    }
+
+    //  파라미터로 위 메서드로 뽑아낸 토큰 받아서 subject인 email을 리턴함.
+    public String getEmail(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+
+    //  파라미터로 위 메서드로 뽑아낸 토큰 받아서 Claims(토큰을 생성할 떄 넣은 메타 데이터)를 리턴함.
+    public Claims getClaim(String jwtToken) {
+
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(jwtToken)
+                .getBody();
+    }
+
+}

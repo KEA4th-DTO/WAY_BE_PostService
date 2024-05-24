@@ -37,7 +37,6 @@ public class HistoryRestController {
     private final CommentCommandService commentCommandService;
     private final LikeCommandService likeCommandService;
 
-    private final MemberClient memberClient;
 
 
     @Operation(summary = "History 게시글 생성 API", description = "form-data 형식으로 썸네일 이미지(image), 본문 html(bodyHtml), createHistoryDtod을 전송해주세요.")
@@ -86,11 +85,4 @@ public class HistoryRestController {
         return ApiResponse.of(SuccessStatus.HISTORY_IMAGE_URL,historyImageUrl);
     }
 
-    @GetMapping("/feign-test")
-    public void feignTest() {
-        MemberResponseDto.GetMemberResultDto dto = memberClient.findMemberByEmail("naeric7@naver.com");
-        log.info("feign name: "+ dto.getName());
-        log.info("feign nickname: "+ dto.getNickname());
-        log.info("feign profile image: "+ dto.getProfileImageUrl());
-    }
 }
