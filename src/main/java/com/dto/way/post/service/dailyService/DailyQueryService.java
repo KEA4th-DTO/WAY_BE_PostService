@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import java.util.List;
 
 public interface DailyQueryService {
-    Daily getDaily(Long postId);
+    DailyResponseDto.GetDailyResultDto getDailyResultDto(Authentication auth, Long postId);
 
     DailyResponseDto.GetDailyListResultDto getDailyListByRange(Authentication auth,Double longitude1, Double latitude1, Double longitude2, Double latitude2);
 

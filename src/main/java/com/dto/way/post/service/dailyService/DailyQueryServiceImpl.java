@@ -2,6 +2,7 @@ package com.dto.way.post.service.dailyService;
 
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.repository.DailyRepository;
+import com.dto.way.post.repository.LikeRepository;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -20,14 +21,29 @@ import java.sql.Timestamp;
 public class DailyQueryServiceImpl implements DailyQueryService {
 
     private final DailyRepository dailyRepository;
+    private final LikeRepository likeRepository;
     private final EntityManager entityManager;
 
 
     @Override
-    public Daily getDaily(Long postId) {
+    public DailyResponseDto.GetDailyResultDto getDailyResultDto(Authentication auth, Long postId) {
 
+        String loginMemberEmail = auth.getName();
         Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 데일리가 존재하지 않습니다. "));
-        return daily;
+
+        boolean isLiked = likeRepository.existsByPostIdAndMemberEmail(postId, loginMemberEmail);
+
+        return DailyResponseDto.GetDailyResultDto.builder()
+                .postId(daily.getPostId())
+                .writerEmail(daily.getPost().getMemberEmail())
+                .title(daily.getTitle())
+                .body(daily.getBody())
+                .isLiked(isLiked)
+                .likesCount((long) daily.getPost().getLikes().size())
+                .imageUrl(daily.getImageUrl())
+                .expiredAt(daily.getExpiredAt())
+                .createdAt(daily.getCreatedAt())
+                .build();
     }
 
     @Override
@@ -55,6 +71,8 @@ public class DailyQueryServiceImpl implements DailyQueryService {
                     dto.setBody((String) result[4]);
                     dto.setCreatedAt(((Timestamp) result[5]).toLocalDateTime());
                     dto.setExpiredAt(((Timestamp) result[6]).toLocalDateTime());
+                    boolean isLiked = likeRepository.existsByPostIdAndMemberEmail((Long) result[1], (String) result[0]);
+                    dto.setIsLiked(isLiked);
                     return dto;
                 })
                 .collect(Collectors.toList());
