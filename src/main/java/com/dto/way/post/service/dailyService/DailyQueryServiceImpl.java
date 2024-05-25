@@ -32,6 +32,7 @@ public class DailyQueryServiceImpl implements DailyQueryService {
         Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 데일리가 존재하지 않습니다. "));
 
         boolean isLiked = likeRepository.existsByPostIdAndMemberEmail(postId, loginMemberEmail);
+        boolean isOwned = loginMemberEmail.equals(daily.getPost().getMemberEmail());
 
         return DailyResponseDto.GetDailyResultDto.builder()
                 .postId(daily.getPostId())
@@ -39,6 +40,7 @@ public class DailyQueryServiceImpl implements DailyQueryService {
                 .title(daily.getTitle())
                 .body(daily.getBody())
                 .isLiked(isLiked)
+                .isOwned(isOwned)
                 .likesCount((long) daily.getPost().getLikes().size())
                 .imageUrl(daily.getImageUrl())
                 .expiredAt(daily.getExpiredAt())
