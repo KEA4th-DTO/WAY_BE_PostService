@@ -2,6 +2,9 @@ package com.dto.way.post.service.historyService;
 
 import com.dto.way.post.domain.History;
 import com.dto.way.post.repository.HistoryRepository;
+import com.dto.way.post.repository.LikeRepository;
+import com.dto.way.post.service.commentService.CommentCommandService;
+import com.dto.way.post.service.likeService.LikeCommandService;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
 import jakarta.persistence.EntityManager;
@@ -18,15 +21,35 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HistoryQueryServiceImpl implements HistoryQueryService{
 
+    private final CommentCommandService commentCommandService;
+    private final LikeCommandService likeCommandService;
+
     private final HistoryRepository historyRepository;
+    private final LikeRepository likeRepository;
     private final EntityManager entityManager;
 
     
     @Override
-    public History getHistory(Long postId) {
+    public HistoryResponseDto.GetHistoryResultDto getHistoryResultDto(Authentication auth, Long postId) {
 
+        String loginMemberEmail = auth.getName();
         History history = historyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 히스토리가 존재하지 않습니다."));
-        return history;
+        boolean isLiked = likeRepository.existsByPostIdAndMemberEmail(postId, loginMemberEmail);
+        boolean isOwned = loginMemberEmail.equals(history.getPost().getMemberEmail());
+        Long countLike = commentCommandService.countComment(postId);
+        Long countComment = likeCommandService.countLikes(postId);
+
+        return HistoryResponseDto.GetHistoryResultDto.builder()
+                .postId(history.getPostId())
+                .memberEmail(history.getPost().getMemberEmail())
+                .title(history.getTitle())
+                .bodyHtmlUrl(history.getBodyHtmlUrl())
+                .bodyPreview(history.getBodyPreview())
+                .isOwned(isOwned)
+                .isLiked(isLiked)
+                .likesCount(countLike)
+                .commentsCount(countComment)
+                .createdAt(history.getCreatedAt()).build();
     }
 
     @Override
@@ -52,6 +75,8 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                     dto.setBodyHtmlUrl((String) result[3]);
                     dto.setCreatedAt(((Timestamp) result[4]).toLocalDateTime());
                     dto.setBodyPreview((String) result[5]);
+                    boolean isLiked = likeRepository.existsByPostIdAndMemberEmail((Long) result[1], (String) result[0]);
+                    dto.setIsLiked(isLiked);
                     return dto;
                 })
                 .collect(Collectors.toList());

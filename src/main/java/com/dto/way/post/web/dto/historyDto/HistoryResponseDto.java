@@ -39,6 +39,7 @@ public class HistoryResponseDto {
         private String title;
         private String bodyHtmlUrl;
         private String bodyPreview;
+        private Boolean isLiked;
         private Long likesCount;
         private Long commentsCount;
         private Boolean isOwned;
