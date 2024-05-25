@@ -57,9 +57,9 @@ public class DailyRestController {
 
     @Operation(summary = "Daily 게시글 상세 조회(단건) API", description = "PathVariable 형식으로 상세조회할 Daily 게시글 postId를 전송해주세요.")
     @GetMapping("/{postId}")
-    public ApiResponse<DailyResponseDto.GetDailyResultDto> getDaily(@PathVariable(name = "postId") Long postId) throws IOException {
-        Daily daily = dailyQueryService.getDaily(postId);
-        return ApiResponse.of(SuccessStatus.DAILY_FOUND, DailyConverter.toGetDailyResponseDto(daily));
+    public ApiResponse<DailyResponseDto.GetDailyResultDto> getDaily(Authentication auth, @PathVariable(name = "postId") Long postId) throws IOException {
+        DailyResponseDto.GetDailyResultDto  getDailyResultDto= dailyQueryService.getDailyResultDto(auth, postId);
+        return ApiResponse.of(SuccessStatus.DAILY_FOUND,getDailyResultDto);
     }
 
 

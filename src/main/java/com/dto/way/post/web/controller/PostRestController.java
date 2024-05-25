@@ -29,17 +29,17 @@ public class PostRestController {
     private final NotificationService notificationService;
 
 
-    @Operation(summary = "(사용하지 않음)게시글 목록 거리로 조회 API", description = "RequestParam 으로 현재 위치와 조회할 거리를 전송해주세요.")
-    @GetMapping("/distance")
-    public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByDistance(Authentication auth,
-                                                                                @RequestParam Double latitude,
-                                                                                @RequestParam Double longitude,
-                                                                                @RequestParam Integer distance) {
-
-        String loginMemberEmail = auth.getName();
-        List<Post> postList = postQueryService.getPostListByDistance(latitude, longitude, distance);
-        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_DISTANCE, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
-    }
+//    @Operation(summary = "(사용하지 않음)게시글 목록 거리로 조회 API", description = "RequestParam 으로 현재 위치와 조회할 거리를 전송해주세요.")
+//    @GetMapping("/distance")
+//    public ApiResponse<PostResponseDto.GetPostListResultDto> getPostsByDistance(Authentication auth,
+//                                                                                @RequestParam Double latitude,
+//                                                                                @RequestParam Double longitude,
+//                                                                                @RequestParam Integer distance) {
+//
+//        String loginMemberEmail = auth.getName();
+//        List<Post> postList = postQueryService.getPostListByDistance(latitude, longitude, distance);
+//        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_DISTANCE, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
+//    }
 
     @Operation(summary = "게시글(Daily, History) 목록을 범위로 조회 API", description = "로컬맵 화면에서 게시글 목록을 조회하기 위한 API 입니다. RequestParam 형식으로 지도의 좌하단 좌표, 우상단 좌표를 전송해주세요.")
     @GetMapping("/list/range")
@@ -48,19 +48,20 @@ public class PostRestController {
                                                                              @RequestParam Double longitude1,
                                                                              @RequestParam Double latitude2,
                                                                              @RequestParam Double longitude2) {
-        String loginMemberEmail = auth.getName();
-        List<Post> postList = postQueryService.getPostListByRange(latitude1, longitude1, latitude2, longitude2);
-        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
+
+        List<PostResponseDto.GetPostResultDto> getPostResultDtoList = postQueryService.getPostListByRange(auth, latitude1, longitude1, latitude2, longitude2);
+
+        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE, PostConverter.toGetPostListResultDto(getPostResultDtoList));
     }
 
     @Operation(summary = "게시글(Daily, History) 목록을 사용자 정보로 조회 API", description = "마이맵 화면에서 게시글 목록을 조회하기 위한 API 입니다. PathVariable 으로 사용자 정보를 전송해주세요.")
     @GetMapping("/list/{memberEmail}")
     public ApiResponse<PostResponseDto.GetPostListResultDto> getPersonalPostsByRange(Authentication auth,
                                                                                      @PathVariable(name = "memberEmail") String memberEmail) {
-        List<Post> postList = postQueryService.getPersonalPostListByRange(memberEmail);
-        String loginMemberEmail = auth.getName();
 
-        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE_PERSONAL, PostConverter.toGetPostListResultDto(loginMemberEmail, postList));
+        List<PostResponseDto.GetPostResultDto> getPostResultDtoList = postQueryService.getPersonalPostListByRange(auth, memberEmail);
+
+        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE_PERSONAL, PostConverter.toGetPostListResultDto(getPostResultDtoList));
     }
 
     @Operation(summary = "핀 목록을 범위로 조회 API", description = "로컬맵의 지도에 핀을 띄우기 위한 API 입니다. RequestParam 형식으로 지도의 좌하단 좌표, 우상단 좌표를 전송해주세요.")
@@ -98,11 +99,11 @@ public class PostRestController {
 
         if (isLiked) {
             status = SuccessStatus.POST_LIKE;
-            message = auth.getName() + "님이 \"" + title + "\"에 좋아요를 눌렀습니다. ";
-            NotificationMessage notificationMessage = notificationService.createNotificationMessage(writerEmail, message);
+//            message = auth.getName() + "님이 \"" + title + "\"에 좋아요를 눌렀습니다. ";
+//            NotificationMessage notificationMessage = notificationService.createNotificationMessage(writerEmail, message);
 
             // Kafka로 메세지 전송
-            notificationService.postNotificationCreate(notificationMessage);
+//            notificationService.postNotificationCreate(notificationMessage);
         } else {
             status = SuccessStatus.POST_UNLIKE;
         }

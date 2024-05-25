@@ -3,6 +3,7 @@ package com.dto.way.post.service.postService;
 import com.dto.way.post.converter.PostConverter;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.domain.enums.PostType;
+import com.dto.way.post.repository.LikeRepository;
 import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.web.dto.postDto.PostResponseDto;
 import jakarta.persistence.EntityManager;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class PostQueryServiceImpl implements PostQueryService {
 
     private final PostRepository postRepository;
+    private final LikeRepository likeRepository;
     private final EntityManager entityManager;
 
 
@@ -41,10 +43,31 @@ public class PostQueryServiceImpl implements PostQueryService {
     }
 
     @Override
-    public List<Post> getPostListByRange( Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
+    public List<PostResponseDto.GetPostResultDto> getPostListByRange(Authentication auth, Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
 
         List<Post> posts = postRepository.findPostByRange(longitude1, latitude1, longitude2, latitude2);
-        return posts;
+        String loginMemberEmail = auth.getName();
+
+        List<PostResponseDto.GetPostResultDto> postResultDtoList = posts.stream()
+                .map(post -> {
+                    boolean isLiked = likeRepository.existsByPostIdAndMemberEmail(post.getId(), loginMemberEmail);
+                    return PostConverter.toGetPostResultDto(loginMemberEmail, post, isLiked);
+                }).collect(Collectors.toList());
+
+        return postResultDtoList;
+    }
+
+    @Override
+    public List<PostResponseDto.GetPostResultDto> getPersonalPostListByRange(Authentication auth, String targetMemberEmail) {
+
+        String loginMemberEmail = auth.getName();
+        List<Post> posts = postRepository.findByMemberEmail(targetMemberEmail);
+        List<PostResponseDto.GetPostResultDto> postResultDtoList = posts.stream()
+                .map(post -> {
+                    boolean isLiked = likeRepository.existsByPostIdAndMemberEmail(post.getId(), loginMemberEmail);
+                    return PostConverter.toGetPostResultDto(loginMemberEmail, post, isLiked);
+                }).collect(Collectors.toList());
+        return postResultDtoList;
     }
 
     @Override
@@ -73,12 +96,7 @@ public class PostQueryServiceImpl implements PostQueryService {
         return result;
     }
 
-    @Override
-    public List<Post> getPersonalPostListByRange(String memberEmail) {
 
-        List<Post> posts = postRepository.findByMemberEmail(memberEmail);
-        return posts;
-    }
 
     @Override
     public PostResponseDto.GetPinListResultDto getPersonalPinListByRange(String memberEmail) {

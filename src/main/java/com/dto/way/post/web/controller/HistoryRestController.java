@@ -34,9 +34,6 @@ import java.io.IOException;
 public class HistoryRestController {
     private final HistoryCommandService historyCommandService;
     private final HistoryQueryService historyQueryService;
-    private final CommentCommandService commentCommandService;
-    private final LikeCommandService likeCommandService;
-
 
 
     @Operation(summary = "History 게시글 생성 API", description = "form-data 형식으로 썸네일 이미지(image), 본문 html(bodyHtml), createHistoryDtod을 전송해주세요.")
@@ -58,10 +55,9 @@ public class HistoryRestController {
 
     @Operation(summary = "History 게시글 상세 조회(단건) API", description = "PathVariable 으로 조회할 History postId를 전송해주세요.")
     @GetMapping("/{postId}")
-    public ApiResponse<HistoryResponseDto.GetHistoryResultDto> getHistory(@PathVariable(name = "postId") Long postId) {
+    public ApiResponse<HistoryResponseDto.GetHistoryResultDto> getHistory(Authentication auth, @PathVariable(name = "postId") Long postId) {
 
-        History history = historyQueryService.getHistory(postId);
-        HistoryResponseDto.GetHistoryResultDto getHistoryResultDto = HistoryConverter.toGetHistoryResultDto(history, commentCommandService.countComment(postId),likeCommandService.countLikes(postId));
+        HistoryResponseDto.GetHistoryResultDto getHistoryResultDto = historyQueryService.getHistoryResultDto(auth, postId);
         return ApiResponse.of(SuccessStatus.HISTORY_FOUND, getHistoryResultDto);
     }
 

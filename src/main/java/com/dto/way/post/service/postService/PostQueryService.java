@@ -10,11 +10,11 @@ public interface PostQueryService {
 
     List<Post> getPostListByDistance(Double latitude, Double longitude, Integer distance);
 
-    List<Post> getPostListByRange( Double longitude1, Double latitude1, Double longitude2, Double latitude2);
+    List<PostResponseDto.GetPostResultDto> getPostListByRange( Authentication auth, Double longitude1, Double latitude1, Double longitude2, Double latitude2);
+
+    List<PostResponseDto.GetPostResultDto> getPersonalPostListByRange(Authentication auth,String targetMemberEmail);
 
     PostResponseDto.GetPinListResultDto getPinListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2);
-
-    List<Post> getPersonalPostListByRange( String memberEmail);
 
     PostResponseDto.GetPinListResultDto getPersonalPinListByRange(String memberEmail);
 

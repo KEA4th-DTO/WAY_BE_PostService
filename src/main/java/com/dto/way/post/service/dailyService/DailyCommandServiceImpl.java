@@ -30,7 +30,6 @@ public class DailyCommandServiceImpl implements DailyCommandService {
 
     private final DailyRepository dailyRepository;
     private final AmazonS3Manager s3Manager;
-    private final UuidRepository uuidRepository;
     private final AmazonConfig amazonConfig;
     private final UuidCreator uuidCreator;
 

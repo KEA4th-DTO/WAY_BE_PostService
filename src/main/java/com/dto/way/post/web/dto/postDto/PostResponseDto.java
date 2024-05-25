@@ -20,6 +20,7 @@ public class PostResponseDto {
         private String title;
         private String imageUrl;
         private PostType postType;
+        private Boolean isLiked;
         private Long likesCount;
         private String bodyPreview;
         private Long commentsCount;

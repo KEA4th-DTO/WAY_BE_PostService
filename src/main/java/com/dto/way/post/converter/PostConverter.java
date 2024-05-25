@@ -17,7 +17,7 @@ public class PostConverter {
                 .postId(post.getId()).build();
     }
 
-    public static PostResponseDto.GetPostResultDto toGetPostResultDto(String memberEmail, Post post) {
+    public static PostResponseDto.GetPostResultDto toGetPostResultDto(String memberEmail, Post post,boolean isLiked) {
 
         Boolean isOwned = post.getMemberEmail().equals(memberEmail);
 
@@ -29,6 +29,7 @@ public class PostConverter {
                     .title(post.getDaily().getTitle())
                     .imageUrl(post.getDaily().getImageUrl())
                     .postType(post.getPostType())
+                    .isLiked(isLiked)
                     .likesCount((long) post.getLikes().size())
                     .commentsCount(null)
                     .inOwned(isOwned)
@@ -43,6 +44,7 @@ public class PostConverter {
                     .title(post.getHistory().getTitle())
                     .imageUrl(post.getHistory().getThumbnailImageUrl())
                     .postType(post.getPostType())
+                    .isLiked(isLiked)
                     .likesCount((long) post.getLikes().size())
                     .commentsCount((long) post.getHistory().getComments().size())
                     .inOwned(isOwned)
@@ -52,11 +54,14 @@ public class PostConverter {
 
     }
 
-    public static PostResponseDto.GetPostListResultDto toGetPostListResultDto(String memberEmail, List<Post> posts) {
-        List<PostResponseDto.GetPostResultDto> postResultDtoList = posts.stream()
-                .map(post -> PostConverter.toGetPostResultDto(memberEmail, post)).collect(Collectors.toList());
+    public static PostResponseDto.GetPostListResultDto toGetPostListResultDto(List<PostResponseDto.GetPostResultDto> dtoList) {
+
+//        //   이 로직을 service 로 빼서 isLiked 추가, return 부분만 남겨둔다.
+//        List<PostResponseDto.GetPostResultDto> postResultDtoList = posts.stream()
+//                .map(post -> PostConverter.toGetPostResultDto(memberEmail, post)).collect(Collectors.toList());
+//        //
         return PostResponseDto.GetPostListResultDto.builder()
-                .postResultDtoList(postResultDtoList).build();
+                .postResultDtoList(dtoList).build();
     }
 
 
