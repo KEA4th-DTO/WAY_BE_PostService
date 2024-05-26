@@ -4,16 +4,22 @@ import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.History;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
+import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
+import com.dto.way.post.web.feign.MemberClient;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class CommentConverter {
 
-    public static Comment toComment(String email, History history, CommentRequestDto.CreateCommentDto request) {
+    private final MemberClient memberClient;
+
+    public static Comment toComment(Long memberId, History history, CommentRequestDto.CreateCommentDto request) {
         return Comment.builder()
-                .memberEmail(email)
+                .memberId(memberId)
                 .history(history)
                 .body(request.getBody())
                 .build();
@@ -38,23 +44,24 @@ public class CommentConverter {
                 .updatedAt(comment.getUpdatedAt()).build();
     }
 
-    public static CommentResponseDto.GetCommentResultDto toGetCommentResultDto(String loginMemberEmail, Comment comment) {
-
-        Boolean isOwned = comment.getMemberEmail().equals(loginMemberEmail);
-
-        return CommentResponseDto.GetCommentResultDto.builder()
-                .memberEmail(comment.getMemberEmail())
-                .body(comment.getBody())
-                .isOwned(isOwned)
-                .replyCounts((long) comment.getReplyList().size())
-                .createdAt(comment.getCreatedAt())
-                .build();
-    }
-
-    public static CommentResponseDto.GetCommentListResultDto toGetCommentListResultDto(String loginMemberEmail, List<Comment> comments) {
-        List<CommentResponseDto.GetCommentResultDto> commentResultDtoList = comments.stream()
-                .map(comment -> CommentConverter.toGetCommentResultDto(loginMemberEmail, comment)).collect(Collectors.toList());
-        return CommentResponseDto.GetCommentListResultDto.builder()
-                .commentResultDtoList(commentResultDtoList).build();
-    }
+//    public static CommentResponseDto.GetCommentResultDto toGetCommentResultDto(Long loginMemberId, Comment comment) {
+//
+//        Boolean isOwned = comment.getMemberId().equals(loginMemberId);
+//
+//
+//        return CommentResponseDto.GetCommentResultDto.builder()
+//                .memberEmail(comment.getMemberEmail())
+//                .body(comment.getBody())
+//                .isOwned(isOwned)
+//                .replyCounts((long) comment.getReplyList().size())
+//                .createdAt(comment.getCreatedAt())
+//                .build();
+//    }
+//
+//    public static CommentResponseDto.GetCommentListResultDto toGetCommentListResultDto(Long loginMemberId, List<Comment> comments) {
+//        List<CommentResponseDto.GetCommentResultDto> commentResultDtoList = comments.stream()
+//                .map(comment -> CommentConverter.toGetCommentResultDto(loginMemberId, comment)).collect(Collectors.toList());
+//        return CommentResponseDto.GetCommentListResultDto.builder()
+//                .commentResultDtoList(commentResultDtoList).build();
+//    }
 }

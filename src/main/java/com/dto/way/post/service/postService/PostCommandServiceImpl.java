@@ -16,11 +16,11 @@ public class PostCommandServiceImpl implements PostCommandService {
     private final PostRepository postRepository;
 
     @Override
-    public String findWriterEmailByPostId(Long postId) {
+    public Long findWriterIdByPostId(Long postId) {
 
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        String writerEmail = post.getMemberEmail();
-        return writerEmail;
+        Long writerMemberId = post.getMemberId();
+        return writerMemberId;
     }
 
     @Override

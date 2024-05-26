@@ -13,9 +13,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findById(Long postId);
 
-    Post findByIdAndMemberEmail(Long postId, String memberEmail);
+    List<Post> findByMemberId(Long memberId);
 
-    List<Post> findByMemberEmail(String memberEmail);
 
     @Query(value = "select * from Post p " +
             "where ST_Dwithin(p.point, ST_GeomFromText(:point, 4326) ,:distance,false) = true ", nativeQuery = true)

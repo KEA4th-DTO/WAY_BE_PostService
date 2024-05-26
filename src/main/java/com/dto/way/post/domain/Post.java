@@ -27,16 +27,13 @@ public class Post  {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private History history;
 
-
-    //TODO: 프론트에서 좌표로 받을 건지, 주소로 받아서 벡에서 좌표로 변환할건지 논의 필요
-    // -> 좌표로 받는게 훨씬 편할 거 같긴한데 뭐가 맞는거지
     private Double latitude;
     private Double longitude;
 
     @Column(columnDefinition = "geometry(Point, 4326)") // PostgreSQL
     private Point point;
 
-    private String memberEmail;
+    private Long memberId;
 
     @Enumerated(value = EnumType.STRING)
     private PostType postType;
@@ -47,7 +44,8 @@ public class Post  {
     private List<Like> likes = new ArrayList<>();
 
 
-    public void setMemberEmail(String memberEmail) {
-        this.memberEmail = memberEmail;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
+
 }

@@ -5,10 +5,12 @@ import com.dto.way.post.converter.HistoryConverter;
 import com.dto.way.post.domain.History;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.aws.config.AmazonConfig;
+import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.HistoryRepository;
 import com.dto.way.post.utils.UuidCreator;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
@@ -28,11 +30,12 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
     private final AmazonConfig amazonConfig;
     private final AmazonS3Manager s3Manager;
     private final UuidCreator uuidCreator;
+    private final JwtUtils jwtUtils;
 
 
     @Override
     @Transactional
-    public History createHistory(Authentication auth, MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.CreateHistoryDto createHistoryDto) throws ParseException {
+    public History createHistory(HttpServletRequest httpServletRequest, MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.CreateHistoryDto createHistoryDto) throws ParseException {
 
         String thumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(), uuidCreator.createUuid(), thumbnailImage);
         String bodyHtmlUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryBodyPath(), uuidCreator.createUuid(), bodyHtml);
@@ -46,20 +49,20 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
         History history = HistoryConverter.toHistory(point, thumbnailImageUrl, bodyHtmlUrl, createHistoryDto);
         Post post = history.getPost();
 
-        post.setMemberEmail(auth.getName());
+        post.setMemberId(jwtUtils.getMemberIdFromRequest(httpServletRequest));
 
         return historyRepository.save(history);
     }
 
     @Override
     @Transactional
-    public HistoryResponseDto.DeleteHistoryResultDto deleteHistory(Authentication auth, Long postId) throws IOException {
+    public HistoryResponseDto.DeleteHistoryResultDto deleteHistory(HttpServletRequest httpServletRequest, Long postId) throws IOException {
 
-        String email = auth.getName();
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         History history = historyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다."));
         HistoryResponseDto.DeleteHistoryResultDto deleteHistoryResultDto = HistoryConverter.toDeleteHistoryResultDto(history);
 
-        if (email.equals(history.getPost().getMemberEmail())) {
+        if (loginMemberId.equals(history.getPost().getMemberId())) {
             s3Manager.deleteFile(amazonConfig.getHistoryThumbnailPath(), history.getThumbnailImageUrl());
             s3Manager.deleteFile(amazonConfig.getHistoryBodyPath(), history.getBodyHtmlUrl());
             historyRepository.delete(history);

@@ -1,34 +1,74 @@
 package com.dto.way.post.service.replyService;
 
+import com.dto.way.post.converter.ReplyConverter;
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.Reply;
+import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.ReplyRepository;
+import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
+import com.dto.way.post.web.dto.replyDto.ReplyResponseDto;
+import com.dto.way.post.web.feign.MemberClient;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ReplyQueryServiceImpl implements ReplyQueryService{
+public class ReplyQueryServiceImpl implements ReplyQueryService {
 
     private final ReplyRepository replyRepository;
     private final CommentRepository commentRepository;
+    private final JwtUtils jwtUtils;
+    private final MemberClient memberClient;
+
 
     @Override
-    public Reply getReply(Long replyId) {
-        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(()->new EntityNotFoundException("대댓글이 존재하지 않습니다."));
-        return reply;
+    public ReplyResponseDto.GetReplyResultDto getReplyResultDto(HttpServletRequest httpServletRequest, Long replyId) {
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
+        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new EntityNotFoundException("대댓글이 존재하지 않습니다."));
+
+        Boolean isOwned = reply.getMemberId().equals(loginMemberId);
+
+        return ReplyResponseDto.GetReplyResultDto.builder()
+                .body(reply.getBody())
+                .isOwned(isOwned)
+                .createdAt(reply.getCreatedAt())
+                .build();
     }
 
     @Override
-    public List<Reply> getReplyList(Long commentId) {
+    public ReplyResponseDto.GetReplyListResultDto getReplyListResultDto(HttpServletRequest httpServletRequest,Long commentId) {
+
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
 
         List<Reply> replyList = replyRepository.findAllByComment(comment);
 
-        return replyList;
+        List<ReplyResponseDto.GetReplyResultDto> replyResultDtoList = replyList.stream()
+                .map(reply -> {
+                    ReplyResponseDto.GetReplyResultDto dto = new ReplyResponseDto.GetReplyResultDto();
+                    dto.setBody(reply.getBody());
+                    Boolean isOwned = reply.getMemberId().equals(loginMemberId);
+                    dto.setIsOwned(isOwned);
+                    dto.setCreatedAt(reply.getCreatedAt());
+                    MemberResponseDto.GetMemberResultDto writerMemberInfo = memberClient.findMemberByMemberId(comment.getMemberId());
+                    dto.setWriterNickname(writerMemberInfo.getNickname());
+                    dto.setWriterProfileImageUrl(writerMemberInfo.getProfileImageUrl());
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return ReplyResponseDto.GetReplyListResultDto.builder()
+                .replyResultDtoList(replyResultDtoList)
+                .build();
+
+
     }
+
+
 }

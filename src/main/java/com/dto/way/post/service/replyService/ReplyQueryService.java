@@ -1,12 +1,15 @@
 package com.dto.way.post.service.replyService;
 
 import com.dto.way.post.domain.Reply;
+import com.dto.way.post.web.dto.replyDto.ReplyResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
 public interface ReplyQueryService {
 
-    Reply getReply(Long replyId);
+    ReplyResponseDto.GetReplyResultDto getReplyResultDto(HttpServletRequest httpServletRequest, Long replyId);
 
-    List<Reply> getReplyList(Long commentId);
+    ReplyResponseDto.GetReplyListResultDto getReplyListResultDto (HttpServletRequest httpServletRequest, Long commentId);
+
 }

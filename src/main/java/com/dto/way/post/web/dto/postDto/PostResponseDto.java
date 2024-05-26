@@ -16,7 +16,8 @@ public class PostResponseDto {
     @AllArgsConstructor
     public static class GetPostResultDto {
         private Long postId;
-        private String memberEmail;
+        private String writerNickname;
+        private String writerProfileImageUrl;
         private String title;
         private String imageUrl;
         private PostType postType;

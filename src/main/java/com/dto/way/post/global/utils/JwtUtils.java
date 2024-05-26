@@ -40,4 +40,13 @@ public class JwtUtils {
                 .getBody();
     }
 
+    // 파라미터로 HttpServletRequest를 받아서 memberId 클레임 값을 리턴함.
+    public Long getMemberIdFromRequest(HttpServletRequest request) {
+        String jwtToken = getJwtFromHeader(request);
+        if (jwtToken != null) {
+            Claims claims = getClaim(jwtToken);
+            return claims.get("memberId", Long.class);
+        }
+        return null;
+    }
 }

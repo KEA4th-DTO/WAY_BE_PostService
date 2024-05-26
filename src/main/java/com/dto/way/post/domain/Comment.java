@@ -24,7 +24,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "post_id")
     private History history;
 
-    private String memberEmail;
+    private Long memberId;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<Reply> replyList = new ArrayList<>();

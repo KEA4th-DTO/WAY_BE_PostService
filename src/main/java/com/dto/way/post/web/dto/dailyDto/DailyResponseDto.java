@@ -44,7 +44,8 @@ public class DailyResponseDto {
     @AllArgsConstructor
     public static class GetDailyResultDto {
         private Long postId;
-        private String writerEmail;
+        private String writerNickname;
+        private String writerProfileImageUrl;
         private String title;
         private String body;
         private Boolean isLiked;

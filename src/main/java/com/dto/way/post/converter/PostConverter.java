@@ -17,15 +17,16 @@ public class PostConverter {
                 .postId(post.getId()).build();
     }
 
-    public static PostResponseDto.GetPostResultDto toGetPostResultDto(String memberEmail, Post post,boolean isLiked) {
+    public static PostResponseDto.GetPostResultDto toGetPostResultDto(String writerNickname, String writerProfileImageUrl, Long loginMemberId, Post post, boolean isLiked) {
 
-        Boolean isOwned = post.getMemberEmail().equals(memberEmail);
+        Boolean isOwned = post.getMemberId().equals(loginMemberId);
 
         if (post.getPostType() == PostType.DAILY) {
             return PostResponseDto.GetPostResultDto.builder()
                     .bodyPreview(post.getDaily().getBody())
+                    .writerProfileImageUrl(writerProfileImageUrl)
+                    .writerNickname(writerNickname)
                     .postId(post.getId())
-                    .memberEmail(post.getMemberEmail())
                     .title(post.getDaily().getTitle())
                     .imageUrl(post.getDaily().getImageUrl())
                     .postType(post.getPostType())
@@ -39,8 +40,9 @@ public class PostConverter {
         } else {
             return PostResponseDto.GetPostResultDto.builder()
                     .postId(post.getId())
-                    .memberEmail(post.getMemberEmail())
                     .bodyPreview(post.getHistory().getBodyPreview())
+                    .writerProfileImageUrl(writerProfileImageUrl)
+                    .writerNickname(writerNickname)
                     .title(post.getHistory().getTitle())
                     .imageUrl(post.getHistory().getThumbnailImageUrl())
                     .postType(post.getPostType())

@@ -1,10 +1,6 @@
 package com.dto.way.post.web.dto.commentDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.apache.kafka.common.protocol.types.Field;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,10 +37,12 @@ public class CommentResponseDto {
 
     @Builder
     @Getter
+    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class GetCommentResultDto{
-        private String memberEmail;
+        private String writerNickname;
+        private String writerProfileImageUrl;
         private String body;
         private Long replyCounts;
         private Boolean isOwned;

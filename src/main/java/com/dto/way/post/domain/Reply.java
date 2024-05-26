@@ -21,7 +21,7 @@ public class Reply extends BaseEntity {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    private String memberEmail;
+    private Long memberId;
 
     public void updateBody(String body) {
         this.body = body;

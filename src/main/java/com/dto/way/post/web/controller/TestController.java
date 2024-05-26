@@ -22,7 +22,7 @@ public class TestController {
 
     @GetMapping("/feign")
     public void feignTest() {
-        MemberResponseDto.GetMemberResultDto dto = memberClient.findMemberByEmail("naeric7@naver.com");
+        MemberResponseDto.GetMemberResultDto dto = memberClient.findMemberByMemberId(5L);
         log.info("feign name: " + dto.getName());
         log.info("feign nickname: " + dto.getNickname());
         log.info("feign profile image: " + dto.getProfileImageUrl());
