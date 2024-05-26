@@ -30,7 +30,7 @@ public class HistoryRestController {
     private final HistoryQueryService historyQueryService;
 
 
-    @Operation(summary = "History 게시글 생성 API", description = "form-data 형식으로 썸네일 이미지(image), 본문 html(bodyHtml), createHistoryDtod을 전송해주세요.")
+    @Operation(summary = "History 게시글 생성 API", description = "form-data 형식으로 썸네일 이미지(image), 본문 html(bodyHtml), createHistoryDto을 전송해주세요.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<HistoryResponseDto.CreateHistoryResultDto> createHistory(HttpServletRequest httpServletRequest,
                                                                                 @RequestPart(value = "image", required = true) MultipartFile thumbnailImage,
@@ -45,6 +45,17 @@ public class HistoryRestController {
     public ApiResponse<HistoryResponseDto.DeleteHistoryResultDto> deleteHistory(HttpServletRequest httpServletRequest,
                                                                                 @PathVariable(name = "postId") Long postId) throws IOException {
         return ApiResponse.of(SuccessStatus.HISTORY_DELETED, historyCommandService.deleteHistory(httpServletRequest, postId));
+    }
+
+    @Operation(summary = "History 게시글 수정 API", description = "form-data 형식으로 수정할 썸네일 이미지(image), 본문 html(bodyHtml), updateHistoryDto을 전송해주세요.")
+    @PatchMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<HistoryResponseDto.UpdateHistoryResultDto> updateHistory(HttpServletRequest httpServletRequest,
+                                                                                @PathVariable(name = "postId") Long postId,
+                                                                                @RequestPart(value = "image", required = true) MultipartFile thumbnailImage,
+                                                                                @RequestPart(value = "html", required = true) MultipartFile bodyHtml,
+                                                                                @Valid @RequestPart(value = "updateHistoryDto", required = true) HistoryRequestDto.UpdateHistoryDto request) throws IOException {
+        History history = historyCommandService.updateHistory(httpServletRequest, postId, thumbnailImage, bodyHtml, request);
+        return ApiResponse.of(SuccessStatus.HISTORY_UPDATE, HistoryConverter.toUpdateHistoryResponseDto(history));
     }
 
     @Operation(summary = "History 게시글 상세 조회(단건) API", description = "PathVariable 으로 조회할 History postId를 전송해주세요.")

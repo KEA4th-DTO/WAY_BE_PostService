@@ -29,6 +29,16 @@ public class HistoryResponseDto {
     }
 
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateHistoryResultDto {
+        private Long postId;
+        private String title;
+        private LocalDateTime updateAt;
+    }
+
+    @Getter
     @Setter
     @Builder
     @NoArgsConstructor

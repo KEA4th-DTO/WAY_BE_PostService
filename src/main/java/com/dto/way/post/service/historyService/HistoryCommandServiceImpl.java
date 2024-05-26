@@ -10,6 +10,7 @@ import com.dto.way.post.repository.HistoryRepository;
 import com.dto.way.post.utils.UuidCreator;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
@@ -73,6 +74,46 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
 
         return deleteHistoryResultDto;
+    }
+
+    @Override
+    @Transactional
+    public History updateHistory(HttpServletRequest httpServletRequest, Long postId, MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.UpdateHistoryDto updateHistoryDto) throws  IOException {
+
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
+        History history = historyRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("히스토리가 존재하지 않습니다."));
+        if (loginMemberId.equals(history.getPost().getMemberId())) {
+            // s3에 업로드 되어있는 기존 데이터들을 제거
+//            s3Manager.deleteFile(amazonConfig.getHistoryBodyPath(), history.getBodyHtmlUrl());
+//            s3Manager.deleteFile(amazonConfig.getHistoryThumbnailPath(), history.getThumbnailImageUrl());
+
+            // 수정한 내용을 s3에 업로드
+            String updatedThumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(), uuidCreator.createUuid(), thumbnailImage);
+            String updatedBodyHtmlUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryBodyPath(), uuidCreator.createUuid(), bodyHtml);
+
+            if (updateHistoryDto.getAddress() != null) {
+                history.getPost().updateAddress(updateHistoryDto.getAddress());
+            }
+            if (updateHistoryDto.getLongitude() != null) {
+                history.getPost().updateLongitude(updateHistoryDto.getLongitude());
+            }
+            if (updateHistoryDto.getLatitude() != null) {
+                history.getPost().updateLatitude(updateHistoryDto.getLatitude());
+            }
+            if (updateHistoryDto.getTitle() != null) {
+                history.updateTitle(updateHistoryDto.getTitle());
+            }
+            if (updateHistoryDto.getBodyPreview() != null) {
+                history.updateBodyPreview(updateHistoryDto.getBodyPreview());
+            }
+            history.updateBodyHtmlUrl(updatedBodyHtmlUrl);
+            history.updateThumbnailImageUrl(updatedThumbnailImageUrl);
+        } else {
+            throw new SecurityException("게시글은 작성자만 수정할 수 있습니다.");
+
+        }
+
+        return history;
     }
 
     @Override

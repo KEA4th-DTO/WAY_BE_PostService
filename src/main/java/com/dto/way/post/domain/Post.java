@@ -48,4 +48,17 @@ public class Post  {
         this.memberId = memberId;
     }
 
+
+    public void updateLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void updateLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void updateAddress(String address) {
+        this.address = address;
+    }
+
 }

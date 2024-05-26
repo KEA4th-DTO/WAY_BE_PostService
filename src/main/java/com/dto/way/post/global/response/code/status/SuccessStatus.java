@@ -41,7 +41,7 @@ public enum SuccessStatus implements BaseCode {
     //  히스토리 관련 응답
     HISTORY_CREATED(HttpStatus.OK, "HISTORY2001", "History 게시글이 생성되었습니다."),
     HISTORY_DELETED(HttpStatus.OK, "HISTORY2002", "History 게시글이 삭제되었습니다."),
-    //  히스토리 수정 응답 HISTORY2003
+    HISTORY_UPDATE(HttpStatus.OK,"HISTORY2003","History 게시글이 수정되었습니다."),
     HISTORY_FOUND(HttpStatus.OK,"HISTORY2004","History 게시글이 조회되었습니다."),
     HISTORY_LIST_FOUND_BY_RANGE(HttpStatus.OK,"HISTORY2005","반경 내 History 게시글 목록이 조회되었습니다."),
     HISTORY_IMAGE_URL(HttpStatus.OK,"HISTORY2006","이미지를 URL로 변환하였습니다."),
