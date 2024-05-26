@@ -36,6 +36,14 @@ public class HistoryConverter {
                 .build();
     }
 
+    public static HistoryResponseDto.UpdateHistoryResultDto toUpdateHistoryResponseDto(History history) {
+        return HistoryResponseDto.UpdateHistoryResultDto.builder()
+                .postId(history.getPostId())
+                .title(history.getTitle())
+                .updateAt(history.getUpdatedAt())
+                .build();
+    }
+
     public static HistoryResponseDto.DeleteHistoryResultDto toDeleteHistoryResultDto(History history) {
         return HistoryResponseDto.DeleteHistoryResultDto.builder()
                 .postId(history.getPostId())

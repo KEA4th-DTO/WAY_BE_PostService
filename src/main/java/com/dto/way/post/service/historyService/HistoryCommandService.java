@@ -16,6 +16,8 @@ public interface HistoryCommandService {
 
     HistoryResponseDto.DeleteHistoryResultDto deleteHistory(HttpServletRequest httpServletRequest, Long postId) throws IOException;
 
+    History updateHistory(HttpServletRequest httpServletRequest, Long postId,MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.UpdateHistoryDto updateHistoryDto) throws IOException;
+
     String historyImageUrl(MultipartFile historyImage);
 
 }

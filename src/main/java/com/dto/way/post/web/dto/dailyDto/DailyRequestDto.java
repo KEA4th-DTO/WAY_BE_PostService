@@ -36,12 +36,9 @@ public class DailyRequestDto {
     @Getter
     public static class UpdateDailyDto {
 
-        @NotBlank
-        @Size(max = 50, message = "제목의 최대 길이는 50자 입니다.")
+
         private String title;
 
-        @NotBlank
-        @Size(max = 200, message = "데일리 본문의 최대 길이는 200자 입니다.")
         private String body;
     }
 }
