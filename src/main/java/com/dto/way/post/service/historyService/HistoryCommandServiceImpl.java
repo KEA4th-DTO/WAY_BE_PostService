@@ -84,8 +84,8 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
         History history = historyRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("히스토리가 존재하지 않습니다."));
         if (loginMemberId.equals(history.getPost().getMemberId())) {
             // s3에 업로드 되어있는 기존 데이터들을 제거
-//            s3Manager.deleteFile(amazonConfig.getHistoryBodyPath(), history.getBodyHtmlUrl());
-//            s3Manager.deleteFile(amazonConfig.getHistoryThumbnailPath(), history.getThumbnailImageUrl());
+            s3Manager.deleteFile(amazonConfig.getHistoryBodyPath(), history.getBodyHtmlUrl());
+            s3Manager.deleteFile(amazonConfig.getHistoryThumbnailPath(), history.getThumbnailImageUrl());
 
             // 수정한 내용을 s3에 업로드
             String updatedThumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(), uuidCreator.createUuid(), thumbnailImage);
