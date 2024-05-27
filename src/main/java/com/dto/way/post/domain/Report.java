@@ -39,4 +39,8 @@ public class Report extends BaseEntity {
     private Long memberId;
 
     private Long targetId;
+
+    public void updateStatus(ReportStatus status) {
+        this.status = status;
+    }
 }
