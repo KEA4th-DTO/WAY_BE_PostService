@@ -5,6 +5,9 @@ import com.dto.way.post.domain.enums.ReportStatus;
 import com.dto.way.post.web.dto.reportDto.ReportRequestDto;
 import com.dto.way.post.web.dto.reportDto.ReportResponseDto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ReportConverter {
 
 
@@ -27,6 +30,29 @@ public class ReportConverter {
                 .status(report.getStatus())
                 .targetId(report.getTargetId())
                 .reportedAt(report.getCreatedAt()).build();
+    }
+
+    public static ReportResponseDto.ChangeReportStatusResultDto toChangeReportStatusResultDto(Report report) {
+        return ReportResponseDto.ChangeReportStatusResultDto.builder()
+                .reportId(report.getId())
+                .status(report.getStatus())
+                .title(report.getTitle())
+                .type(report.getType())
+                .build();
+    }
+
+    public static ReportResponseDto.GetReportResultDto toGetReportResultDto(Report report) {
+        return ReportResponseDto.GetReportResultDto.builder()
+                .reportId(report.getId())
+                .title(report.getTitle())
+                .type(report.getType())
+                .status(report.getStatus())
+                .targetId(report.getTargetId())
+                .reportedAt(report.getCreatedAt()).build();
+    }
+
+    public static List<ReportResponseDto.GetReportResultDto> toGetReportResultDtoList(List<Report> reportList) {
+        return reportList.stream().map(ReportConverter::toGetReportResultDto).collect(Collectors.toList());
     }
 
 }

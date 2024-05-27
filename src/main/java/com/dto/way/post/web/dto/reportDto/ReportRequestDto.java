@@ -1,7 +1,10 @@
 package com.dto.way.post.web.dto.reportDto;
 
 import com.dto.way.post.domain.enums.ReportType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +19,8 @@ public class ReportRequestDto {
     @NoArgsConstructor
     public static class CreateReportDto {
 
-        @NotBlank(message = "신고 타입을 입력해주세요.")
+        @NotNull(message = "신고 타입을 입력해주세요.")
+        @Enumerated(EnumType.STRING)
         private ReportType type;
 
         @NotBlank(message = "신고 제목을 입력해주세요.")
