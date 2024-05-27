@@ -29,13 +29,24 @@ public class HistoryResponseDto {
     }
 
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateHistoryResultDto {
+        private Long postId;
+        private String title;
+        private LocalDateTime updateAt;
+    }
+
+    @Getter
     @Setter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetHistoryResultDto {
         private Long postId;
-        private String memberEmail;
+        private String writerNickname;
+        private String writerProfileImageUrl;
         private String title;
         private String bodyHtmlUrl;
         private String bodyPreview;

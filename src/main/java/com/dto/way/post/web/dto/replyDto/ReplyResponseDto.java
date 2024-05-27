@@ -1,9 +1,6 @@
 package com.dto.way.post.web.dto.replyDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,10 +37,12 @@ public class ReplyResponseDto {
 
     @Builder
     @Getter
+    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class GetReplyResultDto{
-        private String memberEmail;
+        private String writerNickname;
+        private String writerProfileImageUrl;
         private String body;
         private LocalDateTime createdAt;
         private Boolean isOwned;

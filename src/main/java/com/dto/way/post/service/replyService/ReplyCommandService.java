@@ -3,15 +3,16 @@ package com.dto.way.post.service.replyService;
 import com.dto.way.post.domain.Reply;
 import com.dto.way.post.web.dto.replyDto.ReplyRequestDto;
 import com.dto.way.post.web.dto.replyDto.ReplyResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 
 public interface ReplyCommandService {
 
-    Reply createReply(Authentication auth, Long commentId, ReplyRequestDto.CreateReplyDto createReplyDto);
+    Reply createReply(HttpServletRequest httpServletRequest, Long commentId, ReplyRequestDto.CreateReplyDto createReplyDto);
 
-    ReplyResponseDto.DeleteReplyResultDto deleteReply(Authentication auth, Long replyId);
+    ReplyResponseDto.DeleteReplyResultDto deleteReply(HttpServletRequest httpServletRequest, Long replyId);
 
-    Reply updateReply(Authentication auth, Long replyId, ReplyRequestDto.UpdateReplyDto updateReplyDto);
+    Reply updateReply(HttpServletRequest httpServletRequest, Long replyId, ReplyRequestDto.UpdateReplyDto updateReplyDto);
 
     Long countReply(Long commentId);
 }

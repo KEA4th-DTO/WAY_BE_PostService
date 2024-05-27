@@ -5,11 +5,14 @@ import com.dto.way.post.converter.DailyConverter;
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.aws.config.AmazonConfig;
+import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.UuidRepository;
 import com.dto.way.post.utils.UuidCreator;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
@@ -32,13 +35,13 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     private final AmazonS3Manager s3Manager;
     private final AmazonConfig amazonConfig;
     private final UuidCreator uuidCreator;
+    private final JwtUtils jwtUtils;
 
     @Override
     @Transactional
-    public Daily createDaily(Authentication auth, MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException {
+    public Daily createDaily(HttpServletRequest httpServletRequest, MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException {
 
         String imageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getDailyImagePath(), uuidCreator.createUuid(), image);
-
 
         // 위도, 경도를 Point로 변환하여 저장.
         Double latitude = requestDto.getLatitude();
@@ -50,19 +53,18 @@ public class DailyCommandServiceImpl implements DailyCommandService {
         Daily daily = DailyConverter.toDaily(point, imageUrl, requestDto);
         Post post = daily.getPost();
 
-        post.setMemberEmail(auth.getName());
-
+        post.setMemberId(jwtUtils.getMemberIdFromRequest(httpServletRequest));
         return dailyRepository.save(daily);
     }
 
     @Override
     @Transactional
-    public Daily updateDaily(Authentication auth, Long postId, DailyRequestDto.UpdateDailyDto requestDto) {
+    public Daily updateDaily(HttpServletRequest httpServletRequest, Long postId, DailyRequestDto.UpdateDailyDto requestDto) {
 
-        String email = auth.getName();
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 데일리가 존재하지 않습니다."));
 
-        if (email.equals(daily.getPost().getMemberEmail())) {
+        if (loginMemberId.equals(daily.getPost().getMemberId())) {
             //  작성자와 사용자가 같으면 수정 가능
             if (daily.getExpiredAt().isBefore(LocalDateTime.now())) {
                 throw new DateTimeException("만료시간이 지난 게시글은 수정할 수 없습니다.");
@@ -85,13 +87,13 @@ public class DailyCommandServiceImpl implements DailyCommandService {
 
     @Override
     @Transactional
-    public DailyResponseDto.DeleteDailyResultDto deleteDaily(Authentication auth, Long postId) throws IOException {
+    public DailyResponseDto.DeleteDailyResultDto deleteDaily(HttpServletRequest httpServletRequest, Long postId) throws IOException {
 
-        String email = auth.getName();
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 데일리가 존재하지 않습니다."));
         DailyResponseDto.DeleteDailyResultDto deleteDailyResultDto = DailyConverter.toDeleteDailyResponseDto(daily);
 
-        if (email.equals(daily.getPost().getMemberEmail())) {
+        if (loginMemberId.equals(daily.getPost().getMemberId())) {
             //  사용자와 작성자가 같으면 삭제 가능
             s3Manager.deleteFile(amazonConfig.getDailyImagePath(), daily.getImageUrl());
             dailyRepository.delete(daily);

@@ -53,18 +53,4 @@ public class DailyConverter {
                 .build();
     }
 
-    public static DailyResponseDto.GetDailyResultDto toGetDailyResponseDto(Daily daily,boolean isLiked) {
-        return DailyResponseDto.GetDailyResultDto.builder()
-                .postId(daily.getPostId())
-                .writerEmail(daily.getPost().getMemberEmail())
-                .title(daily.getTitle())
-                .body(daily.getBody())
-                .isLiked(isLiked)
-                .likesCount((long) daily.getPost().getLikes().size())
-                .imageUrl(daily.getImageUrl())
-                .expiredAt(daily.getExpiredAt())
-                .createdAt(daily.getCreatedAt())
-                .build();
-    }
-
 }

@@ -8,13 +8,13 @@ import com.dto.way.post.web.dto.reportDto.ReportResponseDto;
 public class ReportConverter {
 
 
-    public static Report toReport(String email, Long targetId, ReportRequestDto.CreateReportDto request) {
+    public static Report toReport(Long memberId, Long targetId, ReportRequestDto.CreateReportDto request) {
         return Report.builder()
                 .status(ReportStatus.PROCESS)
                 .title(request.getTitle())
                 .targetId(targetId)
                 .type(request.getType())
-                .memberEmail(email)
+                .memberId(memberId)
                 .description(request.getDescription()).build();
     }
 

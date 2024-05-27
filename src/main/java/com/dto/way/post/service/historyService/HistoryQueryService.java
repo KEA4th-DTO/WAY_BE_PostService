@@ -1,11 +1,10 @@
 package com.dto.way.post.service.historyService;
 
-import com.dto.way.post.domain.History;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
-import org.springframework.security.core.Authentication;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface HistoryQueryService {
-    HistoryResponseDto.GetHistoryResultDto getHistoryResultDto(Authentication auth, Long postId);
+    HistoryResponseDto.GetHistoryResultDto getHistoryResult(HttpServletRequest httpServletRequest, Long postId);
 
-    HistoryResponseDto.GetHistoryListResultDto getHistoryListByRange(Authentication auth, Double longitude1, Double latitude1, Double longitude2, Double latitude2);
+    HistoryResponseDto.GetHistoryListResultDto getHistoryListByRange(HttpServletRequest httpServletRequest, Double longitude1, Double latitude1, Double longitude2, Double latitude2);
 }

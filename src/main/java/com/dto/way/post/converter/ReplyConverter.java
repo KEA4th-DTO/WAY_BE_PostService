@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 
 public class ReplyConverter {
 
-    public static Reply toReply(String email, Comment comment, ReplyRequestDto.CreateReplyDto request) {
+    public static Reply toReply(Long loginMemberId, Comment comment, ReplyRequestDto.CreateReplyDto request) {
         return Reply.builder()
-                .memberEmail(email)
+                .memberId(loginMemberId)
                 .body(request.getBody())
                 .comment(comment)
                 .build();
@@ -40,21 +40,22 @@ public class ReplyConverter {
                 .updatedAt(reply.getUpdatedAt())
                 .build();
     }
-    public static ReplyResponseDto.GetReplyResultDto toGetReplyResultDto(String loginMemberEmail, Reply reply) {
 
-        Boolean isOwned = reply.getMemberEmail().equals(loginMemberEmail);
+    public static ReplyResponseDto.GetReplyResultDto toGetReplyResultDto(Long LoginMemberId, Reply reply) {
+
+        Boolean isOwned = reply.getMemberId().equals(LoginMemberId);
 
         return ReplyResponseDto.GetReplyResultDto.builder()
-                .memberEmail(reply.getMemberEmail())
                 .body(reply.getBody())
                 .isOwned(isOwned)
                 .createdAt(reply.getCreatedAt())
                 .build();
     }
-    public static ReplyResponseDto.GetReplyListResultDto toGetReplyListResultDto(String loginMemberEmail, List<Reply> replyList) {
+
+    public static ReplyResponseDto.GetReplyListResultDto toGetReplyListResultDto(Long LoginMemberId, List<Reply> replyList) {
 
         List<ReplyResponseDto.GetReplyResultDto> replyResultDtoLsit = replyList.stream()
-                .map(reply -> ReplyConverter.toGetReplyResultDto(loginMemberEmail,reply)).collect(Collectors.toList());
+                .map(reply -> ReplyConverter.toGetReplyResultDto(LoginMemberId, reply)).collect(Collectors.toList());
         return ReplyResponseDto.GetReplyListResultDto.builder()
                 .replyResultDtoList(replyResultDtoLsit)
                 .build();

@@ -36,7 +36,7 @@ public class Report extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReportStatus status;
 
-    private String memberEmail;
+    private Long memberId;
 
     private Long targetId;
 }

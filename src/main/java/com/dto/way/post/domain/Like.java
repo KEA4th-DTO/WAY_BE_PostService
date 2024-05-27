@@ -24,8 +24,6 @@ public class Like {
     private Post post;
 
     @NonNull
-    private String memberEmail;
-
-
+    private Long memberId;
 
 }
