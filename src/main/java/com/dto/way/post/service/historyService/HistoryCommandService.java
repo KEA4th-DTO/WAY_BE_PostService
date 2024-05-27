@@ -12,11 +12,11 @@ import java.io.IOException;
 
 public interface HistoryCommandService {
 
-    History createHistory(HttpServletRequest httpServletRequest, MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.CreateHistoryDto createHistoryDto) throws ParseException;
+    History createHistory(HttpServletRequest httpServletRequest, MultipartFile thumbnailImage, HistoryRequestDto.CreateHistoryDto createHistoryDto) throws ParseException;
 
     HistoryResponseDto.DeleteHistoryResultDto deleteHistory(HttpServletRequest httpServletRequest, Long postId) throws IOException;
 
-    History updateHistory(HttpServletRequest httpServletRequest, Long postId,MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.UpdateHistoryDto updateHistoryDto) throws IOException;
+    History updateHistory(HttpServletRequest httpServletRequest, Long postId, MultipartFile bodyHtml, HistoryRequestDto.UpdateHistoryDto updateHistoryDto) throws IOException;
 
     String historyImageUrl(MultipartFile historyImage);
 

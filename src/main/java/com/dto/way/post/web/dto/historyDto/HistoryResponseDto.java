@@ -48,7 +48,7 @@ public class HistoryResponseDto {
         private String writerNickname;
         private String writerProfileImageUrl;
         private String title;
-        private String bodyHtmlUrl;
+        private String body;
         private String bodyPreview;
         private Boolean isLiked;
         private Long likesCount;

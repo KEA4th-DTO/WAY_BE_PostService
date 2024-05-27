@@ -30,13 +30,12 @@ public class HistoryRestController {
     private final HistoryQueryService historyQueryService;
 
 
-    @Operation(summary = "History 게시글 생성 API", description = "form-data 형식으로 썸네일 이미지(image), 본문 html(bodyHtml), createHistoryDto을 전송해주세요.")
+    @Operation(summary = "History 게시글 생성 API", description = "form-data 형식으로 썸네일 이미지(image), createHistoryDto을 전송해주세요.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<HistoryResponseDto.CreateHistoryResultDto> createHistory(HttpServletRequest httpServletRequest,
-                                                                                @RequestPart(value = "image", required = true) MultipartFile thumbnailImage,
-                                                                                @RequestPart(value = "html", required = true) MultipartFile bodyHtml,
+                                                                                @RequestPart(value = "thumbnailImage", required = true) MultipartFile thumbnailImage,
                                                                                 @Valid @RequestPart(value = "createHistoryDto", required = true) HistoryRequestDto.CreateHistoryDto request) throws ParseException {
-        History history = historyCommandService.createHistory(httpServletRequest, thumbnailImage, bodyHtml, request);
+        History history = historyCommandService.createHistory(httpServletRequest, thumbnailImage, request);
         return ApiResponse.of(SuccessStatus.HISTORY_CREATED, HistoryConverter.toCreateHistoryResponseDto(history));
     }
 
@@ -47,14 +46,13 @@ public class HistoryRestController {
         return ApiResponse.of(SuccessStatus.HISTORY_DELETED, historyCommandService.deleteHistory(httpServletRequest, postId));
     }
 
-    @Operation(summary = "History 게시글 수정 API", description = "form-data 형식으로 수정할 썸네일 이미지(image), 본문 html(bodyHtml), updateHistoryDto을 전송해주세요.")
+    @Operation(summary = "History 게시글 수정 API", description = "form-data 형식으로 수정할 썸네일 이미지(image), updateHistoryDto을 전송해주세요.")
     @PatchMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<HistoryResponseDto.UpdateHistoryResultDto> updateHistory(HttpServletRequest httpServletRequest,
                                                                                 @PathVariable(name = "postId") Long postId,
-                                                                                @RequestPart(value = "image", required = true) MultipartFile thumbnailImage,
-                                                                                @RequestPart(value = "html", required = true) MultipartFile bodyHtml,
+                                                                                @RequestPart(value = "thumbnailImage", required = true) MultipartFile thumbnailImage,
                                                                                 @Valid @RequestPart(value = "updateHistoryDto", required = true) HistoryRequestDto.UpdateHistoryDto request) throws IOException {
-        History history = historyCommandService.updateHistory(httpServletRequest, postId, thumbnailImage, bodyHtml, request);
+        History history = historyCommandService.updateHistory(httpServletRequest, postId, thumbnailImage, request);
         return ApiResponse.of(SuccessStatus.HISTORY_UPDATE, HistoryConverter.toUpdateHistoryResponseDto(history));
     }
 
@@ -79,12 +77,12 @@ public class HistoryRestController {
         return ApiResponse.of(SuccessStatus.HISTORY_LIST_FOUND_BY_RANGE, historyDtoList);
     }
 
-    @Operation(summary = "History 이미지를 url로 변환하는 API",description = "Requestbody의 form-data 형식으로 변환할 이미지 파일을 전송해주세요. ")
+    @Operation(summary = "History 이미지를 url로 변환하는 API", description = "Requestbody의 form-data 형식으로 변환할 이미지 파일을 전송해주세요. ")
     @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<String> getImageUrlFromS3(@RequestParam(name = "historyImage") MultipartFile historyImage) {
 
         String historyImageUrl = historyCommandService.historyImageUrl(historyImage);
-        return ApiResponse.of(SuccessStatus.HISTORY_IMAGE_URL,historyImageUrl);
+        return ApiResponse.of(SuccessStatus.HISTORY_IMAGE_URL, historyImageUrl);
     }
 
 }

@@ -36,10 +36,9 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
     @Override
     @Transactional
-    public History createHistory(HttpServletRequest httpServletRequest, MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.CreateHistoryDto createHistoryDto) throws ParseException {
+    public History createHistory(HttpServletRequest httpServletRequest, MultipartFile thumbnailImage, HistoryRequestDto.CreateHistoryDto createHistoryDto) throws ParseException {
 
         String thumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(), uuidCreator.createUuid(), thumbnailImage);
-        String bodyHtmlUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryBodyPath(), uuidCreator.createUuid(), bodyHtml);
 
         Double latitude = createHistoryDto.getLatitude();
         Double longitude = createHistoryDto.getLongitude();
@@ -47,7 +46,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
                 (Point) new WKTReader().read(String.format("POINT(%s %s)", latitude, longitude))
                 : null;
 
-        History history = HistoryConverter.toHistory(point, thumbnailImageUrl, bodyHtmlUrl, createHistoryDto);
+        History history = HistoryConverter.toHistory(point, thumbnailImageUrl, createHistoryDto);
         Post post = history.getPost();
 
         post.setMemberId(jwtUtils.getMemberIdFromRequest(httpServletRequest));
@@ -64,8 +63,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
         HistoryResponseDto.DeleteHistoryResultDto deleteHistoryResultDto = HistoryConverter.toDeleteHistoryResultDto(history);
 
         if (loginMemberId.equals(history.getPost().getMemberId())) {
-            s3Manager.deleteFile(amazonConfig.getHistoryThumbnailPath(), history.getThumbnailImageUrl());
-            s3Manager.deleteFile(amazonConfig.getHistoryBodyPath(), history.getBodyHtmlUrl());
+            s3Manager.deleteFile(history.getThumbnailImageUrl());
             historyRepository.delete(history);
         } else {
             //  사용자와 작성자가 다르면 예외처리
@@ -78,18 +76,16 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
     @Override
     @Transactional
-    public History updateHistory(HttpServletRequest httpServletRequest, Long postId, MultipartFile thumbnailImage, MultipartFile bodyHtml, HistoryRequestDto.UpdateHistoryDto updateHistoryDto) throws  IOException {
+    public History updateHistory(HttpServletRequest httpServletRequest, Long postId, MultipartFile thumbnailImage, HistoryRequestDto.UpdateHistoryDto updateHistoryDto) throws IOException {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         History history = historyRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("히스토리가 존재하지 않습니다."));
         if (loginMemberId.equals(history.getPost().getMemberId())) {
             // s3에 업로드 되어있는 기존 데이터들을 제거
-            s3Manager.deleteFile(amazonConfig.getHistoryBodyPath(), history.getBodyHtmlUrl());
-            s3Manager.deleteFile(amazonConfig.getHistoryThumbnailPath(), history.getThumbnailImageUrl());
+            s3Manager.deleteFile(history.getThumbnailImageUrl());
 
             // 수정한 내용을 s3에 업로드
             String updatedThumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(), uuidCreator.createUuid(), thumbnailImage);
-            String updatedBodyHtmlUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryBodyPath(), uuidCreator.createUuid(), bodyHtml);
 
             if (updateHistoryDto.getAddress() != null) {
                 history.getPost().updateAddress(updateHistoryDto.getAddress());
@@ -106,7 +102,6 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
             if (updateHistoryDto.getBodyPreview() != null) {
                 history.updateBodyPreview(updateHistoryDto.getBodyPreview());
             }
-            history.updateBodyHtmlUrl(updatedBodyHtmlUrl);
             history.updateThumbnailImageUrl(updatedThumbnailImageUrl);
         } else {
             throw new SecurityException("게시글은 작성자만 수정할 수 있습니다.");

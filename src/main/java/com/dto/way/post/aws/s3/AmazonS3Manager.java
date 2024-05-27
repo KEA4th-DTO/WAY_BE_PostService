@@ -35,7 +35,7 @@ public class AmazonS3Manager {
     }
 
 
-    public void deleteFile(String directoryPath, String fileUrl) throws IOException {
+    public void deleteFile(String fileUrl) throws IOException {
         // 예상된 S3 버킷 URL 패턴
         String s3UrlPattern = "https://way-bucket-s3.s3.ap-northeast-2.amazonaws.com/";
 

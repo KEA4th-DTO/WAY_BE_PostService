@@ -13,7 +13,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -50,8 +49,8 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
         return HistoryResponseDto.GetHistoryResultDto.builder()
                 .postId(history.getPostId())
                 .title(history.getTitle())
-                .bodyHtmlUrl(history.getBodyHtmlUrl())
                 .bodyPreview(history.getBodyPreview())
+                .body(history.getBody())
                 .isOwned(isOwned)
                 .isLiked(isLiked)
                 .likesCount(countLike)
@@ -61,7 +60,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
 
     @Override
     public HistoryResponseDto.GetHistoryListResultDto getHistoryListByRange(HttpServletRequest httpServletRequest, Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
-        String sql = "SELECT p.member_id, p.post_id, h.title, h.body_html_url, h.created_at,h.body_preview FROM post p JOIN history h ON h.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
+        String sql = "SELECT p.member_id, p.post_id, h.title, h.body, h.created_at,h.body_preview FROM post p JOIN history h ON h.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter("x1", longitude1);
         query.setParameter("y1", latitude1);
@@ -78,7 +77,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                     dto.setIsOwned(isOwned);
                     dto.setPostId((Long) result[1]);
                     dto.setTitle((String) result[2]);
-                    dto.setBodyHtmlUrl((String) result[3]);
+                    dto.setBody((String) result[3]);
                     dto.setCreatedAt(((Timestamp) result[4]).toLocalDateTime());
                     dto.setBodyPreview((String) result[5]);
 
