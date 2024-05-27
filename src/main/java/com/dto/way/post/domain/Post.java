@@ -1,5 +1,6 @@
 package com.dto.way.post.domain;
 
+import com.dto.way.post.domain.enums.PostStatus;
 import com.dto.way.post.domain.enums.PostType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -38,11 +39,17 @@ public class Post  {
     @Enumerated(value = EnumType.STRING)
     private PostType postType;
 
+    @Enumerated(value = EnumType.STRING)
+    private PostStatus postStatus;
+
+    public void updatePostStatus(PostStatus postStatus) {
+        this.postStatus = postStatus;
+    }
+
     private String address;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
-
 
     public void setMemberId(Long memberId) {
         this.memberId = memberId;

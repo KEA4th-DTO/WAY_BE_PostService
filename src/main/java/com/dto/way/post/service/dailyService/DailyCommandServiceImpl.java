@@ -5,6 +5,7 @@ import com.dto.way.post.converter.DailyConverter;
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.aws.config.AmazonConfig;
+import com.dto.way.post.domain.enums.PostStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.UuidRepository;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -103,5 +108,17 @@ public class DailyCommandServiceImpl implements DailyCommandService {
         }
 
         return deleteDailyResultDto;
+    }
+
+    @Override
+    @Transactional
+    @Async
+    @Scheduled(cron = "0 */10 * * * *") //  10분 단위로 Daily의 만료 날짜를 확인해서 상태를 변경한다.
+    public void changePostStatus() {
+        List<Daily> dailyList = dailyRepository.findByExpiredAtBefore(LocalDateTime.now());
+
+        dailyList.forEach(daily -> {
+            daily.getPost().updatePostStatus(PostStatus.EXPIRED);
+        });
     }
 }
