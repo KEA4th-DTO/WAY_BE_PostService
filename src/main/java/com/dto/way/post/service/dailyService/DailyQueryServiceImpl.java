@@ -57,7 +57,11 @@ public class DailyQueryServiceImpl implements DailyQueryService {
     public DailyResponseDto.GetDailyListResultDto getDailyListByRange(HttpServletRequest httpServletRequest, Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
 
 
-        String sql = "SELECT p.member_id, p.post_id, d.title, d.image_url, d.body, d.created_at, d.expired_at FROM post p JOIN daily d ON d.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
+        String sql = "SELECT p.member_id, p.post_id, d.title, d.image_url, d.body, d.created_at, d.expired_at " +
+                "FROM post p " +
+                "JOIN daily d ON d.post_id = p.post_id " +
+                "WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true " +
+                "AND p.post_status <> 'EXPIRED'";
 
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter("x1", longitude1);

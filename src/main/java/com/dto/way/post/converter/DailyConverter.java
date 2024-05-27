@@ -2,6 +2,7 @@ package com.dto.way.post.converter;
 
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.domain.Post;
+import com.dto.way.post.domain.enums.Expiration;
 import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
@@ -14,6 +15,7 @@ public class DailyConverter {
         Post postRequest = Post.builder()
                 .longitude(request.getLongitude())
                 .latitude(request.getLatitude())
+                .postStatus(Expiration.NOT_EXPIRED)
                 .postType(PostType.DAILY)
                 .point(point)
                 .address(request.getAddress())

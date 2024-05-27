@@ -16,4 +16,7 @@ public interface DailyCommandService {
     Daily updateDaily(HttpServletRequest httpServletRequest, Long dailyId, DailyRequestDto.UpdateDailyDto requestDto);
 
     DailyResponseDto.DeleteDailyResultDto deleteDaily(HttpServletRequest httpServletRequest, Long dailyId) throws IOException;
+
+    void changePostStatus();
+
 }

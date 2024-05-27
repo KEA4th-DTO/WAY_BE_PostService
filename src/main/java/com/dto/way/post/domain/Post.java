@@ -1,8 +1,8 @@
 package com.dto.way.post.domain;
 
+import com.dto.way.post.domain.enums.Expiration;
 import com.dto.way.post.domain.enums.PostType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post  {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,16 +38,17 @@ public class Post  {
     @Enumerated(value = EnumType.STRING)
     private PostType postType;
 
+    @Enumerated(value = EnumType.STRING)
+    private Expiration postStatus;
+
     private String address;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
-
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
-
 
     public void updateLatitude(Double latitude) {
         this.latitude = latitude;
@@ -61,4 +62,7 @@ public class Post  {
         this.address = address;
     }
 
+    public void updateExpiration(Expiration postStatus) {
+        this.postStatus = postStatus;
+    }
 }

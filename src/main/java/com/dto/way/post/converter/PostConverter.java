@@ -36,6 +36,7 @@ public class PostConverter {
                     .inOwned(isOwned)
                     .createdAt(post.getDaily().getCreatedAt())
                     .expiredAt(post.getDaily().getExpiredAt())
+                    .postStatus(post.getPostStatus())
                     .build();
         } else {
             return PostResponseDto.GetPostResultDto.builder()
@@ -51,6 +52,7 @@ public class PostConverter {
                     .commentsCount((long) post.getHistory().getComments().size())
                     .inOwned(isOwned)
                     .createdAt(post.getHistory().getCreatedAt())
+                    .postStatus(post.getPostStatus())
                     .build();
         }
 
