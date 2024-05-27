@@ -26,17 +26,13 @@ public class History extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     private String title;
-    private String bodyHtmlUrl;
+    private String body;
     private String thumbnailImageUrl;
     private String bodyPreview;
 
 
     public void updateTitle(String title) {
         this.title = title;
-    }
-
-    public void updateBodyHtmlUrl(String bodyHtmlUrl) {
-        this.bodyHtmlUrl = bodyHtmlUrl;
     }
 
     public void updateThumbnailImageUrl(String thumbnailImageUrl) {

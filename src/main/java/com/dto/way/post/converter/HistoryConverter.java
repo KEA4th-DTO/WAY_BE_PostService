@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class HistoryConverter {
 
-    public static History toHistory(Point point, String thumbnailImageUrl, String bodyHtmlUrl, HistoryRequestDto.CreateHistoryDto createHistoryDto) {
+    public static History toHistory(Point point, String thumbnailImageUrl, HistoryRequestDto.CreateHistoryDto createHistoryDto) {
         Post post = Post.builder()
                 .latitude(createHistoryDto.getLatitude())
                 .longitude(createHistoryDto.getLongitude())
@@ -22,7 +22,7 @@ public class HistoryConverter {
         return History.builder()
                 .title(createHistoryDto.getTitle())
                 .bodyPreview(createHistoryDto.getBodyPreview())
-                .bodyHtmlUrl(bodyHtmlUrl)
+                .body(createHistoryDto.getBody())
                 .thumbnailImageUrl(thumbnailImageUrl)
                 .post(post)
                 .build();
