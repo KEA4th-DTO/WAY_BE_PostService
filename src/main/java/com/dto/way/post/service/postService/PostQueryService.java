@@ -19,4 +19,5 @@ public interface PostQueryService {
 
     PostResponseDto.GetPinListResultDto getPersonalPinListByRange(String memberNickname);
 
+    PostResponseDto.GetPostCountDto getPostCount(Long memberId);
 }

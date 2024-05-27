@@ -4,6 +4,8 @@ import com.dto.way.post.converter.PostConverter;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.global.utils.JwtUtils;
+import com.dto.way.post.repository.DailyRepository;
+import com.dto.way.post.repository.HistoryRepository;
 import com.dto.way.post.repository.LikeRepository;
 import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
@@ -30,6 +32,8 @@ public class PostQueryServiceImpl implements PostQueryService {
 
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
+    private final HistoryRepository historyRepository;
+    private final DailyRepository dailyRepository;
     private final EntityManager entityManager;
     private final JwtUtils jwtUtils;
     private final MemberClient memberClient;
@@ -122,5 +126,18 @@ public class PostQueryServiceImpl implements PostQueryService {
         PostResponseDto.GetPinListResultDto result = new PostResponseDto.GetPinListResultDto(dtoList);
         return result;
     }
+
+    @Override
+    public PostResponseDto.GetPostCountDto getPostCount(Long memberId) {
+
+        Long historyCount = postRepository.countByPostTypeAndMemberId(PostType.HISTORY, memberId);
+        Long dailyCount = postRepository.countByPostTypeAndMemberId(PostType.DAILY, memberId);
+
+        return PostResponseDto.GetPostCountDto.builder()
+                .historyCount(historyCount)
+                .dailyCount(dailyCount)
+                .build();
+    }
+
 
 }

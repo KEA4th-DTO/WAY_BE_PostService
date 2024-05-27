@@ -112,4 +112,10 @@ public class PostRestController {
         return ApiResponse.of(status, dto);
     }
 
+    @Operation(summary = "특정 사용자의 게시글 수를 반환하는 openFeign을 위한 API 입니다.", description = "RequestParam으로 memberId를 전송해주세요.")
+    @GetMapping("/count/")
+    public PostResponseDto.GetPostCountDto getPostCount(@RequestParam Long memberId) {
+        return postQueryService.getPostCount(memberId);
+    }
+
 }

@@ -60,4 +60,13 @@ public class PostResponseDto {
         private List<GetPinResultDto> pinResultDtoList;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetPostCountDto {
+        private Long dailyCount;
+        private Long historyCount;
+    }
+
 }

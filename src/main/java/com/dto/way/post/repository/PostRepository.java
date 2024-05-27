@@ -1,6 +1,7 @@
 package com.dto.way.post.repository;
 
 import com.dto.way.post.domain.Post;
+import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.web.dto.postDto.PostResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -38,4 +39,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                                        @Param("x2") Double right_x,
                                        @Param("y2") Double right_y);
 
+    @Query("SELECT COUNT(p) FROM Post p WHERE p.postType = :postType AND p.memberId = :memberId")
+    Long countByPostTypeAndMemberId(@Param("postType") PostType postType, @Param("memberId") Long memberId);
 }
