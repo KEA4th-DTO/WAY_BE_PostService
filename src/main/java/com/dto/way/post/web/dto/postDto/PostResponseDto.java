@@ -1,5 +1,6 @@
 package com.dto.way.post.web.dto.postDto;
 
+import com.dto.way.post.domain.enums.Expiration;
 import com.dto.way.post.domain.enums.PostType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,6 +28,7 @@ public class PostResponseDto {
         private Long commentsCount;
         private LocalDateTime createdAt;
         private LocalDateTime expiredAt;
+        private Expiration postStatus;
         private Boolean inOwned;
     }
 

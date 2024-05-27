@@ -2,7 +2,7 @@ package com.dto.way.post.converter;
 
 import com.dto.way.post.domain.History;
 import com.dto.way.post.domain.Post;
-import com.dto.way.post.domain.enums.PostStatus;
+import com.dto.way.post.domain.enums.Expiration;
 import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
@@ -16,7 +16,7 @@ public class HistoryConverter {
         Post post = Post.builder()
                 .latitude(createHistoryDto.getLatitude())
                 .longitude(createHistoryDto.getLongitude())
-                .postStatus(PostStatus.NO_EXPIRATION)
+                .postStatus(Expiration.NO_EXPIRATION)
                 .postType(PostType.HISTORY)
                 .address(createHistoryDto.getAddress())
                 .point(point).build();

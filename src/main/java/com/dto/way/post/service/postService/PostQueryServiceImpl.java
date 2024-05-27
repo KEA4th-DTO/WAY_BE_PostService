@@ -32,8 +32,6 @@ public class PostQueryServiceImpl implements PostQueryService {
 
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
-    private final HistoryRepository historyRepository;
-    private final DailyRepository dailyRepository;
     private final EntityManager entityManager;
     private final JwtUtils jwtUtils;
     private final MemberClient memberClient;
@@ -90,7 +88,11 @@ public class PostQueryServiceImpl implements PostQueryService {
     @Override
     public PostResponseDto.GetPinListResultDto getPinListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
 
-        String sql = "SELECT p.post_id,  p.latitude, p.longitude, p.post_type FROM post p WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
+        String sql = "SELECT p.post_id, p.latitude, p.longitude, p.post_type " +
+                "FROM post p " +
+                "WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true " +
+                "AND p.post_status <> 'EXPIRED'";
+
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter("x1", longitude1);
         query.setParameter("y1", latitude1);

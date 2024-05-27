@@ -24,7 +24,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     @Query(value = "SELECT * FROM Post p " +
-            "WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true", nativeQuery = true)
+            "WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true " +
+            "AND p.post_status <> 'EXPIRED'", nativeQuery = true)
     List<Post> findPostByRange(@Param("x1") Double left_x,
                                @Param("y1") Double left_y,
                                @Param("x2") Double right_x,
