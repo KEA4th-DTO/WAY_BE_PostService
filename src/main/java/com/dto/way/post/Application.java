@@ -21,6 +21,7 @@ public class Application {
 
 	@PostConstruct
 	public void init() {
+
 		// 타임존 설정
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 		System.out.println("Current TimeZone: " + TimeZone.getDefault().getID());
