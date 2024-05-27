@@ -2,6 +2,7 @@ package com.dto.way.post.aws.s3;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dto.way.post.aws.config.AmazonConfig;
@@ -35,14 +36,24 @@ public class AmazonS3Manager {
 
 
     public void deleteFile(String directoryPath, String fileUrl) throws IOException {
-        int indexOfReviews = fileUrl.indexOf(directoryPath + "/");
+        // 예상된 S3 버킷 URL 패턴
+        String s3UrlPattern = "https://way-bucket-s3.s3.ap-northeast-2.amazonaws.com/";
 
-        String fileKey = fileUrl.substring(indexOfReviews);
+        // URL이 예상된 패턴으로 시작하는지 확인
+        if (!fileUrl.startsWith(s3UrlPattern)) {
+            throw new IllegalArgumentException("Invalid S3 URL: " + fileUrl);
+        }
+
+        // 파일 키 추출
+        String fileKey = fileUrl.substring(s3UrlPattern.length());
+
+        log.info("s3 객체 키: " + fileKey);
         try {
             amazonS3.deleteObject(amazonConfig.getBucket(), fileKey);
+
         } catch (SdkClientException e) {
+            log.error("Error deleting file from S3", e);
             throw new IOException("Error deleting file from S3", e);
         }
     }
-
 }
