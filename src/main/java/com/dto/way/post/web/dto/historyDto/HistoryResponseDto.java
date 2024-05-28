@@ -16,6 +16,7 @@ public class HistoryResponseDto {
         private Long postId;
         private String title;
         private LocalDateTime createAt;
+        private Boolean capture;
     }
 
     @Getter

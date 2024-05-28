@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface HistoryRepository extends JpaRepository<History, Long> {
 
     Optional<History> findById(Long Id);
+
+    Long countByPostMemberId(Long memberId);
 }

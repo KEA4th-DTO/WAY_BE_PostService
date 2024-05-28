@@ -38,6 +38,7 @@ cloud:
         history_body: history_body
         history_thumbnail: history_thumbnail
         history_image: history_image
+        history_plain_text: history_plain_text
     region:
       static: ap-northeast-2
     stack:
