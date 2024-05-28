@@ -43,7 +43,7 @@ public class ReportRestController {
     }
 
     @Operation(summary = "신고 상태를 변경하는 API", description = "신고 상태를 변경하는 API 입니다. PathVariable 으로 reportId, RequestParam 으로 신고 상태(PROCESS, DONE)을 전송해주세요. ")
-    @PatchMapping("/{reportId}")
+    @PutMapping("/{reportId}")
     public ReportResponseDto.ChangeReportStatusResultDto changeReportStatus(@PathVariable(name = "reportId") Long reportId,
                                                                             @RequestParam(name = "reportStatus") ReportStatus reportStatus) {
         return reportCommandService.changeReportStatus(reportId, reportStatus);
