@@ -35,8 +35,8 @@ public class HistoryRestController {
     public ApiResponse<HistoryResponseDto.CreateHistoryResultDto> createHistory(HttpServletRequest httpServletRequest,
                                                                                 @RequestPart(value = "thumbnailImage", required = true) MultipartFile thumbnailImage,
                                                                                 @Valid @RequestPart(value = "createHistoryDto", required = true) HistoryRequestDto.CreateHistoryDto request) throws ParseException {
-        History history = historyCommandService.createHistory(httpServletRequest, thumbnailImage, request);
-        return ApiResponse.of(SuccessStatus.HISTORY_CREATED, HistoryConverter.toCreateHistoryResponseDto(history));
+        HistoryResponseDto.CreateHistoryResultDto historyResultDto = historyCommandService.createHistory(httpServletRequest, thumbnailImage, request);
+        return ApiResponse.of(SuccessStatus.HISTORY_CREATED, historyResultDto);
     }
 
     @Operation(summary = "History 게시글 삭제 API", description = "PathVariable 으로 삭제할 History postId를 전송해주세요.")
