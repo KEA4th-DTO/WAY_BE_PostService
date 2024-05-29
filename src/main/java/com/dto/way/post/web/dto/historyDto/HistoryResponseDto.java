@@ -1,5 +1,6 @@
 package com.dto.way.post.web.dto.historyDto;
 
+import com.dto.way.post.domain.enums.PostType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ public class HistoryResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CreateHistoryResultDto {
+        private PostType postType;
         private Long postId;
         private String title;
         private LocalDateTime createAt;
