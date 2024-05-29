@@ -95,7 +95,7 @@ public class S3FileService {
                 InputStream updatedInputStream = new ByteArrayInputStream(fileContent.toString().getBytes(StandardCharsets.UTF_8));
                 PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                         .bucket(bucketName)
-                        .contentType("text/plain")
+                        .contentType("text/plain; charset=utf-8")
                         .key(key)
                         .build();
 
