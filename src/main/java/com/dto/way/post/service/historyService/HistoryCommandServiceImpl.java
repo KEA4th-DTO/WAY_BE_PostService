@@ -6,12 +6,13 @@ import com.dto.way.post.converter.HistoryConverter;
 import com.dto.way.post.domain.History;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.aws.config.AmazonConfig;
+import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.HistoryRepository;
+import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.utils.UuidCreator;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
-import com.dto.way.post.web.feign.MemberClient;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,23 +33,23 @@ import java.util.concurrent.CompletableFuture;
 public class HistoryCommandServiceImpl implements HistoryCommandService {
 
     private final HistoryRepository historyRepository;
+    private final PostRepository postRepository;
     private final AmazonConfig amazonConfig;
     private final AmazonS3Manager s3Manager;
     private final S3FileService s3FileService;
     private final UuidCreator uuidCreator;
     private final JwtUtils jwtUtils;
-    private final MemberClient memberClient;
 
 
     @Override
     @Transactional
     public HistoryResponseDto.CreateHistoryResultDto createHistory(HttpServletRequest httpServletRequest, MultipartFile thumbnailImage, HistoryRequestDto.CreateHistoryDto createHistoryDto) throws ParseException {
 
-        Long memberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
 
 
         //  AI 분석 데이터를 위해 html 태그가 전부 빠진 history 본문 내용을 S3 파일에 저장한다.
-        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(createHistoryDto.getBodyPlainText(), amazonConfig.getHistoryPlainText() + "/"+"text_member_id_" + memberId);
+        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(createHistoryDto.getBodyPlainText(), amazonConfig.getAiText() + "/"+"text_member_id_" + loginMemberId);
 
         // 비동기 작업이 완료된 후 추가 작업 수행
 //        future.thenAccept(log::info)
@@ -68,14 +69,15 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
         History history = HistoryConverter.toHistory(point, thumbnailImageUrl, createHistoryDto);
         Post post = history.getPost();
 
-        post.setMemberId(jwtUtils.getMemberIdFromRequest(httpServletRequest));
+        post.setMemberId(loginMemberId);
 
         History createdHistory = historyRepository.save(history);
-        Long count = historyRepository.countByPostMemberId(createdHistory.getPost().getMemberId());
+        Long count = postRepository.countByMemberId(loginMemberId);
 
-        boolean captureFlag = (count > 0) && (count % 10 == 0);
+        boolean captureFlag = (count > 0) && (count % 15 == 0);
 
         return HistoryResponseDto.CreateHistoryResultDto.builder()
+                .postType(PostType.HISTORY)
                 .postId(createdHistory.getPostId())
                 .title(createdHistory.getTitle())
                 .createAt(createdHistory.getCreatedAt())

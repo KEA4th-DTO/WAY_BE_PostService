@@ -16,6 +16,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByMemberId(Long memberId);
 
+    Long countByMemberId(Long memberId);
 
     @Query(value = "select * from Post p " +
             "where ST_Dwithin(p.point, ST_GeomFromText(:point, 4326) ,:distance,false) = true ", nativeQuery = true)

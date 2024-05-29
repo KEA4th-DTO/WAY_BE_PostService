@@ -25,20 +25,19 @@ public class S3FileService {
     private final String bucketName;
     private final int maxQueueSize;
 
-    private static final String BLOCK_DELIMITER = "###-------###";
+    private static final String BLOCK_DELIMITER = "### ----- ###\n";
 
     public S3FileService(@Value("${cloud.aws.credentials.accessKey}") String accessKeyId,
                          @Value("${cloud.aws.credentials.secretKey}") String secretAccessKey,
                          @Value("${cloud.aws.region.static}") String region,
                          @Value("${cloud.aws.s3.bucket}") String bucketName) {
-
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKeyId, secretAccessKey);
         this.s3Client = S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
         this.bucketName = bucketName;
-        this.maxQueueSize = 10;
+        this.maxQueueSize = 15;
     }
 
     @Async
@@ -58,7 +57,7 @@ public class S3FileService {
                         StringBuilder currentBlock = new StringBuilder();
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            if (line.equals(BLOCK_DELIMITER)) {
+                            if (line.equals(BLOCK_DELIMITER.trim())) {
                                 contentQueue.add(currentBlock.toString().trim());
                                 currentBlock.setLength(0);
                             } else {
@@ -88,15 +87,21 @@ public class S3FileService {
                 // 큐의 내용을 StringBuilder에 저장
                 StringBuilder fileContent = new StringBuilder();
                 for (String block : contentQueue) {
-                    fileContent.append(block).append("\n").append(BLOCK_DELIMITER).append("\n");
+                    fileContent.append(block).append("\n").append(BLOCK_DELIMITER);
+                }
+
+                // 마지막 블록 구분자 제거
+                int lastIndex = fileContent.lastIndexOf(BLOCK_DELIMITER);
+                if (lastIndex != -1) {
+                    fileContent.delete(lastIndex, lastIndex + BLOCK_DELIMITER.length());
                 }
 
                 // 수정된 파일을 다시 업로드
                 InputStream updatedInputStream = new ByteArrayInputStream(fileContent.toString().getBytes(StandardCharsets.UTF_8));
                 PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                         .bucket(bucketName)
-                        .contentType("text/plain; charset=utf-8")
                         .key(key)
+                        .contentType("text/plain; charset=utf-8")
                         .build();
 
                 s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(updatedInputStream, fileContent.length()));
