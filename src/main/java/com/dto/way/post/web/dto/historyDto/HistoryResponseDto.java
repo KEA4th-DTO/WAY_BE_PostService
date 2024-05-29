@@ -68,4 +68,27 @@ public class HistoryResponseDto {
         private List<GetHistoryResultDto> historyResultDtoList;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class HistorySearchResultDto{
+        private Long postId;
+        private String title;
+        private String bodyPreview;
+        private LocalDateTime createdAt;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class HistorySearchResultListDto {
+        List<HistorySearchResultDto> historySearchResultDtoList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
+    }
 }

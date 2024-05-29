@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.io.ParseException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,6 +78,22 @@ public class HistoryRestController {
         return ApiResponse.of(SuccessStatus.HISTORY_LIST_FOUND_BY_RANGE, historyDtoList);
     }
 
+    @Operation(summary = "History 게시글 제목으로 검색 API", description = "RequestParam 으로 검색할 키워드와 page 번호를 전송해주세요.")
+    @GetMapping("/search/title")
+    public ApiResponse<HistoryResponseDto.HistorySearchResultListDto> searchHistoryByTitle(@RequestParam(name = "keyword") String keyword,
+                                                                                           @RequestParam(name = "page") Integer page) {
+        Page<History> historyPage = historyQueryService.findHistoryByTitle(page - 1, keyword);
+        return ApiResponse.of(SuccessStatus.HISTORY_TITLE_SEARCH, HistoryConverter.toHistorySearchResultListDto(historyPage));
+    }
+
+    @Operation(summary = "History 게시글 내용으로 검색 API", description = "RequestParam 으로 검색할 키워드와 page 번호를 전송해주세요.")
+    @GetMapping("/search/body")
+    public ApiResponse<HistoryResponseDto.HistorySearchResultListDto> searchHistoryByBody(@RequestParam(name = "keyword") String keyword,
+                                                                                          @RequestParam(name = "page") Integer page) {
+        Page<History> historyPage = historyQueryService.findHistoryByBody(page - 1, keyword);
+        return ApiResponse.of(SuccessStatus.HISTORY_BODY_SEARCH, HistoryConverter.toHistorySearchResultListDto(historyPage));
+    }
+
     @Operation(summary = "History 이미지를 url로 변환하는 API", description = "Requestbody의 form-data 형식으로 변환할 이미지 파일을 전송해주세요. ")
     @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<String> getImageUrlFromS3(@RequestParam(name = "historyImage") MultipartFile historyImage) {
@@ -84,5 +101,6 @@ public class HistoryRestController {
         String historyImageUrl = historyCommandService.historyImageUrl(historyImage);
         return ApiResponse.of(SuccessStatus.HISTORY_IMAGE_URL, historyImageUrl);
     }
+
 
 }
