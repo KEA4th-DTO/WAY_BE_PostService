@@ -45,8 +45,8 @@ public enum SuccessStatus implements BaseCode {
     HISTORY_FOUND(HttpStatus.OK,"HISTORY2004","History 게시글이 조회되었습니다."),
     HISTORY_LIST_FOUND_BY_RANGE(HttpStatus.OK,"HISTORY2005","반경 내 History 게시글 목록이 조회되었습니다."),
     HISTORY_IMAGE_URL(HttpStatus.OK,"HISTORY2006","이미지를 URL로 변환하였습니다."),
-
-
+    HISTORY_TITLE_SEARCH(HttpStatus.OK, "HISTORY2007", "제목 키워드 검색을 성공했습니다. "),
+    HISTORY_BODY_SEARCH(HttpStatus.OK, "HISTORY2008", "내용 키워드 검색을 성공했습니다. "),
 
 
     //  댓글 관련 응답
@@ -66,8 +66,6 @@ public enum SuccessStatus implements BaseCode {
 
     //  신고 관련 응답
     REPORT_CREATED(HttpStatus.OK, "REPORT2001", "신고 목록에 추가되었습니다."),
-
-
     ;
 
 

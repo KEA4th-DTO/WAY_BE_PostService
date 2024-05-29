@@ -7,8 +7,11 @@ import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.web.dto.historyDto.HistoryRequestDto;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
 import org.locationtech.jts.geom.Point;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class HistoryConverter {
 
@@ -54,5 +57,25 @@ public class HistoryConverter {
                 .build();
     }
 
+    public static HistoryResponseDto.HistorySearchResultDto toHistorySearchResultDto(History history) {
+        return HistoryResponseDto.HistorySearchResultDto.builder()
+                .postId(history.getPostId())
+                .title(history.getTitle())
+                .bodyPreview(history.getBodyPreview())
+                .createdAt(history.getCreatedAt())
+                .build();
+    }
 
+    public static HistoryResponseDto.HistorySearchResultListDto toHistorySearchResultListDto(Page<History> historyPage) {
+        List<HistoryResponseDto.HistorySearchResultDto> historySearchResultDtoList = historyPage.stream()
+                .map(HistoryConverter::toHistorySearchResultDto).collect(Collectors.toList());
+
+        return HistoryResponseDto.HistorySearchResultListDto.builder()
+                .historySearchResultDtoList(historySearchResultDtoList)
+                .isFirst(historyPage.isFirst())
+                .isLast(historyPage.isLast())
+                .totalPage(historyPage.getTotalPages())
+                .listSize(historyPage.getSize())
+                .build();
+    }
 }
