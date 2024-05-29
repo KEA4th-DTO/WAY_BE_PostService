@@ -1,13 +1,16 @@
 package com.dto.way.post.service.dailyService;
 
 import com.dto.way.post.aws.s3.AmazonS3Manager;
+import com.dto.way.post.aws.s3.S3FileService;
 import com.dto.way.post.converter.DailyConverter;
 import com.dto.way.post.domain.Daily;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.aws.config.AmazonConfig;
 import com.dto.way.post.domain.enums.Expiration;
+import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.DailyRepository;
+import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.utils.UuidCreator;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
@@ -26,22 +29,29 @@ import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
 public class DailyCommandServiceImpl implements DailyCommandService {
 
     private final DailyRepository dailyRepository;
+    private final PostRepository postRepository;
     private final AmazonS3Manager s3Manager;
+    private final S3FileService s3FileService;
     private final AmazonConfig amazonConfig;
     private final UuidCreator uuidCreator;
     private final JwtUtils jwtUtils;
 
     @Override
     @Transactional
-    public Daily createDaily(HttpServletRequest httpServletRequest, MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException {
+    public DailyResponseDto.CreateDailyResultDto createDaily(HttpServletRequest httpServletRequest, MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException {
 
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         String imageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getDailyImagePath(), uuidCreator.createUuid(), image);
+
+        //  AI 분석 데이터를 위해 daily 본문 내용을 S3 파일에 저장한다.
+        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(requestDto.getBody(), amazonConfig.getAiText() + "/"+"text_member_id_" + loginMemberId);
 
         // 위도, 경도를 Point로 변환하여 저장.
         Double latitude = requestDto.getLatitude();
@@ -53,8 +63,19 @@ public class DailyCommandServiceImpl implements DailyCommandService {
         Daily daily = DailyConverter.toDaily(point, imageUrl, requestDto);
         Post post = daily.getPost();
 
-        post.setMemberId(jwtUtils.getMemberIdFromRequest(httpServletRequest));
-        return dailyRepository.save(daily);
+        post.setMemberId(loginMemberId);
+
+        Daily createDaily = dailyRepository.save(daily);
+        Long count = postRepository.countByMemberId(loginMemberId);
+        boolean captureFlag = (count > 0) && (count % 15 == 0);
+
+        return DailyResponseDto.CreateDailyResultDto.builder()
+                .postType(PostType.DAILY)
+                .postId(createDaily.getPostId())
+                .title(createDaily.getTitle())
+                .createdAt(createDaily.getCreatedAt())
+                .capture(captureFlag)
+                .build();
     }
 
     @Override

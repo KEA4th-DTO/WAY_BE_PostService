@@ -33,8 +33,8 @@ public class DailyRestController {
     public ApiResponse<DailyResponseDto.CreateDailyResultDto> createDaily(HttpServletRequest httpServletRequest,
                                                                           @Valid @RequestPart(value = "image", required = true) MultipartFile image,
                                                                           @Valid @RequestPart(value = "createDailyDto") DailyRequestDto.CreateDailyDto request) throws ParseException {
-        Daily daily = dailyCommandService.createDaily(httpServletRequest, image, request);
-        return ApiResponse.of(SuccessStatus.DAILY_CREATED, DailyConverter.toCreateDailyResultDto(daily));
+        DailyResponseDto.CreateDailyResultDto daily = dailyCommandService.createDaily(httpServletRequest, image, request);
+        return ApiResponse.of(SuccessStatus.DAILY_CREATED, daily);
     }
 
     @Operation(summary = "Daily 게시글 수정 API", description = "PathVariable 형식으로 수정할 Daily 게시글 postId, RequestBody로 수정 내역을 전송해주세요.")

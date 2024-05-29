@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface DailyCommandService {
-    Daily createDaily(HttpServletRequest httpServletRequest, MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException;   //  회원 서비스 구현 완료시 수정사항 있음
+    DailyResponseDto.CreateDailyResultDto createDaily(HttpServletRequest httpServletRequest, MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException;   //  회원 서비스 구현 완료시 수정사항 있음
 
     Daily updateDaily(HttpServletRequest httpServletRequest, Long dailyId, DailyRequestDto.UpdateDailyDto requestDto);
 

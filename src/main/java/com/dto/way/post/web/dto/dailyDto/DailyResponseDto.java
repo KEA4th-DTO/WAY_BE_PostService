@@ -1,5 +1,6 @@
 package com.dto.way.post.web.dto.dailyDto;
 
+import com.dto.way.post.domain.enums.PostType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,9 +13,11 @@ public class DailyResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CreateDailyResultDto {
+        private PostType postType;
         private Long postId;
         private String title;
         private LocalDateTime createdAt;
+        private Boolean capture;
     }
 
     @Getter

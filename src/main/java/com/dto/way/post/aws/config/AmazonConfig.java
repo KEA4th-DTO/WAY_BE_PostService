@@ -43,8 +43,9 @@ public class AmazonConfig {
     @Value("${cloud.aws.s3.path.history_image}")
     private String historyImagePath;
 
-    @Value("${cloud.aws.s3.path.history_plain_text}")
-    private String historyPlainText;
+    @Value("${cloud.aws.s3.path.ai_text}")
+    private String aiText;
+
 
     @PostConstruct
     public void init() {
