@@ -13,10 +13,7 @@ import lombok.NoArgsConstructor;
 
 public class ReportRequestDto {
 
-    @Builder
     @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class CreateReportDto {
 
         @NotNull(message = "신고 타입을 입력해주세요.")
