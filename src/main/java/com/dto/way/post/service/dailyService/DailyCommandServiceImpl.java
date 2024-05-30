@@ -8,6 +8,8 @@ import com.dto.way.post.domain.Post;
 import com.dto.way.post.aws.config.AmazonConfig;
 import com.dto.way.post.domain.enums.Expiration;
 import com.dto.way.post.domain.enums.PostType;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.PostRepository;
@@ -111,7 +113,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     public DailyResponseDto.DeleteDailyResultDto deleteDaily(HttpServletRequest httpServletRequest, Long postId) throws IOException {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 데일리가 존재하지 않습니다."));
+        Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DAILY_NOT_FOUND));
         DailyResponseDto.DeleteDailyResultDto deleteDailyResultDto = DailyConverter.toDeleteDailyResponseDto(daily);
 
         if (loginMemberId.equals(daily.getPost().getMemberId())) {
@@ -120,7 +122,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
             dailyRepository.delete(daily);
         } else {
             //  사용자와 작성자가 다르면 예외처리
-            throw new SecurityException("게시글은 작성자만 삭제할 수 있습니다.");
+            throw new ExceptionHandler(ErrorStatus._FORBIDDEN);
         }
 
         return deleteDailyResultDto;

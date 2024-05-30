@@ -2,6 +2,8 @@ package com.dto.way.post.service.likeService;
 
 import com.dto.way.post.domain.Like;
 import com.dto.way.post.domain.Post;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.LikeRepository;
 import com.dto.way.post.repository.PostRepository;
@@ -24,7 +26,7 @@ public class LikeCommandServiceImpl implements LikeCommandService {
     @Override
     public Boolean likePost(HttpServletRequest httpServletRequest, Long postId) {
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         Optional<Like> like = likeRepository.findByMemberIdAndPostId(loginMemberId, post.getId());
 

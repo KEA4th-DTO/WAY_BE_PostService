@@ -16,7 +16,6 @@ public interface MemberClient {
     @GetMapping("/member-info/nickname/{nickname}")
     MemberResponseDto.GetMemberResultDto findMemberByNickname(@PathVariable String nickname);
 
-
     @GetMapping("/member-info/id/{memberId}")
     MemberResponseDto.GetMemberResultDto findMemberByMemberId(@PathVariable Long memberId);
 }

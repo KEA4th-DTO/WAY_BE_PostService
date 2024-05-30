@@ -7,6 +7,8 @@ import com.dto.way.post.domain.History;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.aws.config.AmazonConfig;
 import com.dto.way.post.domain.enums.PostType;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.HistoryRepository;
 import com.dto.way.post.repository.PostRepository;
@@ -49,7 +51,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
 
         //  AI 분석 데이터를 위해 html 태그가 전부 빠진 history 본문 내용을 S3 파일에 저장한다.
-        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(createHistoryDto.getBodyPlainText(), amazonConfig.getAiText() + "/"+"text_member_id_" + loginMemberId);
+        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(createHistoryDto.getBodyPlainText(), amazonConfig.getAiText() + "/" + "text_member_id_" + loginMemberId);
 
         // 비동기 작업이 완료된 후 추가 작업 수행
 //        future.thenAccept(log::info)
@@ -91,7 +93,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
     public HistoryResponseDto.DeleteHistoryResultDto deleteHistory(HttpServletRequest httpServletRequest, Long postId) throws IOException {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        History history = historyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다."));
+        History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
         HistoryResponseDto.DeleteHistoryResultDto deleteHistoryResultDto = HistoryConverter.toDeleteHistoryResultDto(history);
 
         if (loginMemberId.equals(history.getPost().getMemberId())) {
@@ -99,9 +101,8 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
             historyRepository.delete(history);
         } else {
             //  사용자와 작성자가 다르면 예외처리
-            throw new SecurityException("게시글은 작성자만 삭제할 수 있습니다.");
+            throw new ExceptionHandler(ErrorStatus._FORBIDDEN);
         }
-
 
         return deleteHistoryResultDto;
     }
@@ -111,7 +112,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
     public History updateHistory(HttpServletRequest httpServletRequest, Long postId, MultipartFile thumbnailImage, HistoryRequestDto.UpdateHistoryDto updateHistoryDto) throws IOException {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        History history = historyRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("히스토리가 존재하지 않습니다."));
+        History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
         if (loginMemberId.equals(history.getPost().getMemberId())) {
             // s3에 업로드 되어있는 기존 데이터들을 제거
             s3Manager.deleteFile(history.getThumbnailImageUrl());
@@ -136,8 +137,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
             }
             history.updateThumbnailImageUrl(updatedThumbnailImageUrl);
         } else {
-            throw new SecurityException("게시글은 작성자만 수정할 수 있습니다.");
-
+            throw new ExceptionHandler(ErrorStatus._FORBIDDEN);
         }
 
         return history;

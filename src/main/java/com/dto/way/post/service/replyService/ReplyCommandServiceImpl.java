@@ -3,6 +3,8 @@ package com.dto.way.post.service.replyService;
 import com.dto.way.post.converter.ReplyConverter;
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.Reply;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.ReplyRepository;
@@ -26,7 +28,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     public Reply createReply(HttpServletRequest httpServletRequest, Long commentId, ReplyRequestDto.CreateReplyDto createReplyDto) {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. "));
+        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         Reply reply = ReplyConverter.toReply(loginMemberId, comment, createReplyDto);
         return replyRepository.save(reply);
@@ -35,13 +37,13 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     @Override
     public ReplyResponseDto.DeleteReplyResultDto deleteReply(HttpServletRequest httpServletRequest, Long replyId) {
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new IllegalArgumentException("해당 대댓글이 존재하지 않습니다."));
+        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPLY_NOT_FOUND));
         ReplyResponseDto.DeleteReplyResultDto deleteReplyResultDto = ReplyConverter.toDeleteReplyResultDto(reply);
 
         if (loginMemberId.equals(reply.getMemberId())) {
             replyRepository.delete(reply);
         } else {
-            throw new SecurityException("대댓글 작성자만 대댓글을 삭제할 수 있습니다.");
+            throw new ExceptionHandler(ErrorStatus._FORBIDDEN);
         }
         return deleteReplyResultDto;
     }
@@ -49,16 +51,16 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     @Override
     public Reply updateReply(HttpServletRequest httpServletRequest, Long replyId, ReplyRequestDto.UpdateReplyDto updateReplyDto) {
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new IllegalArgumentException("해당 대댓글이 존재하지 않습니다."));
+        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         if (loginMemberId.equals(reply.getMemberId())) {
             if (updateReplyDto.getBody() != null) {
                 reply.updateBody(updateReplyDto.getBody());
             } else {
-                throw new IllegalArgumentException("수정할 내용을 입력해주세요.");
+                throw new ExceptionHandler(ErrorStatus._EMPTY_FIELD);
             }
         } else {
-            throw new SecurityException("대댓글 작성자만 대댓글을 수정할 수 있습니다.");
+            throw new ExceptionHandler(ErrorStatus._FORBIDDEN);
         }
 
         return replyRepository.save(reply);
@@ -67,7 +69,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     @Override
     public Long countReply(Long commentId) {
 
-        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         return replyRepository.countByComment(comment);
     }

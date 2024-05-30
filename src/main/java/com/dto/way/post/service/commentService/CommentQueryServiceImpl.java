@@ -3,6 +3,8 @@ package com.dto.way.post.service.commentService;
 import com.dto.way.post.converter.CommentConverter;
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.History;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.HistoryRepository;
@@ -27,7 +29,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
 
     @Override
     public CommentResponseDto.GetCommentResultDto getCommentResultDto(HttpServletRequest httpServletRequest, Long postId) {
-        Comment comment = commentRepository.findByCommentId(postId).orElseThrow(() -> new EntityNotFoundException("댓글이 존재하지 않습니다."));
+        Comment comment = commentRepository.findByCommentId(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
 
         Boolean isOwned = comment.getMemberId().equals(loginMemberId);
@@ -43,7 +45,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
     @Override
     public CommentResponseDto.GetCommentListResultDto getCommentListResultDto(HttpServletRequest httpServletRequest, Long postId) {
 
-        History history = historyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
 
         List<Comment> commentList = commentRepository.findAllByHistory(history);
