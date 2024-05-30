@@ -74,6 +74,7 @@ public class HistoryConverter {
                 .historySearchResultDtoList(historySearchResultDtoList)
                 .isFirst(historyPage.isFirst())
                 .isLast(historyPage.isLast())
+                .totalElements(historyPage.getTotalElements())
                 .totalPage(historyPage.getTotalPages())
                 .listSize(historyPage.getSize())
                 .build();

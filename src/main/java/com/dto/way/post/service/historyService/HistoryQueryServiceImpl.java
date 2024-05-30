@@ -108,9 +108,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
     @Transactional(readOnly = true)
     public Page<History> findHistoryByTitle(Integer page, String title) {
         Page<History> historyPage = historyRepository.findByTitleContaining(PageRequest.of(page, 10), title);
-        if(historyPage.isEmpty()){
-            throw new ResourceNotFoundException("해당 키워드로 검색 결과를 찾지 못했습니다.");
-        }
+
         return historyPage;
     }
     @Override
@@ -118,9 +116,6 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
     public Page<History> findHistoryByBody(Integer page, String body) {
 
         Page<History> historyPage = historyRepository.findByBodyContaining(PageRequest.of(page, 10), body);
-        if (historyPage.isEmpty()) {
-            throw new ResourceNotFoundException("해당 키워드로 검색 결과를 찾지 못했습니다.");
-        }
 
         return historyPage;
     }

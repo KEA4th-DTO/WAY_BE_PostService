@@ -83,6 +83,9 @@ public class HistoryRestController {
     public ApiResponse<HistoryResponseDto.HistorySearchResultListDto> searchHistoryByTitle(@RequestParam(name = "keyword") String keyword,
                                                                                            @RequestParam(name = "page") Integer page) {
         Page<History> historyPage = historyQueryService.findHistoryByTitle(page - 1, keyword);
+        if (historyPage.isEmpty()) {
+            return ApiResponse.of(SuccessStatus.HISTORY_SEARCH_NO_RESULT, null);
+        }
         return ApiResponse.of(SuccessStatus.HISTORY_TITLE_SEARCH, HistoryConverter.toHistorySearchResultListDto(historyPage));
     }
 
@@ -91,6 +94,9 @@ public class HistoryRestController {
     public ApiResponse<HistoryResponseDto.HistorySearchResultListDto> searchHistoryByBody(@RequestParam(name = "keyword") String keyword,
                                                                                           @RequestParam(name = "page") Integer page) {
         Page<History> historyPage = historyQueryService.findHistoryByBody(page - 1, keyword);
+        if (historyPage.isEmpty()) {
+            return ApiResponse.of(SuccessStatus.HISTORY_SEARCH_NO_RESULT, null);
+        }
         return ApiResponse.of(SuccessStatus.HISTORY_BODY_SEARCH, HistoryConverter.toHistorySearchResultListDto(historyPage));
     }
 
