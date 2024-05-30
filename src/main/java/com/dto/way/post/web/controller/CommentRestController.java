@@ -2,6 +2,7 @@ package com.dto.way.post.web.controller;
 
 import com.dto.way.post.converter.CommentConverter;
 import com.dto.way.post.domain.Comment;
+import com.dto.way.post.global.exception.ExceptionHandler;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.global.utils.JwtUtils;
@@ -68,6 +69,9 @@ public class CommentRestController {
                                                                                   @PathVariable(name = "postId") Long postId) {
 
         CommentResponseDto.GetCommentListResultDto getCommentListResultDto = commentQueryService.getCommentListResultDto(httpServletRequest, postId);
+        if (getCommentListResultDto.getCommentResultDtoList().isEmpty()) {
+            return ApiResponse.of(SuccessStatus.COMMENT_LIST_NOT_FOUND, null);
+        }
 
         return ApiResponse.of(SuccessStatus.COMMENT_LIST_FOUND, getCommentListResultDto);
     }
