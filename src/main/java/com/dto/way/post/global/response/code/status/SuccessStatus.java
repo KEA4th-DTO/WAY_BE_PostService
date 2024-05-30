@@ -50,7 +50,6 @@ public enum SuccessStatus implements BaseCode {
     HISTORY_SEARCH_NO_RESULT(HttpStatus.OK, "HISTORY2009", "해당 키워드로 검색한 결과가 없습니다."),
 
 
-
     //  댓글 관련 응답
     COMMENT_CREATED(HttpStatus.OK, "COMMENT2001", "댓글이 생성되었습니다."),
     COMMENT_DELETED(HttpStatus.OK, "COMMENT2002", "댓글이 삭제되었습니다."),

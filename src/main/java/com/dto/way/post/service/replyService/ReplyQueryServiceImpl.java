@@ -3,6 +3,8 @@ package com.dto.way.post.service.replyService;
 import com.dto.way.post.converter.ReplyConverter;
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.Reply;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.ReplyRepository;
@@ -30,7 +32,7 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
     @Override
     public ReplyResponseDto.GetReplyResultDto getReplyResultDto(HttpServletRequest httpServletRequest, Long replyId) {
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new EntityNotFoundException("대댓글이 존재하지 않습니다."));
+        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPLY_NOT_FOUND));
 
         Boolean isOwned = reply.getMemberId().equals(loginMemberId);
 
@@ -45,7 +47,7 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
     public ReplyResponseDto.GetReplyListResultDto getReplyListResultDto(HttpServletRequest httpServletRequest,Long commentId) {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() ->  new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         List<Reply> replyList = replyRepository.findAllByComment(comment);
 

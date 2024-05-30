@@ -22,6 +22,4 @@ public class ReportQueryServiceImpl implements ReportQueryService{
 
         return ReportConverter.toGetReportResultDtoList(reportList);
     }
-
-
 }

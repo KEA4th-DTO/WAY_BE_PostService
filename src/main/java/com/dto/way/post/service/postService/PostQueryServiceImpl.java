@@ -3,6 +3,9 @@ package com.dto.way.post.service.postService;
 import com.dto.way.post.converter.PostConverter;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.domain.enums.PostType;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
+import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.HistoryRepository;
@@ -54,6 +57,7 @@ public class PostQueryServiceImpl implements PostQueryService {
     public List<PostResponseDto.GetPostResultDto> getPostListByRange(HttpServletRequest httpServletRequest, Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
 
         List<Post> posts = postRepository.findPostByRange(longitude1, latitude1, longitude2, latitude2);
+
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
 
         List<PostResponseDto.GetPostResultDto> postResultDtoList = posts.stream()

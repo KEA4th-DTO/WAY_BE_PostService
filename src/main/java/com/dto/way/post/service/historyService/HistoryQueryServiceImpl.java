@@ -2,6 +2,8 @@ package com.dto.way.post.service.historyService;
 
 import com.dto.way.post.converter.HistoryConverter;
 import com.dto.way.post.domain.History;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.HistoryRepository;
 import com.dto.way.post.repository.LikeRepository;
@@ -44,7 +46,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
     public HistoryResponseDto.GetHistoryResultDto getHistoryResult(HttpServletRequest httpServletRequest, Long postId) {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        History history = historyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 히스토리가 존재하지 않습니다."));
+        History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
         boolean isLiked = likeRepository.existsByPostIdAndMemberId(postId, loginMemberId);
         boolean isOwned = loginMemberId.equals(history.getPost().getMemberId());
         Long countLike = commentCommandService.countComment(postId);

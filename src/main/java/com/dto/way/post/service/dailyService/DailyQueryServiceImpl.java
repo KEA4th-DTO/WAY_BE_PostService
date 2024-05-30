@@ -1,6 +1,8 @@
 package com.dto.way.post.service.dailyService;
 
 import com.dto.way.post.domain.Daily;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.LikeRepository;
@@ -35,7 +37,7 @@ public class DailyQueryServiceImpl implements DailyQueryService {
     public DailyResponseDto.GetDailyResultDto getDailyResultDto(HttpServletRequest httpServletRequest, Long postId) {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 데일리가 존재하지 않습니다. "));
+        Daily daily = dailyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DAILY_NOT_FOUND));
 
         boolean isLiked = likeRepository.existsByPostIdAndMemberId(postId, loginMemberId);
         boolean isOwned = loginMemberId.equals(daily.getPost().getMemberId());

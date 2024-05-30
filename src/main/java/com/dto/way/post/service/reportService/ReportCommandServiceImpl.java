@@ -7,6 +7,8 @@ import com.dto.way.post.domain.Reply;
 import com.dto.way.post.domain.Report;
 import com.dto.way.post.domain.enums.ReportStatus;
 import com.dto.way.post.domain.enums.ReportType;
+import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.PostRepository;
@@ -38,19 +40,19 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         Report report = new Report();
 
         if (reportType.equals(ReportType.POST)) {
-            Post post = postRepository.findById(targetId).orElseThrow(() -> new EntityNotFoundException("게시글이 존재하지 않습니다."));
+            Post post = postRepository.findById(targetId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
             report = ReportConverter.toReport(loginMemberId, post.getId(), request);
 
         }
 
         if (reportType.equals(ReportType.COMMENT)) {
-            Comment comment = commentRepository.findByCommentId(targetId).orElseThrow(() -> new EntityNotFoundException("댓글이 존재하지 않습니다."));
+            Comment comment = commentRepository.findByCommentId(targetId).orElseThrow(() ->  new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
             report = ReportConverter.toReport(loginMemberId, comment.getCommentId(), request);
 
         }
 
         if (reportType.equals(ReportType.REPLY)) {
-            Reply reply = replyRepository.findByReplyId(targetId).orElseThrow(() -> new EntityNotFoundException("대댓글이 존재하지 않습니다."));
+            Reply reply = replyRepository.findByReplyId(targetId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPLY_NOT_FOUND));
             report = ReportConverter.toReport(loginMemberId, reply.getReplyId(), request);
 
 
@@ -62,7 +64,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
     @Transactional
     public ReportResponseDto.ChangeReportStatusResultDto changeReportStatus(Long reportId, ReportStatus reportStatus) {
 
-        Report report = reportRepository.findById(reportId).orElseThrow(() -> new EntityNotFoundException("신고 내역이 존재하지 않습니다."));
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPORT_NOT_FOUND));
         if (!report.getStatus().equals(reportStatus)) {
             report.updateStatus(reportStatus);
         } else {
