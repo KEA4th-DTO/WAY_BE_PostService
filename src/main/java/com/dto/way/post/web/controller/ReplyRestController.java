@@ -71,6 +71,10 @@ public class ReplyRestController {
                                                                             @PathVariable(name = "commentId") Long commentId) {
 
         ReplyResponseDto.GetReplyListResultDto getReplyListResultDto = replyQueryService.getReplyListResultDto(httpServletRequest, commentId);
+        if (getReplyListResultDto.getReplyResultDtoList().isEmpty()) {
+            return ApiResponse.of(SuccessStatus.REPLY_LIST_NOT_FOUND, null);
+        }
+
         return ApiResponse.of(SuccessStatus.REPLY_LIST_FOUND, getReplyListResultDto);
     }
 

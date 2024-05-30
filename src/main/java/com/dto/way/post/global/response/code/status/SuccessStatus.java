@@ -37,6 +37,7 @@ public enum SuccessStatus implements BaseCode {
     DAILY_DELETED(HttpStatus.OK,"DAILY2003","Daily 게시글이 삭제되었습니다."),
     DAILY_FOUND(HttpStatus.OK,"DAILY2004","Daily 게시글이 조회되었습니다."),
     DAILY_LIST_FOUND_BY_RANGE(HttpStatus.OK,"DAILY2005","반경 내 Daily 게시글 목록이 조회되었습니다."),
+    DAILY_LIST_NOT_FOUND_BY_RANGE(HttpStatus.OK, "DAILY2006", "반경 내 Daily 게시글이 존재하지 않습니다."),
 
     //  히스토리 관련 응답
     HISTORY_CREATED(HttpStatus.OK, "HISTORY2001", "History 게시글이 생성되었습니다."),
@@ -44,10 +45,12 @@ public enum SuccessStatus implements BaseCode {
     HISTORY_UPDATE(HttpStatus.OK,"HISTORY2003","History 게시글이 수정되었습니다."),
     HISTORY_FOUND(HttpStatus.OK,"HISTORY2004","History 게시글이 조회되었습니다."),
     HISTORY_LIST_FOUND_BY_RANGE(HttpStatus.OK,"HISTORY2005","반경 내 History 게시글 목록이 조회되었습니다."),
+    HISTORY_LIST_NOT_FOUND_BY_RANGE(HttpStatus.OK,"HISTORY20010","반경 내 History 게시글이 존재하지 않습니다."),
     HISTORY_IMAGE_URL(HttpStatus.OK,"HISTORY2006","이미지를 URL로 변환하였습니다."),
     HISTORY_TITLE_SEARCH(HttpStatus.OK, "HISTORY2007", "제목 키워드 검색을 성공했습니다."),
     HISTORY_BODY_SEARCH(HttpStatus.OK, "HISTORY2008", "내용 키워드 검색을 성공했습니다."),
     HISTORY_SEARCH_NO_RESULT(HttpStatus.OK, "HISTORY2009", "해당 키워드로 검색한 결과가 없습니다."),
+
 
 
     //  댓글 관련 응답
@@ -56,6 +59,7 @@ public enum SuccessStatus implements BaseCode {
     COMMENT_UPDATED(HttpStatus.OK, "COMMENT2003", "댓글이 수정되었습니다."),
     COMMENT_FOUND(HttpStatus.OK, "COMMENT2004", "댓글이 조회되었습니다."),
     COMMENT_LIST_FOUND(HttpStatus.OK, "COMMENT2005", "댓글 목록이 조회되었습니다."),
+    COMMENT_LIST_NOT_FOUND(HttpStatus.OK, "COMMENT2006", "게시글에 댓글이 존재하지 않습니다."),
 
     //  대댓글 관련 응답
     REPLY_CREATED(HttpStatus.OK, "REPLY2001", "대댓글이 생성되었습니다."),
@@ -63,6 +67,8 @@ public enum SuccessStatus implements BaseCode {
     REPLY_UPDATED(HttpStatus.OK, "REPLY2003", "대댓글이 수정되었습니다."),
     REPLY_FOUND(HttpStatus.OK, "REPLY2004", "대댓글이 조회되었습니다."),
     REPLY_LIST_FOUND(HttpStatus.OK, "REPLY2005", "대댓글 목록이 조회되었습니다."),
+    REPLY_LIST_NOT_FOUND(HttpStatus.OK, "REPLY2006", "댓글에 대댓글이 존재하지 않습니다."),
+
 
 
     //  신고 관련 응답
