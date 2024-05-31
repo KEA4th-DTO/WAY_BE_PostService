@@ -49,4 +49,14 @@ public class JwtUtils {
         }
         return null;
     }
+
+    // 파라미터로 HttpServletRequest를 받아서 memberNickname 클레임 값을 리턴함.
+    public String getMemberNicknameFromRequest(HttpServletRequest request) {
+        String jwtToken = getJwtFromHeader(request);
+        if (jwtToken != null) {
+            Claims claims = getClaim(jwtToken);
+            return claims.get("memberNickname", String.class);
+        }
+        return null;
+    }
 }
