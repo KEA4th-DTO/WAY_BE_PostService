@@ -53,7 +53,7 @@ public class S3FileService {
                 Queue<String> contentQueue = new LinkedList<>();
                 try {
                     InputStream inputStream = s3Client.getObject(getObjectRequest);
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
                         StringBuilder currentBlock = new StringBuilder();
                         String line;
                         while ((line = reader.readLine()) != null) {
@@ -97,14 +97,15 @@ public class S3FileService {
                 }
 
                 // 수정된 파일을 다시 업로드
-                InputStream updatedInputStream = new ByteArrayInputStream(fileContent.toString().getBytes(StandardCharsets.UTF_8));
+                byte[] fileContentBytes = fileContent.toString().getBytes(StandardCharsets.UTF_8);
+                InputStream updatedInputStream = new ByteArrayInputStream(fileContentBytes);
                 PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                         .bucket(bucketName)
                         .key(key)
                         .contentType("text/plain; charset=utf-8")
                         .build();
 
-                s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(updatedInputStream, fileContent.length()));
+                s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(updatedInputStream, fileContentBytes.length));
 
                 // 파일의 URL 반환
                 return s3Client.utilities().getUrl(b -> b.bucket(bucketName).key(key)).toString();
