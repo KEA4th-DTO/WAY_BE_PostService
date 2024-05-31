@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationMessage {
+
+    private Long targetMemberId;
     private String message;
-    private String sendedMember;
+    private String targetMemberNickname;
     private LocalDateTime createdAt;
 }

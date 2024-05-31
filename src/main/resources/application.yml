@@ -15,7 +15,7 @@ spring:
         show_sql: true #show sql
       database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
   kafka:
-    bootstrap-servers: 10.109.201.158:9092
+    bootstrap-servers: kafka-service:9092
     template:
       default-topic: like
     consumer:

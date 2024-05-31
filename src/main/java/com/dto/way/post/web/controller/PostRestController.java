@@ -5,12 +5,16 @@ import com.dto.way.post.converter.PostConverter;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
+import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.service.likeService.LikeCommandService;
 import com.dto.way.post.service.notificationService.NotificationService;
 import com.dto.way.post.service.postService.PostCommandService;
 import com.dto.way.post.service.postService.PostQueryService;
 import com.dto.way.post.web.dto.likeDto.LikeResponseDto;
+import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
 import com.dto.way.post.web.dto.postDto.PostResponseDto;
+import com.dto.way.post.web.feign.MemberClient;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,8 @@ public class PostRestController {
     private final LikeCommandService likeCommandService;
     private final PostCommandService postCommandService;
     private final NotificationService notificationService;
+    private final JwtUtils jwtUtils;
+    private final MemberClient memberClient;
 
 
 //    @Operation(summary = "(사용하지 않음)게시글 목록 거리로 조회 API", description = "RequestParam 으로 현재 위치와 조회할 거리를 전송해주세요.")
@@ -95,16 +101,21 @@ public class PostRestController {
         SuccessStatus status;
         String message;
 
-        Long writerMemberId = postCommandService.findWriterIdByPostId(postId);
-        String title = postCommandService.findPostTitleByPostId(postId);
+        Long targetMemberId = postCommandService.findWriterIdByPostId(postId);
+        String targetTitle = postCommandService.findPostTitleByPostId(postId);
 
         if (isLiked) {
             status = SuccessStatus.POST_LIKE;
-//            message = auth.getName() + "님이 \"" + title + "\"에 좋아요를 눌렀습니다. ";
-//            NotificationMessage notificationMessage = notificationService.createNotificationMessage(writerEmail, message);
+            String token = jwtUtils.getJwtFromHeader(httpServletRequest);
+            Claims claims = jwtUtils.getClaim(token);
+
+            MemberResponseDto.GetMemberResultDto targetMemberResultDto = memberClient.findMemberByMemberId(targetMemberId);
+
+            message = claims.get("nickname") + "님이 회원님의 \"" + targetTitle + "\"에 좋아요를 눌렀습니다. ";
+            NotificationMessage notificationMessage = notificationService.createNotificationMessage(targetMemberId, targetMemberResultDto.getNickname(), message);
 
             // Kafka로 메세지 전송
-//            notificationService.postNotificationCreate(notificationMessage);
+            notificationService.postNotificationCreate(notificationMessage);
         } else {
             status = SuccessStatus.POST_UNLIKE;
         }
