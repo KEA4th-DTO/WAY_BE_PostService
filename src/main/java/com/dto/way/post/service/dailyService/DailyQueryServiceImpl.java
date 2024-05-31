@@ -1,7 +1,7 @@
 package com.dto.way.post.service.dailyService;
 
 import com.dto.way.post.domain.Daily;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.DailyRepository;
@@ -13,11 +13,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.sql.Timestamp;

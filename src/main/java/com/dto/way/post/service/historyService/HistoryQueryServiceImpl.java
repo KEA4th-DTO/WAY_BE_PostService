@@ -1,8 +1,7 @@
 package com.dto.way.post.service.historyService;
 
-import com.dto.way.post.converter.HistoryConverter;
 import com.dto.way.post.domain.History;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.HistoryRepository;
@@ -16,10 +15,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +86,6 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                     dto.setBody((String) result[3]);
                     dto.setCreatedAt(((Timestamp) result[4]).toLocalDateTime());
                     dto.setBodyPreview((String) result[5]);
-
                     boolean isLiked = likeRepository.existsByPostIdAndMemberId((Long) result[1], (Long) result[0]);
                     dto.setIsLiked(isLiked);
 

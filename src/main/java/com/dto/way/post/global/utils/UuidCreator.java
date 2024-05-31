@@ -1,4 +1,4 @@
-package com.dto.way.post.utils;
+package com.dto.way.post.global.utils;
 
 import com.dto.way.post.domain.common.Uuid;
 import com.dto.way.post.repository.UuidRepository;

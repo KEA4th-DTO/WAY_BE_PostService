@@ -8,6 +8,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,33 +20,37 @@ import java.util.concurrent.CompletableFuture;
 public class NotificationService {
     private final KafkaTemplate<String, NotificationMessage> kafkaTemplate;
 
-    public void sendNotification(String topic, NotificationMessage notificationMessage) {
+    @Async
+    public CompletableFuture<Void> sendNotification(String topic, NotificationMessage notificationMessage) {
         Message<NotificationMessage> notification = MessageBuilder
                 .withPayload(notificationMessage)
                 .setHeader(KafkaHeaders.TOPIC, topic)
                 .build();
         CompletableFuture<SendResult<String, NotificationMessage>> future =
                 kafkaTemplate.send(notification);
-        future.whenComplete((result, ex) -> {
+        return future.whenComplete((result, ex) -> {
             if (ex == null) {
                 log.info("producer: success >>> message: {}, offset: {}",
                         result.getProducerRecord().value().toString(), result.getRecordMetadata().offset());
             } else {
                 log.info("producer: failure >>> message: {}", ex.getMessage());
             }
-        });
+        }).thenApply(result -> null);
     }
 
-    public void likeNotificationCreate(NotificationMessage notificationMessage) {
-        sendNotification("like", notificationMessage);
+    @Async
+    public CompletableFuture<Void> likeNotificationCreate(NotificationMessage notificationMessage) {
+        return sendNotification("like", notificationMessage);
     }
 
-    public void commentNotificationCreate(NotificationMessage notificationMessage) {
-        sendNotification("comment", notificationMessage);
+    @Async
+    public CompletableFuture<Void> commentNotificationCreate(NotificationMessage notificationMessage) {
+        return sendNotification("comment", notificationMessage);
     }
 
-    public void replyNotificationCreate(NotificationMessage notificationMessage) {
-        sendNotification("reply", notificationMessage);
+    @Async
+    public CompletableFuture<Void> replyNotificationCreate(NotificationMessage notificationMessage) {
+        return sendNotification("reply", notificationMessage);
     }
 
     public NotificationMessage createNotificationMessage(Long targetMemberId, String targetMemberNickname, String message) {

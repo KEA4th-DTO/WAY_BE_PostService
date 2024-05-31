@@ -1,6 +1,6 @@
 package com.dto.way.post.global.filter;
 
-import com.dto.way.post.global.JwtTokenProvider;
+import com.dto.way.post.global.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;

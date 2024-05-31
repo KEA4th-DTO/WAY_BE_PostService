@@ -1,4 +1,4 @@
-package com.dto.way.post.global;
+package com.dto.way.post.global.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

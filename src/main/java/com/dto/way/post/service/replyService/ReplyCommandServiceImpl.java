@@ -4,7 +4,7 @@ import com.dto.way.message.NotificationMessage;
 import com.dto.way.post.converter.ReplyConverter;
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.Reply;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;

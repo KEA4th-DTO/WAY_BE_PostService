@@ -3,7 +3,7 @@ package com.dto.way.post.service.postService;
 
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.domain.enums.PostType;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;

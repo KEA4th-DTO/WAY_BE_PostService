@@ -22,9 +22,6 @@ public class History extends BaseEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
-
     private String title;
     private String body;
     private String thumbnailImageUrl;

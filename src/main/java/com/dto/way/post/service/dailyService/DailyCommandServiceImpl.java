@@ -8,12 +8,11 @@ import com.dto.way.post.domain.Post;
 import com.dto.way.post.aws.config.AmazonConfig;
 import com.dto.way.post.domain.enums.Expiration;
 import com.dto.way.post.domain.enums.PostType;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.PostRepository;
-import com.dto.way.post.utils.UuidCreator;
 import com.dto.way.post.web.dto.dailyDto.DailyRequestDto;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +41,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     private final AmazonS3Manager s3Manager;
     private final S3FileService s3FileService;
     private final AmazonConfig amazonConfig;
-    private final UuidCreator uuidCreator;
+    private final JwtUtils.UuidCreator uuidCreator;
     private final JwtUtils jwtUtils;
 
     @Override

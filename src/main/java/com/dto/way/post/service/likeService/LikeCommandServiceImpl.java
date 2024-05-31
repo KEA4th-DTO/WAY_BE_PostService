@@ -2,15 +2,13 @@ package com.dto.way.post.service.likeService;
 
 import com.dto.way.post.domain.Like;
 import com.dto.way.post.domain.Post;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.LikeRepository;
 import com.dto.way.post.repository.PostRepository;
-import com.dto.way.post.web.dto.likeDto.LikeResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
