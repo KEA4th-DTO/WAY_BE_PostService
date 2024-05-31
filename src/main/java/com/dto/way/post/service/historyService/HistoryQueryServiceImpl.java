@@ -4,8 +4,10 @@ import com.dto.way.post.domain.History;
 import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
+import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.HistoryRepository;
 import com.dto.way.post.repository.LikeRepository;
+import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.service.commentService.CommentCommandService;
 import com.dto.way.post.service.likeService.LikeCommandService;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
@@ -46,10 +48,6 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
         History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
         boolean isLiked = likeRepository.existsByPostIdAndMemberId(postId, loginMemberId);
         boolean isOwned = loginMemberId.equals(history.getPost().getMemberId());
-        Long countLike = commentCommandService.countComment(postId);
-        Long countComment = likeCommandService.countLikes(postId);
-
-
 
         return HistoryResponseDto.GetHistoryResultDto.builder()
                 .postId(history.getPostId())
@@ -58,8 +56,8 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                 .body(history.getBody())
                 .isOwned(isOwned)
                 .isLiked(isLiked)
-                .likesCount(countLike)
-                .commentsCount(countComment)
+                .likesCount((long) history.getPost().getLikes().size())
+                .commentsCount((long) history.getPost().getComments().size())
                 .createdAt(history.getCreatedAt()).build();
     }
 
@@ -92,6 +90,9 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                     MemberResponseDto.GetMemberResultDto writerMemberInfo = memberClient.findMemberByMemberId((Long) result[0]);
                     dto.setWriterNickname(writerMemberInfo.getNickname());
                     dto.setWriterProfileImageUrl(writerMemberInfo.getProfileImageUrl());
+
+                    dto.setCommentsCount(commentCommandService.countComment((long) result[1]));
+                    dto.setLikesCount(likeCommandService.countLikes((long) result[1]));
 
                     return dto;
                 })

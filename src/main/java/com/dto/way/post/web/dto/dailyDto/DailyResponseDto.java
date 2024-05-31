@@ -53,6 +53,7 @@ public class DailyResponseDto {
         private String body;
         private Boolean isLiked;
         private Long likesCount;
+        private Long commentsCount;
         private String imageUrl;
         private Boolean isOwned;
         private LocalDateTime expiredAt;
