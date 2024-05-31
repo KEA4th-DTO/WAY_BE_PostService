@@ -51,7 +51,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
 
         //  AI 분석 데이터를 위해 html 태그가 전부 빠진 history 본문 내용을 S3 파일에 저장한다.
-        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(createHistoryDto.getBodyPlainText(), amazonConfig.getAiText() + "/" + "text_member_id_" + loginMemberId);
+        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(createHistoryDto.getBodyPlainText(), amazonConfig.getAiText() + "/" + "text_member_id_" + loginMemberId + ".txt");
 
         // 비동기 작업이 완료된 후 추가 작업 수행
 //        future.thenAccept(log::info)
