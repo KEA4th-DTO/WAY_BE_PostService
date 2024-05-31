@@ -8,6 +8,7 @@ import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.service.commentService.CommentCommandService;
 import com.dto.way.post.service.commentService.CommentQueryService;
+import com.dto.way.post.service.notificationService.NotificationService;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/post-service/comment")
@@ -26,6 +26,7 @@ public class CommentRestController {
 
     private final CommentCommandService commentCommandService;
     private final CommentQueryService commentQueryService;
+    private final NotificationService notificationService;
     private final JwtUtils jwtUtils;
 
 
@@ -35,6 +36,8 @@ public class CommentRestController {
                                                                                 @PathVariable(name = "postId") Long postId,
                                                                                 @Valid @RequestBody CommentRequestDto.CreateCommentDto request) {
         Comment comment = commentCommandService.createComment(httpServletRequest, postId, request);
+
+
         return ApiResponse.of(SuccessStatus.COMMENT_CREATED, CommentConverter.toCreateCommentResultDto(comment));
     }
 

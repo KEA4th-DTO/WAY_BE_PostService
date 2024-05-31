@@ -3,7 +3,6 @@ package com.dto.way.post.service.notificationService;
 import com.dto.way.message.NotificationMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.SendResult;
@@ -19,13 +18,46 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class NotificationService {
     private final KafkaTemplate<String, NotificationMessage> kafkaTemplate;
-    @Value("${spring.kafka.template.default-topic}")
-    private String topicName;
 
-    public void postNotificationCreate(NotificationMessage notificationMessage) {
+
+    public void likeNotificationCreate(NotificationMessage notificationMessage) {
         Message<NotificationMessage> notification = MessageBuilder
                 .withPayload(notificationMessage)
-                .setHeader(KafkaHeaders.TOPIC, topicName)
+                .setHeader(KafkaHeaders.TOPIC, "like")
+                .build();
+        CompletableFuture<SendResult<String, NotificationMessage>> future =
+                kafkaTemplate.send(notification);
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                log.info("producer: success >>> message: {}, offset: {}",
+                        result.getProducerRecord().value().toString(), result.getRecordMetadata().offset());
+            } else {
+                log.info("producer: failure >>> message: {}", ex.getMessage());
+            }
+        });
+    }
+
+    public void commentNotificationCreate(NotificationMessage notificationMessage) {
+        Message<NotificationMessage> notification = MessageBuilder
+                .withPayload(notificationMessage)
+                .setHeader(KafkaHeaders.TOPIC, "comment")
+                .build();
+        CompletableFuture<SendResult<String, NotificationMessage>> future =
+                kafkaTemplate.send(notification);
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                log.info("producer: success >>> message: {}, offset: {}",
+                        result.getProducerRecord().value().toString(), result.getRecordMetadata().offset());
+            } else {
+                log.info("producer: failure >>> message: {}", ex.getMessage());
+            }
+        });
+    }
+
+    public void replyNotificationCreate(NotificationMessage notificationMessage) {
+        Message<NotificationMessage> notification = MessageBuilder
+                .withPayload(notificationMessage)
+                .setHeader(KafkaHeaders.TOPIC, "reply")
                 .build();
         CompletableFuture<SendResult<String, NotificationMessage>> future =
                 kafkaTemplate.send(notification);
