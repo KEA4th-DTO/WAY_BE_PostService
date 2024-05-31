@@ -55,7 +55,7 @@ public class JwtUtils {
         String jwtToken = getJwtFromHeader(request);
         if (jwtToken != null) {
             Claims claims = getClaim(jwtToken);
-            return claims.get("memberNickname", String.class);
+            return claims.get("nickname", String.class);
         }
         return null;
     }

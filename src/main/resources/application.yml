@@ -16,8 +16,10 @@ spring:
       database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
   kafka:
     bootstrap-servers: kafka-service:9092
-    template:
-      default-topic: like
+    topics:
+      - like
+      - comments
+      - reply
     consumer:
       group-id: group-1
   cloud:
