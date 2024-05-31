@@ -1,11 +1,13 @@
 package com.dto.way.post.service.dailyService;
 
 import com.dto.way.post.domain.Daily;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.LikeRepository;
+import com.dto.way.post.service.commentService.CommentCommandService;
+import com.dto.way.post.service.likeService.LikeCommandService;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
 import com.dto.way.post.web.feign.MemberClient;
@@ -13,11 +15,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.sql.Timestamp;
@@ -26,6 +25,8 @@ import java.sql.Timestamp;
 @RequiredArgsConstructor
 public class DailyQueryServiceImpl implements DailyQueryService {
 
+    private final CommentCommandService commentCommandService;
+    private final LikeCommandService likeCommandService;
     private final DailyRepository dailyRepository;
     private final LikeRepository likeRepository;
     private final EntityManager entityManager;
@@ -49,6 +50,7 @@ public class DailyQueryServiceImpl implements DailyQueryService {
                 .isLiked(isLiked)
                 .isOwned(isOwned)
                 .likesCount((long) daily.getPost().getLikes().size())
+                .commentsCount((long) daily.getPost().getComments().size())
                 .imageUrl(daily.getImageUrl())
                 .expiredAt(daily.getExpiredAt())
                 .createdAt(daily.getCreatedAt())
@@ -92,6 +94,9 @@ public class DailyQueryServiceImpl implements DailyQueryService {
                     MemberResponseDto.GetMemberResultDto writerMemberInfo = memberClient.findMemberByMemberId((Long) result[0]);
                     dto.setWriterNickname(writerMemberInfo.getNickname());
                     dto.setWriterProfileImageUrl(writerMemberInfo.getProfileImageUrl());
+
+                    dto.setCommentsCount(commentCommandService.countComment((long) result[1]));
+                    dto.setLikesCount(likeCommandService.countLikes((long) result[1]));
 
                     return dto;
                 })

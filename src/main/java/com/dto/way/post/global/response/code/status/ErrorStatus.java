@@ -35,6 +35,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 신고 관련 응답
     REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "REPORT4001", "신고내역이 존재하지 않습니다."),
 
+    //  카프카 관련 응답
+    KAFKA_CONSTRUCT_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "KAFKA4001", "KAFKA 연결 실패")
+
     ;
 
 

@@ -1,12 +1,13 @@
 package com.dto.way.post.service.historyService;
 
-import com.dto.way.post.converter.HistoryConverter;
 import com.dto.way.post.domain.History;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
+import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.HistoryRepository;
 import com.dto.way.post.repository.LikeRepository;
+import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.service.commentService.CommentCommandService;
 import com.dto.way.post.service.likeService.LikeCommandService;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
@@ -16,10 +17,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,10 +48,6 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
         History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
         boolean isLiked = likeRepository.existsByPostIdAndMemberId(postId, loginMemberId);
         boolean isOwned = loginMemberId.equals(history.getPost().getMemberId());
-        Long countLike = commentCommandService.countComment(postId);
-        Long countComment = likeCommandService.countLikes(postId);
-
-
 
         return HistoryResponseDto.GetHistoryResultDto.builder()
                 .postId(history.getPostId())
@@ -61,8 +56,8 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                 .body(history.getBody())
                 .isOwned(isOwned)
                 .isLiked(isLiked)
-                .likesCount(countLike)
-                .commentsCount(countComment)
+                .likesCount((long) history.getPost().getLikes().size())
+                .commentsCount((long) history.getPost().getComments().size())
                 .createdAt(history.getCreatedAt()).build();
     }
 
@@ -89,13 +84,15 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                     dto.setBody((String) result[3]);
                     dto.setCreatedAt(((Timestamp) result[4]).toLocalDateTime());
                     dto.setBodyPreview((String) result[5]);
-
                     boolean isLiked = likeRepository.existsByPostIdAndMemberId((Long) result[1], (Long) result[0]);
                     dto.setIsLiked(isLiked);
 
                     MemberResponseDto.GetMemberResultDto writerMemberInfo = memberClient.findMemberByMemberId((Long) result[0]);
                     dto.setWriterNickname(writerMemberInfo.getNickname());
                     dto.setWriterProfileImageUrl(writerMemberInfo.getProfileImageUrl());
+
+                    dto.setCommentsCount(commentCommandService.countComment((long) result[1]));
+                    dto.setLikesCount(likeCommandService.countLikes((long) result[1]));
 
                     return dto;
                 })

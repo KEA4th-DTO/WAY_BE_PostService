@@ -1,17 +1,16 @@
 package com.dto.way.post.service.commentService;
 
-import com.dto.way.post.converter.CommentConverter;
 import com.dto.way.post.domain.Comment;
-import com.dto.way.post.domain.History;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.domain.Post;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;
 import com.dto.way.post.repository.HistoryRepository;
+import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
 import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
 import com.dto.way.post.web.feign.MemberClient;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentQueryServiceImpl implements CommentQueryService {
     private final CommentRepository commentRepository;
-    private final HistoryRepository historyRepository;
+    private final PostRepository postRepository;
     private final JwtUtils jwtUtils;
     private final  MemberClient memberClient;
 
@@ -45,10 +44,11 @@ public class CommentQueryServiceImpl implements CommentQueryService {
     @Override
     public CommentResponseDto.GetCommentListResultDto getCommentListResultDto(HttpServletRequest httpServletRequest, Long postId) {
 
-        History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
+
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
 
-        List<Comment> commentList = commentRepository.findAllByHistory(history);
+        List<Comment> commentList = commentRepository.findAllByPost(post);
         List<CommentResponseDto.GetCommentResultDto> commentResultDtoList = commentList.stream()
                 .map(comment -> {
                     CommentResponseDto.GetCommentResultDto dto = new CommentResponseDto.GetCommentResultDto();

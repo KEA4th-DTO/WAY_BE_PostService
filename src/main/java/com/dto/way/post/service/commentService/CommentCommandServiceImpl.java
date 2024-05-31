@@ -3,12 +3,14 @@ package com.dto.way.post.service.commentService;
 import com.dto.way.message.NotificationMessage;
 import com.dto.way.post.converter.CommentConverter;
 import com.dto.way.post.domain.Comment;
-import com.dto.way.post.domain.History;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.domain.Post;
+import com.dto.way.post.domain.enums.PostType;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.KafkaExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;
-import com.dto.way.post.repository.HistoryRepository;
+import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.service.notificationService.NotificationService;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
@@ -16,14 +18,17 @@ import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
 import com.dto.way.post.web.feign.MemberClient;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.KafkaException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentCommandServiceImpl implements CommentCommandService {
 
-    private final HistoryRepository historyRepository;
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final NotificationService notificationService;
     private final MemberClient memberClient;
@@ -36,16 +41,16 @@ public class CommentCommandServiceImpl implements CommentCommandService {
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         String loginMemberNickname = jwtUtils.getMemberNicknameFromRequest(httpServletRequest);
 
-        History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
 
-        Comment comment = commentRepository.save(CommentConverter.toComment(loginMemberId, history, createCommentDto));
+        Comment comment = commentRepository.save(CommentConverter.toComment(loginMemberId, post, createCommentDto));
 
         // 알림을 위한 데이터 세팅
-        String targetObject = history.getTitle();
+        String targetObject = post.getPostType().equals(PostType.DAILY) ? post.getDaily().getTitle() : post.getHistory().getTitle();
         if (targetObject.length() > 10) {
             targetObject = targetObject.substring(0, 10);
         }
-        Long targetMemberId = history.getPost().getMemberId();
+        Long targetMemberId = post.getMemberId();
         MemberResponseDto.GetMemberResultDto targetMemberResultDto = memberClient.findMemberByMemberId(targetMemberId);
         String targetMemberNickname = targetMemberResultDto.getNickname();
         String noticeMessage = loginMemberNickname + "님이 회원님의 \"" + targetObject + "\"에 댓글을 남겼습니다.";
@@ -99,8 +104,8 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
     @Override
     public Long countComment(Long postId) {
-        History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
 
-        return commentRepository.countByHistory(history);
+        return commentRepository.countByPost(post);
     }
 }

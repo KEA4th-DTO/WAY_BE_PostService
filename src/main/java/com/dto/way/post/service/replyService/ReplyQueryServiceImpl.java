@@ -1,9 +1,8 @@
 package com.dto.way.post.service.replyService;
 
-import com.dto.way.post.converter.ReplyConverter;
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.Reply;
-import com.dto.way.post.global.exception.ExceptionHandler;
+import com.dto.way.post.global.exception.handler.ExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;
@@ -11,7 +10,6 @@ import com.dto.way.post.repository.ReplyRepository;
 import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
 import com.dto.way.post.web.dto.replyDto.ReplyResponseDto;
 import com.dto.way.post.web.feign.MemberClient;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -2,6 +2,7 @@ package com.dto.way.post.converter;
 
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.History;
+import com.dto.way.post.domain.Post;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
 import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
@@ -15,12 +16,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentConverter {
 
-    private final MemberClient memberClient;
-
-    public static Comment toComment(Long memberId, History history, CommentRequestDto.CreateCommentDto request) {
+    public static Comment toComment(Long memberId, Post post, CommentRequestDto.CreateCommentDto request) {
         return Comment.builder()
                 .memberId(memberId)
-                .history(history)
+                .post(post)
                 .body(request.getBody())
                 .build();
     }

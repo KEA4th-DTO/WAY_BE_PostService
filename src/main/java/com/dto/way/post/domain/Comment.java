@@ -22,7 +22,7 @@ public class Comment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    private History history;
+    private Post post;
 
     private Long memberId;
 

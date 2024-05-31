@@ -2,7 +2,6 @@ package com.dto.way.post.web.controller;
 
 import com.dto.way.post.converter.CommentConverter;
 import com.dto.way.post.domain.Comment;
-import com.dto.way.post.global.exception.ExceptionHandler;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.global.utils.JwtUtils;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -30,7 +28,7 @@ public class CommentRestController {
     private final JwtUtils jwtUtils;
 
 
-    @Operation(summary = "댓글 생성 API", description = "History 게시글에 댓글을 작성하는 API 입니다. PathVariable 으로 게시글의 postId, RequestBody 으로 댓글 내용을 전송해주세요.")
+    @Operation(summary = "댓글 생성 API", description = "게시글에 댓글을 작성하는 API 입니다. PathVariable 으로 게시글의 postId, RequestBody 으로 댓글 내용을 전송해주세요.")
     @PostMapping("/{postId}")
     public ApiResponse<CommentResponseDto.CreateCommentResultDto> createComment(HttpServletRequest httpServletRequest,
                                                                                 @PathVariable(name = "postId") Long postId,
@@ -41,14 +39,14 @@ public class CommentRestController {
         return ApiResponse.of(SuccessStatus.COMMENT_CREATED, CommentConverter.toCreateCommentResultDto(comment));
     }
 
-    @Operation(summary = "댓글 삭제 API", description = "History 게시글에 댓글을 삭제하는 API 입니다. PathVariable 으로 삭제할 댓글의 commentId를 전송해주세요.")
+    @Operation(summary = "댓글 삭제 API", description = "게시글에 댓글을 삭제하는 API 입니다. PathVariable 으로 삭제할 댓글의 commentId를 전송해주세요.")
     @DeleteMapping("/{commentId}")
     public ApiResponse<CommentResponseDto.DeleteCommentResultDto> createComment(HttpServletRequest httpServletRequest,
                                                                                 @PathVariable(name = "commentId") Long commentId) {
         return ApiResponse.of(SuccessStatus.COMMENT_DELETED, commentCommandService.deleteComment(httpServletRequest, commentId));
     }
 
-    @Operation(summary = "댓글 수정 API", description = "History 게시글에 댓글을 수정하는 API 입니다. PathVariable 으로 수정할 댓글의 commentId, RequestBody 으로 댓글 수정 내용을 전송해주세요.")
+    @Operation(summary = "댓글 수정 API", description = "게시글에 댓글을 수정하는 API 입니다. PathVariable 으로 수정할 댓글의 commentId, RequestBody 으로 댓글 수정 내용을 전송해주세요.")
     @PatchMapping("/{commentId}")
     public ApiResponse<CommentResponseDto.UpdateCommentResultDto> updateComment(HttpServletRequest httpServletRequest,
                                                                                 @PathVariable(name = "commentId") Long commentId,
