@@ -24,8 +24,8 @@ public class PostResponseDto {
         private PostType postType;
         private Boolean isLiked;
         private Long likesCount;
-        private String bodyPreview;
         private Long commentsCount;
+        private String bodyPreview;
         private LocalDateTime createdAt;
         private LocalDateTime expiredAt;
         private Expiration postStatus;

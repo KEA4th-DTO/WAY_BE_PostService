@@ -95,6 +95,9 @@ public class DailyQueryServiceImpl implements DailyQueryService {
                     dto.setWriterNickname(writerMemberInfo.getNickname());
                     dto.setWriterProfileImageUrl(writerMemberInfo.getProfileImageUrl());
 
+                    dto.setCommentsCount(commentCommandService.countComment((long) result[1]));
+                    dto.setLikesCount(likeCommandService.countLikes((long) result[1]));
+
                     return dto;
                 })
                 .collect(Collectors.toList());
