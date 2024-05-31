@@ -2,7 +2,6 @@ package com.dto.way.post.web.controller;
 
 import com.dto.way.message.NotificationMessage;
 import com.dto.way.post.converter.PostConverter;
-import com.dto.way.post.domain.Post;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.global.utils.JwtUtils;
@@ -18,8 +17,6 @@ import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -102,20 +99,24 @@ public class PostRestController {
         String message;
 
         Long targetMemberId = postCommandService.findWriterIdByPostId(postId);
-        String targetTitle = postCommandService.findPostTitleByPostId(postId);
+        String targetObject = postCommandService.findPostTitleByPostId(postId);
+        if (targetObject.length() > 10) {
+            targetObject = targetObject.substring(0, 10);
+        }
 
         if (isLiked) {
             status = SuccessStatus.POST_LIKE;
-            String token = jwtUtils.getJwtFromHeader(httpServletRequest);
-            Claims claims = jwtUtils.getClaim(token);
+
+            String loginMemberNickname = jwtUtils.getMemberNicknameFromRequest(httpServletRequest);
 
             MemberResponseDto.GetMemberResultDto targetMemberResultDto = memberClient.findMemberByMemberId(targetMemberId);
+            String targetMemberNickname = targetMemberResultDto.getNickname();
 
-            message = claims.get("nickname") + "님이 회원님의 \"" + targetTitle + "\"에 좋아요를 눌렀습니다. ";
-            NotificationMessage notificationMessage = notificationService.createNotificationMessage(targetMemberId, targetMemberResultDto.getNickname(), message);
+            message = loginMemberNickname + "님이 회원님의 \"" + targetObject + "\"에 좋아요를 눌렀습니다. ";
+            NotificationMessage notificationMessage = notificationService.createNotificationMessage(targetMemberId, targetMemberNickname, message);
 
             // Kafka로 메세지 전송
-            notificationService.postNotificationCreate(notificationMessage);
+            notificationService.likeNotificationCreate(notificationMessage);
         } else {
             status = SuccessStatus.POST_UNLIKE;
         }
