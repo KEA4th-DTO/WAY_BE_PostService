@@ -10,6 +10,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
@@ -20,6 +21,7 @@ public class NotificationService {
     private final KafkaTemplate<String, NotificationMessage> kafkaTemplate;
     @Value("${spring.kafka.template.default-topic}")
     private String topicName;
+
     public void postNotificationCreate(NotificationMessage notificationMessage) {
         Message<NotificationMessage> notification = MessageBuilder
                 .withPayload(notificationMessage)
@@ -36,9 +38,11 @@ public class NotificationService {
             }
         });
     }
-    public NotificationMessage createNotificationMessage(String sendedMember, String message) {
+
+    public NotificationMessage createNotificationMessage(Long targetMemberId, String targetMemberNickname, String message) {
         NotificationMessage notificationMessage = new NotificationMessage();
-        notificationMessage.setSendedMember(sendedMember);
+        notificationMessage.setTargetMemberId(targetMemberId);
+        notificationMessage.setTargetMemberNickname(targetMemberNickname);
         notificationMessage.setMessage(message);
         notificationMessage.setCreatedAt(LocalDateTime.now());
         return notificationMessage;
