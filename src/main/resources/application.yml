@@ -59,4 +59,4 @@ springdoc:
 
 config:
   feign:
-    member-url: http://apis.way-blog.today/member-service
+    member-url: https://apis.way-blog.today/member-service
