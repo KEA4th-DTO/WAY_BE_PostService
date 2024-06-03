@@ -51,6 +51,7 @@ public class DailyResponseDto {
         private String writerProfileImageUrl;
         private String title;
         private String body;
+        private String address;
         private Boolean isLiked;
         private Long likesCount;
         private Long commentsCount;

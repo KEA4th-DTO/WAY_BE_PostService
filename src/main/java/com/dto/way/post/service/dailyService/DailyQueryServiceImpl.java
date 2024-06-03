@@ -47,6 +47,7 @@ public class DailyQueryServiceImpl implements DailyQueryService {
                 .postId(daily.getPostId())
                 .title(daily.getTitle())
                 .body(daily.getBody())
+                .address(daily.getPost().getAddress())
                 .isLiked(isLiked)
                 .isOwned(isOwned)
                 .likesCount((long) daily.getPost().getLikes().size())

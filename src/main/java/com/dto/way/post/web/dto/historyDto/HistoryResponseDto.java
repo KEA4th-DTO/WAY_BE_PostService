@@ -50,6 +50,7 @@ public class HistoryResponseDto {
         private Long postId;
         private String writerNickname;
         private String writerProfileImageUrl;
+        private String address;
         private String title;
         private String body;
         private String bodyPreview;
