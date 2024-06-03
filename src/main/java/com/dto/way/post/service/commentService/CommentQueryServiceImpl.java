@@ -34,6 +34,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
         Boolean isOwned = comment.getMemberId().equals(loginMemberId);
 
         return CommentResponseDto.GetCommentResultDto.builder()
+                .commentId(comment.getCommentId())
                 .body(comment.getBody())
                 .isOwned(isOwned)
                 .replyCounts((long) comment.getReplyList().size())
@@ -52,6 +53,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
         List<CommentResponseDto.GetCommentResultDto> commentResultDtoList = commentList.stream()
                 .map(comment -> {
                     CommentResponseDto.GetCommentResultDto dto = new CommentResponseDto.GetCommentResultDto();
+                    dto.setCommentId(comment.getCommentId());
                     dto.setBody(comment.getBody());
                     dto.setIsOwned(loginMemberId.equals(comment.getMemberId()));
                     dto.setReplyCounts((long) comment.getReplyList().size());

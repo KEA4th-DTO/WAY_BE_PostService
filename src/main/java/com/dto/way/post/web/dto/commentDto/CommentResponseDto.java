@@ -41,6 +41,7 @@ public class CommentResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class GetCommentResultDto{
+        private Long commentId;
         private String writerNickname;
         private String writerProfileImageUrl;
         private String body;
