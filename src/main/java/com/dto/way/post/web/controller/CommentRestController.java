@@ -86,7 +86,7 @@ public class CommentRestController {
         return ApiResponse.of(SuccessStatus.COMMENT_LIST_FOUND, getCommentListResultDto);
     }
 
-
+    @Operation(summary = "댓글 좋아요 기능 API", description = "댓글에 좋아요/좋아요 취소 기능을 하는 API 입니다. PathVariable 으로 좋아요 처리를 할 댓글의 commentId 를 전송해주세요.")
     @PostMapping("/like/{commentId}")
     public ApiResponse<CommentLikeResponseDto.CommentLikeResultDto> likeComment(HttpServletRequest httpServletRequest,
                                                                                 @PathVariable(name = "commentId")Long commentId) {
