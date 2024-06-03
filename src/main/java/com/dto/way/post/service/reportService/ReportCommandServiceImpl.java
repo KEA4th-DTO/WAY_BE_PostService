@@ -45,14 +45,14 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         }
 
         if (reportType.equals(ReportType.COMMENT)) {
-            Comment comment = commentRepository.findByCommentId(targetId).orElseThrow(() ->  new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
-            report = ReportConverter.toReport(loginMemberId, comment.getCommentId(), request);
+            Comment comment = commentRepository.findById(targetId).orElseThrow(() ->  new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
+            report = ReportConverter.toReport(loginMemberId, comment.getId(), request);
 
         }
 
         if (reportType.equals(ReportType.REPLY)) {
-            Reply reply = replyRepository.findByReplyId(targetId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPLY_NOT_FOUND));
-            report = ReportConverter.toReport(loginMemberId, reply.getReplyId(), request);
+            Reply reply = replyRepository.findById(targetId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPLY_NOT_FOUND));
+            report = ReportConverter.toReport(loginMemberId, reply.getId(), request);
 
 
         }

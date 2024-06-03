@@ -11,4 +11,8 @@ public interface CommentQueryService {
     CommentResponseDto.GetCommentResultDto getCommentResultDto(HttpServletRequest httpServletRequest, Long commentId);
 
     CommentResponseDto.GetCommentListResultDto getCommentListResultDto(HttpServletRequest httpServletRequest, Long postId);
+
+    Long findWriterIdByCommentId(Long commentId);
+
+    String findCommentBodyByCommentId(Long commentId);
 }

@@ -38,8 +38,5 @@ public class LikeCommandServiceImpl implements LikeCommandService {
         }
     }
 
-    @Override
-    public Long countLikes(Long postId) {
-        return likeRepository.countByPostId(postId);
-    }
+
 }

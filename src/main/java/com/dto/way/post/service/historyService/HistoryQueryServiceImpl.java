@@ -10,6 +10,7 @@ import com.dto.way.post.repository.LikeRepository;
 import com.dto.way.post.repository.PostRepository;
 import com.dto.way.post.service.commentService.CommentCommandService;
 import com.dto.way.post.service.likeService.LikeCommandService;
+import com.dto.way.post.service.likeService.LikeQueryService;
 import com.dto.way.post.web.dto.historyDto.HistoryResponseDto;
 import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
 import com.dto.way.post.web.feign.MemberClient;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 public class HistoryQueryServiceImpl implements HistoryQueryService{
 
     private final CommentCommandService commentCommandService;
-    private final LikeCommandService likeCommandService;
+    private final LikeQueryService likeQueryService;
     private final HistoryRepository historyRepository;
     private final LikeRepository likeRepository;
     private final EntityManager entityManager;
@@ -92,7 +93,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                     dto.setWriterProfileImageUrl(writerMemberInfo.getProfileImageUrl());
 
                     dto.setCommentsCount(commentCommandService.countComment((long) result[1]));
-                    dto.setLikesCount(likeCommandService.countLikes((long) result[1]));
+                    dto.setLikesCount(likeQueryService.countLikes((long) result[1]));
 
                     return dto;
                 })

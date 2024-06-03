@@ -1,29 +1,27 @@
 package com.dto.way.post.domain;
 
-import com.dto.way.post.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Entity
-@Getter
-@Builder
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reply extends BaseEntity {
+@NoArgsConstructor
+public class CommentLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String body;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
+    @NonNull
     private Comment comment;
 
+    @NonNull
     private Long memberId;
 
-    public void updateBody(String body) {
-        this.body = body;
-    }
 }

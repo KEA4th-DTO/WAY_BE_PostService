@@ -1,15 +1,21 @@
 package com.dto.way.post.web.controller;
 
+import com.dto.way.message.NotificationMessage;
 import com.dto.way.post.converter.CommentConverter;
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.global.utils.JwtUtils;
+import com.dto.way.post.service.commentLikeService.CommentLikeCommandService;
+import com.dto.way.post.service.commentLikeService.CommentLikeQueryService;
 import com.dto.way.post.service.commentService.CommentCommandService;
 import com.dto.way.post.service.commentService.CommentQueryService;
 import com.dto.way.post.service.notificationService.NotificationService;
 import com.dto.way.post.web.dto.commentDto.CommentRequestDto;
 import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
+import com.dto.way.post.web.dto.commentLikeDto.CommentLikeResponseDto;
+import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
+import com.dto.way.post.web.feign.MemberClient;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -24,8 +30,11 @@ public class CommentRestController {
 
     private final CommentCommandService commentCommandService;
     private final CommentQueryService commentQueryService;
+    private final CommentLikeCommandService commentLikeCommandService;
+    private final CommentLikeQueryService commentLikeQueryService;
     private final NotificationService notificationService;
     private final JwtUtils jwtUtils;
+    private final MemberClient memberClient;
 
 
     @Operation(summary = "댓글 생성 API", description = "게시글에 댓글을 작성하는 API 입니다. PathVariable 으로 게시글의 postId, RequestBody 으로 댓글 내용을 전송해주세요.")
@@ -75,5 +84,42 @@ public class CommentRestController {
         }
 
         return ApiResponse.of(SuccessStatus.COMMENT_LIST_FOUND, getCommentListResultDto);
+    }
+
+
+    @PostMapping("/like/{commentId}")
+    public ApiResponse<CommentLikeResponseDto.CommentLikeResultDto> likeComment(HttpServletRequest httpServletRequest,
+                                                                                @PathVariable(name = "commentId")Long commentId) {
+        Boolean isLiked = commentLikeCommandService.likeComment(httpServletRequest, commentId);
+        CommentLikeResponseDto.CommentLikeResultDto dto = new CommentLikeResponseDto.CommentLikeResultDto(commentId, commentLikeQueryService.countCommentLike(commentId));
+
+        SuccessStatus status;
+        String message;
+
+        Long targetMemberId = commentQueryService.findWriterIdByCommentId(commentId);
+        String targetObject = commentQueryService.findCommentBodyByCommentId(commentId);
+        if (targetObject.length() > 10) {
+            targetObject = targetObject.substring(0, 10);
+        }
+
+        if (isLiked) {
+            status = SuccessStatus.COMMENT_LIKE;
+
+            String loginMemberNickname = jwtUtils.getMemberNicknameFromRequest(httpServletRequest);
+
+            MemberResponseDto.GetMemberResultDto targetMemberResultDto = memberClient.findMemberByMemberId(targetMemberId);
+            String targetMemberNickname = targetMemberResultDto.getNickname();
+
+            message = loginMemberNickname + "님이 회원님의 댓글 \"" + targetObject + "\"에 좋아요를 눌렀습니다. ";
+            NotificationMessage notificationMessage = notificationService.createNotificationMessage(targetMemberId, targetMemberNickname, message);
+
+            // Kafka로 메세지 전송
+            notificationService.commentLikeNotificationCreate(notificationMessage);
+        } else {
+            status = SuccessStatus.COMMENT_UNLIKE;
+        }
+
+        return ApiResponse.of(status, dto);
+
     }
 }

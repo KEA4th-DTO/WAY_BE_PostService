@@ -47,6 +47,8 @@ public class CommentResponseDto {
         private String body;
         private Long replyCounts;
         private Boolean isOwned;
+        private Boolean isLiked;
+        private Long likeCounts;
         private LocalDateTime createdAt;
     }
 

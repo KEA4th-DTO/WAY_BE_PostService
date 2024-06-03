@@ -20,6 +20,7 @@ spring:
       - like
       - comments
       - reply
+      - commentLike
     consumer:
       group-id: group-1
   cloud:

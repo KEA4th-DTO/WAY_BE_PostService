@@ -30,7 +30,6 @@ public enum SuccessStatus implements BaseCode {
     POSTS_FOUND_BY_RANGE_PERSONAL(HttpStatus.OK,"POST2006", "해당 유저의 게시글 목록을 조회하였습니다."),
     PINS_FOUND_BY_RANGE_PERSONAL(HttpStatus.OK,"POST2007", "해당 유저의 핀을 모두 조회하였습니다."),
 
-
     //  데일리 관련 응답
     DAILY_CREATED(HttpStatus.OK, "DAILY2001", "Daily 게시글이 생성되었습니다."),
     DAILY_UPDATED(HttpStatus.OK,"DAILY2002","Daily 게시글이 수정되었습니다."),
@@ -51,8 +50,6 @@ public enum SuccessStatus implements BaseCode {
     HISTORY_BODY_SEARCH(HttpStatus.OK, "HISTORY2008", "내용 키워드 검색을 성공했습니다."),
     HISTORY_SEARCH_NO_RESULT(HttpStatus.OK, "HISTORY2009", "해당 키워드로 검색한 결과가 없습니다."),
 
-
-
     //  댓글 관련 응답
     COMMENT_CREATED(HttpStatus.OK, "COMMENT2001", "댓글이 생성되었습니다."),
     COMMENT_DELETED(HttpStatus.OK, "COMMENT2002", "댓글이 삭제되었습니다."),
@@ -60,6 +57,8 @@ public enum SuccessStatus implements BaseCode {
     COMMENT_FOUND(HttpStatus.OK, "COMMENT2004", "댓글이 조회되었습니다."),
     COMMENT_LIST_FOUND(HttpStatus.OK, "COMMENT2005", "댓글 목록이 조회되었습니다."),
     COMMENT_LIST_NOT_FOUND(HttpStatus.OK, "COMMENT2006", "게시글에 댓글이 존재하지 않습니다."),
+    COMMENT_LIKE(HttpStatus.OK,"COMMENT2007","댓글 좋아요 처리가 되었습니다."),
+    COMMENT_UNLIKE(HttpStatus.OK,"COMMENT2008","댓글 좋아요 취소 처리가 되었습니다."),
 
     //  대댓글 관련 응답
     REPLY_CREATED(HttpStatus.OK, "REPLY2001", "대댓글이 생성되었습니다."),
@@ -68,8 +67,6 @@ public enum SuccessStatus implements BaseCode {
     REPLY_FOUND(HttpStatus.OK, "REPLY2004", "대댓글이 조회되었습니다."),
     REPLY_LIST_FOUND(HttpStatus.OK, "REPLY2005", "대댓글 목록이 조회되었습니다."),
     REPLY_LIST_NOT_FOUND(HttpStatus.OK, "REPLY2006", "댓글에 대댓글이 존재하지 않습니다."),
-
-
 
     //  신고 관련 응답
     REPORT_CREATED(HttpStatus.OK, "REPORT2001", "신고 목록에 추가되었습니다."),

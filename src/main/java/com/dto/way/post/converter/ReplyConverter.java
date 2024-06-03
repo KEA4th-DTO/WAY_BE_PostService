@@ -2,7 +2,6 @@ package com.dto.way.post.converter;
 
 import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.Reply;
-import com.dto.way.post.web.dto.commentDto.CommentResponseDto;
 import com.dto.way.post.web.dto.replyDto.ReplyRequestDto;
 import com.dto.way.post.web.dto.replyDto.ReplyResponseDto;
 
@@ -22,21 +21,21 @@ public class ReplyConverter {
 
     public static ReplyResponseDto.CreateReplyResultDto toCreateReplyResultDto(Reply reply) {
         return ReplyResponseDto.CreateReplyResultDto.builder()
-                .replyId(reply.getReplyId())
+                .replyId(reply.getId())
                 .createAt(reply.getCreatedAt())
                 .build();
     }
 
     public static ReplyResponseDto.DeleteReplyResultDto toDeleteReplyResultDto(Reply reply) {
         return ReplyResponseDto.DeleteReplyResultDto.builder()
-                .replyId(reply.getReplyId())
+                .replyId(reply.getId())
                 .deletedAt(LocalDateTime.now())
                 .build();
     }
 
     public static ReplyResponseDto.UpdateReplyResultDto toUpdateReplyResultDto(Reply reply) {
         return ReplyResponseDto.UpdateReplyResultDto.builder()
-                .replyId(reply.getReplyId())
+                .replyId(reply.getId())
                 .updatedAt(reply.getUpdatedAt())
                 .build();
     }

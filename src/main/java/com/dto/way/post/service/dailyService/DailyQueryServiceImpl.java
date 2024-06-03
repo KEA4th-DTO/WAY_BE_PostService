@@ -8,6 +8,7 @@ import com.dto.way.post.repository.DailyRepository;
 import com.dto.way.post.repository.LikeRepository;
 import com.dto.way.post.service.commentService.CommentCommandService;
 import com.dto.way.post.service.likeService.LikeCommandService;
+import com.dto.way.post.service.likeService.LikeQueryService;
 import com.dto.way.post.web.dto.dailyDto.DailyResponseDto;
 import com.dto.way.post.web.dto.memberDto.MemberResponseDto;
 import com.dto.way.post.web.feign.MemberClient;
@@ -26,7 +27,7 @@ import java.sql.Timestamp;
 public class DailyQueryServiceImpl implements DailyQueryService {
 
     private final CommentCommandService commentCommandService;
-    private final LikeCommandService likeCommandService;
+    private final LikeQueryService likeQueryService;
     private final DailyRepository dailyRepository;
     private final LikeRepository likeRepository;
     private final EntityManager entityManager;
@@ -96,7 +97,7 @@ public class DailyQueryServiceImpl implements DailyQueryService {
                     dto.setWriterProfileImageUrl(writerMemberInfo.getProfileImageUrl());
 
                     dto.setCommentsCount(commentCommandService.countComment((long) result[1]));
-                    dto.setLikesCount(likeCommandService.countLikes((long) result[1]));
+                    dto.setLikesCount(likeQueryService.countLikes((long) result[1]));
 
                     return dto;
                 })
