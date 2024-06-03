@@ -53,6 +53,12 @@ public class NotificationService {
         return sendNotification("reply", notificationMessage);
     }
 
+    @Async
+    public CompletableFuture<Void> commentLikeNotificationCreate(NotificationMessage notificationMessage) {
+        return sendNotification("commentLike", notificationMessage);
+    }
+
+
     public NotificationMessage createNotificationMessage(Long targetMemberId, String targetMemberNickname, String message) {
         NotificationMessage notificationMessage = new NotificationMessage();
         notificationMessage.setTargetMemberId(targetMemberId);

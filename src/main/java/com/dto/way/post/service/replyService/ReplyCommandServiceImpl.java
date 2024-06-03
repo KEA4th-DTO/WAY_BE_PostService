@@ -35,7 +35,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         String loginMemberNickname = jwtUtils.getMemberNicknameFromRequest(httpServletRequest);
 
-        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         Reply reply = replyRepository.save(ReplyConverter.toReply(loginMemberId, comment, createReplyDto));
 
@@ -60,7 +60,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     @Override
     public ReplyResponseDto.DeleteReplyResultDto deleteReply(HttpServletRequest httpServletRequest, Long replyId) {
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPLY_NOT_FOUND));
+        Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPLY_NOT_FOUND));
         ReplyResponseDto.DeleteReplyResultDto deleteReplyResultDto = ReplyConverter.toDeleteReplyResultDto(reply);
 
         if (loginMemberId.equals(reply.getMemberId())) {
@@ -74,7 +74,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     @Override
     public Reply updateReply(HttpServletRequest httpServletRequest, Long replyId, ReplyRequestDto.UpdateReplyDto updateReplyDto) {
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
+        Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         if (loginMemberId.equals(reply.getMemberId())) {
             if (updateReplyDto.getBody() != null) {
@@ -92,7 +92,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     @Override
     public Long countReply(Long commentId) {
 
-        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         return replyRepository.countByComment(comment);
     }

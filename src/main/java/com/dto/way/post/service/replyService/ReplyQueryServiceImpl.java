@@ -30,7 +30,7 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
     @Override
     public ReplyResponseDto.GetReplyResultDto getReplyResultDto(HttpServletRequest httpServletRequest, Long replyId) {
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Reply reply = replyRepository.findByReplyId(replyId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPLY_NOT_FOUND));
+        Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPLY_NOT_FOUND));
 
         Boolean isOwned = reply.getMemberId().equals(loginMemberId);
 
@@ -45,7 +45,7 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
     public ReplyResponseDto.GetReplyListResultDto getReplyListResultDto(HttpServletRequest httpServletRequest,Long commentId) {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() ->  new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->  new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         List<Reply> replyList = replyRepository.findAllByComment(comment);
 

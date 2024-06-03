@@ -6,7 +6,6 @@ import com.dto.way.post.domain.Comment;
 import com.dto.way.post.domain.Post;
 import com.dto.way.post.domain.enums.PostType;
 import com.dto.way.post.global.exception.handler.ExceptionHandler;
-import com.dto.way.post.global.exception.handler.KafkaExceptionHandler;
 import com.dto.way.post.global.response.code.status.ErrorStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.repository.CommentRepository;
@@ -19,7 +18,6 @@ import com.dto.way.post.web.feign.MemberClient;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.KafkaException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +67,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
 
-        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         CommentResponseDto.DeleteCommentResultDto deleteCommentResultDto = CommentConverter.toDeleteCommentResultDto(comment);
         if (loginMemberId.equals(comment.getMemberId())) {
@@ -87,7 +85,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
 
-        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_NOT_FOUND));
 
         if (loginMemberId.equals(comment.getMemberId())) {
             if (updateCommentDto.getBody() != null) {

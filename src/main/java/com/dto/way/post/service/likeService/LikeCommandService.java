@@ -9,5 +9,4 @@ public interface LikeCommandService {
 
     Boolean likePost(HttpServletRequest httpServletRequest, Long postId);
 
-    Long countLikes(Long postId);
 }

@@ -6,6 +6,7 @@ import com.dto.way.post.global.response.ApiResponse;
 import com.dto.way.post.global.response.code.status.SuccessStatus;
 import com.dto.way.post.global.utils.JwtUtils;
 import com.dto.way.post.service.likeService.LikeCommandService;
+import com.dto.way.post.service.likeService.LikeQueryService;
 import com.dto.way.post.service.notificationService.NotificationService;
 import com.dto.way.post.service.postService.PostCommandService;
 import com.dto.way.post.service.postService.PostQueryService;
@@ -27,6 +28,7 @@ import java.util.List;
 public class PostRestController {
     private final PostQueryService postQueryService;
     private final LikeCommandService likeCommandService;
+    private final LikeQueryService likeQueryService;
     private final PostCommandService postCommandService;
     private final NotificationService notificationService;
     private final JwtUtils jwtUtils;
@@ -93,7 +95,7 @@ public class PostRestController {
     public ApiResponse<LikeResponseDto.LikeResultDto> likePost(HttpServletRequest httpServletRequest,
                                                                @PathVariable(name = "postId") Long postId) {
         Boolean isLiked = likeCommandService.likePost(httpServletRequest, postId);
-        LikeResponseDto.LikeResultDto dto = new LikeResponseDto.LikeResultDto(postId, likeCommandService.countLikes(postId));
+        LikeResponseDto.LikeResultDto dto = new LikeResponseDto.LikeResultDto(postId, likeQueryService.countLikes(postId));
 
         SuccessStatus status;
         String message;
@@ -112,7 +114,7 @@ public class PostRestController {
             MemberResponseDto.GetMemberResultDto targetMemberResultDto = memberClient.findMemberByMemberId(targetMemberId);
             String targetMemberNickname = targetMemberResultDto.getNickname();
 
-            message = loginMemberNickname + "님이 회원님의 \"" + targetObject + "\"에 좋아요를 눌렀습니다. ";
+            message = loginMemberNickname + "님이 회원님의 게시글 \"" + targetObject + "\"에 좋아요를 눌렀습니다. ";
             NotificationMessage notificationMessage = notificationService.createNotificationMessage(targetMemberId, targetMemberNickname, message);
 
             // Kafka로 메세지 전송
