@@ -104,7 +104,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
         if (loginMemberId.equals(history.getPost().getMemberId())) {
             s3Manager.deleteFile(history.getThumbnailImageUrl());
-            historyRepository.delete(history);
+            postRepository.delete(history.getPost());
         } else {
             //  사용자와 작성자가 다르면 예외처리
             throw new ExceptionHandler(ErrorStatus._FORBIDDEN);

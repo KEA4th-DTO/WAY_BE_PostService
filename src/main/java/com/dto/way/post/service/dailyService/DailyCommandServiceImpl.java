@@ -121,7 +121,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
         if (loginMemberId.equals(daily.getPost().getMemberId())) {
             //  사용자와 작성자가 같으면 삭제 가능
             s3Manager.deleteFile(daily.getImageUrl());
-            dailyRepository.delete(daily);
+            postRepository.delete(daily.getPost());
         } else {
             //  사용자와 작성자가 다르면 예외처리
             throw new ExceptionHandler(ErrorStatus._FORBIDDEN);

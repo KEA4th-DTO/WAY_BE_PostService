@@ -27,7 +27,6 @@ public class History extends BaseEntity {
     private String thumbnailImageUrl;
     private String bodyPreview;
 
-
     public void updateTitle(String title) {
         this.title = title;
     }
