@@ -18,10 +18,12 @@ import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/post-service/posts")
 @RequiredArgsConstructor
@@ -131,7 +133,8 @@ public class PostRestController {
             MemberResponseDto.GetMemberResultDto targetMemberResultDto = memberClient.findMemberByMemberId(targetMemberId);
             String targetMemberNickname = targetMemberResultDto.getNickname();
 
-            message = loginMemberNickname + "님이 회원님의 \"" + targetObject + "\"게시글에 좋아요를 눌렀습니다. ";
+            message = String.format("%s님이 회원님의 \"%s\" 게시글에 좋아요를 눌렀습니다.", loginMemberNickname, targetObject);
+
             NotificationMessage notificationMessage = notificationService.createNotificationMessage(targetMemberId, targetMemberNickname, message);
 
             // Kafka로 메세지 전송
