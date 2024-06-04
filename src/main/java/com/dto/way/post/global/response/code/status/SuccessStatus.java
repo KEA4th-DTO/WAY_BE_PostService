@@ -30,6 +30,7 @@ public enum SuccessStatus implements BaseCode {
     POSTS_FOUND_BY_RANGE_PERSONAL(HttpStatus.OK,"POST2006", "해당 유저의 게시글 목록을 조회하였습니다."),
     PINS_FOUND_BY_RANGE_PERSONAL(HttpStatus.OK,"POST2007", "해당 유저의 핀을 모두 조회하였습니다."),
 
+
     //  데일리 관련 응답
     DAILY_CREATED(HttpStatus.OK, "DAILY2001", "Daily 게시글이 생성되었습니다."),
     DAILY_UPDATED(HttpStatus.OK,"DAILY2002","Daily 게시글이 수정되었습니다."),
