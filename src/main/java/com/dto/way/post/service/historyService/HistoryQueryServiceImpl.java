@@ -66,7 +66,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
     @Override
     @Transactional(readOnly = true)
     public HistoryResponseDto.GetHistoryListResultDto getHistoryListByRange(HttpServletRequest httpServletRequest, Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
-        String sql = "SELECT p.member_id, p.post_id, h.title, h.body, h.created_at,h.body_preview FROM post p JOIN history h ON h.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
+        String sql = "SELECT p.member_id, p.post_id, h.title, h.body, h.created_at,h.body_preview, h.thumbnail_image_url FROM post p JOIN history h ON h.post_id = p.post_id WHERE ST_Contains(ST_MakeEnvelope(:x1, :y1, :x2, :y2, 4326), p.point) = true";
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter("x1", longitude1);
         query.setParameter("y1", latitude1);
@@ -86,6 +86,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
                     dto.setBody((String) result[3]);
                     dto.setCreatedAt(((Timestamp) result[4]).toLocalDateTime());
                     dto.setBodyPreview((String) result[5]);
+                    dto.setThumbnailImageUrl((String) result[6]);
                     boolean isLiked = likeRepository.existsByPostIdAndMemberId((Long) result[1], (Long) result[0]);
                     dto.setIsLiked(isLiked);
 

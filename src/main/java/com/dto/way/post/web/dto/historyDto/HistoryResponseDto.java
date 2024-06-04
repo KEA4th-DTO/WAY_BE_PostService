@@ -48,6 +48,7 @@ public class HistoryResponseDto {
     @AllArgsConstructor
     public static class GetHistoryResultDto {
         private Long postId;
+        private String thumbnailImageUrl;
         private String writerNickname;
         private String writerProfileImageUrl;
         private String address;
