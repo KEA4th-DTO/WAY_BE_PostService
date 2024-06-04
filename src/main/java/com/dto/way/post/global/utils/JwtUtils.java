@@ -1,16 +1,12 @@
 package com.dto.way.post.global.utils;
 
-import com.dto.way.post.domain.common.Uuid;
-import com.dto.way.post.repository.UuidRepository;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.util.UUID;
 
 @Component
 public class JwtUtils {
@@ -65,18 +61,4 @@ public class JwtUtils {
         return null;
     }
 
-    @Component
-    @RequiredArgsConstructor
-    public static class UuidCreator {
-
-        private final UuidRepository uuidRepository;
-
-        public String createUuid() {
-            String uuid = UUID.randomUUID().toString();
-            Uuid savedUuid = uuidRepository.save(Uuid.builder()
-                    .uuid(uuid)
-                    .build());
-            return savedUuid.getUuid();
-        }
-    }
 }

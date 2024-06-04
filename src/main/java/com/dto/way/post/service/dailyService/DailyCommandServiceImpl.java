@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -41,7 +42,6 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     private final AmazonS3Manager s3Manager;
     private final S3FileService s3FileService;
     private final AmazonConfig amazonConfig;
-    private final JwtUtils.UuidCreator uuidCreator;
     private final JwtUtils jwtUtils;
 
     @Override
@@ -49,10 +49,13 @@ public class DailyCommandServiceImpl implements DailyCommandService {
     public DailyResponseDto.CreateDailyResultDto createDaily(HttpServletRequest httpServletRequest, MultipartFile image, DailyRequestDto.CreateDailyDto requestDto) throws ParseException {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
-        String imageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getDailyImagePath(), uuidCreator.createUuid(), image);
+        String imageUrl = s3Manager.uploadFileToDirectory(
+                amazonConfig.getDailyImagePath(),
+                loginMemberId + UUID.randomUUID().toString(),
+                image);
 
         //  AI 분석 데이터를 위해 daily 본문 내용을 S3 파일에 저장한다.
-        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(requestDto.getBody(), amazonConfig.getAiText() + "/"+"text_member_id_" + loginMemberId);
+        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(requestDto.getBody(), amazonConfig.getAiText() + "/" + "text_member_id_" + loginMemberId);
 
         // 위도, 경도를 Point로 변환하여 저장.
         Double latitude = requestDto.getLatitude();

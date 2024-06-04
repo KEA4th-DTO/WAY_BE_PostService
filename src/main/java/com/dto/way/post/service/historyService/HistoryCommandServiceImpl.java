@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -37,7 +38,6 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
     private final AmazonConfig amazonConfig;
     private final AmazonS3Manager s3Manager;
     private final S3FileService s3FileService;
-    private final JwtUtils.UuidCreator uuidCreator;
     private final JwtUtils jwtUtils;
 
 
@@ -47,33 +47,41 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
 
+        // AI 분석 데이터를 위해 HTML 태그가 제거된 history 본문 내용을 S3 파일에 비동기적으로 저장
+        CompletableFuture<String> futureTextFile = s3FileService.saveOrUpdateFileAsync(
+                createHistoryDto.getBodyPlainText(),
+                amazonConfig.getAiText() + "/" + "text_member_id_" + loginMemberId + ".txt"
+        );
 
-        //  AI 분석 데이터를 위해 html 태그가 전부 빠진 history 본문 내용을 S3 파일에 저장한다.
-        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(createHistoryDto.getBodyPlainText(), amazonConfig.getAiText() + "/" + "text_member_id_" + loginMemberId + ".txt");
+        // 썸네일 이미지를 S3에 동기적으로 업로드하고 URL을 반환
+        String thumbnailImageUrl = s3Manager.uploadFileToDirectory(
+                amazonConfig.getHistoryThumbnailPath(),
+                loginMemberId + "_" + UUID.randomUUID().toString(),
+                thumbnailImage
+        );
 
-        // 비동기 작업이 완료된 후 추가 작업 수행
-//        future.thenAccept(log::info)
-//                .exceptionally(ex -> {
-//                    System.err.println("Failed to complete async operation: " + ex.getMessage());
-//                    return null;
-//                });
-
-        String thumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(), uuidCreator.createUuid(), thumbnailImage);
-
+        // 좌표 데이터를 처리하여 Point 객체 생성
         Double latitude = createHistoryDto.getLatitude();
         Double longitude = createHistoryDto.getLongitude();
-        Point point = latitude != null && longitude != null ?
-                (Point) new WKTReader().read(String.format("POINT(%s %s)", latitude, longitude))
-                : null;
+        Point point = (latitude != null && longitude != null) ?
+                (Point) new WKTReader().read(String.format("POINT(%s %s)", latitude, longitude)) : null;
 
+        // History 엔티티 생성
         History history = HistoryConverter.toHistory(point, thumbnailImageUrl, createHistoryDto);
         Post post = history.getPost();
-
         post.setMemberId(loginMemberId);
 
+        // History 엔티티를 데이터베이스에 저장
         History createdHistory = historyRepository.save(history);
         Long count = postRepository.countByMemberId(loginMemberId);
 
+        // 비동기 작업 예외 처리
+        futureTextFile.exceptionally(ex -> {
+            System.err.println("[S3]history plain text 업로드 실패: " + ex.getMessage());
+            return null;
+        });
+
+        // 캡처 플래그 설정
         boolean captureFlag = (count > 0) && (count % 15 == 0);
 
         return HistoryResponseDto.CreateHistoryResultDto.builder()
@@ -83,8 +91,8 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
                 .createAt(createdHistory.getCreatedAt())
                 .capture(captureFlag)
                 .build();
-
     }
+
 
     @Override
     @Transactional
@@ -116,7 +124,9 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
             s3Manager.deleteFile(history.getThumbnailImageUrl());
 
             // 수정한 내용을 s3에 업로드
-            String updatedThumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(), uuidCreator.createUuid(), thumbnailImage);
+            String updatedThumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(),
+                    loginMemberId + UUID.randomUUID().toString(),
+                    thumbnailImage);
 
             if (updateHistoryDto.getAddress() != null) {
                 history.getPost().updateAddress(updateHistoryDto.getAddress());
@@ -144,7 +154,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
     @Override
     public String historyImageUrl(MultipartFile historyImage) {
 
-        String historyImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryImagePath(), uuidCreator.createUuid(), historyImage);
+        String historyImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryImagePath(), UUID.randomUUID().toString(), historyImage);
 
         return historyImageUrl;
     }
