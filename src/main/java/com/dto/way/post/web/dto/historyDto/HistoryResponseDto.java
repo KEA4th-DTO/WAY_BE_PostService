@@ -86,7 +86,7 @@ public class HistoryResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class HistorySearchResultListDto {
-        List<HistorySearchResultDto> historySearchResultDtoList;
+        List<HistorySearchResultDto> list;
         Integer listSize;
         Integer totalPage;
         Long totalElements;

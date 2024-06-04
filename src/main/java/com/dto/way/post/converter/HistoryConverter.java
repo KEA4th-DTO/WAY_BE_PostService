@@ -72,7 +72,7 @@ public class HistoryConverter {
                 .map(HistoryConverter::toHistorySearchResultDto).collect(Collectors.toList());
 
         return HistoryResponseDto.HistorySearchResultListDto.builder()
-                .historySearchResultDtoList(historySearchResultDtoList)
+                .list(historySearchResultDtoList)
                 .isFirst(historyPage.isFirst())
                 .isLast(historyPage.isLast())
                 .totalElements(historyPage.getTotalElements())
