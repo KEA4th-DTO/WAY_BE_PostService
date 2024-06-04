@@ -75,6 +75,7 @@ public class HistoryResponseDto {
     @AllArgsConstructor
     public static class HistorySearchResultDto{
         private Long postId;
+        private String thumbnailImageUrl;
         private String title;
         private String bodyPreview;
         private LocalDateTime createdAt;

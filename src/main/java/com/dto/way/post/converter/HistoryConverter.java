@@ -60,6 +60,7 @@ public class HistoryConverter {
     public static HistoryResponseDto.HistorySearchResultDto toHistorySearchResultDto(History history) {
         return HistoryResponseDto.HistorySearchResultDto.builder()
                 .postId(history.getPostId())
+                .thumbnailImageUrl(history.getThumbnailImageUrl())
                 .title(history.getTitle())
                 .bodyPreview(history.getBodyPreview())
                 .createdAt(history.getCreatedAt())
