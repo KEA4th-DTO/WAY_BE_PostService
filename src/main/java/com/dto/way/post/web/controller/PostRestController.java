@@ -114,7 +114,7 @@ public class PostRestController {
             MemberResponseDto.GetMemberResultDto targetMemberResultDto = memberClient.findMemberByMemberId(targetMemberId);
             String targetMemberNickname = targetMemberResultDto.getNickname();
 
-            message = loginMemberNickname + "님이 회원님의 게시글 \"" + targetObject + "\"에 좋아요를 눌렀습니다. ";
+            message = loginMemberNickname + "님이 회원님의 \"" + targetObject + "\"게시글에 좋아요를 눌렀습니다. ";
             NotificationMessage notificationMessage = notificationService.createNotificationMessage(targetMemberId, targetMemberNickname, message);
 
             // Kafka로 메세지 전송
