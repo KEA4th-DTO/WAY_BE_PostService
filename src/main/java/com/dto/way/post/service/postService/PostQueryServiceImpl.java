@@ -85,6 +85,23 @@ public class PostQueryServiceImpl implements PostQueryService {
     }
 
     @Override
+    public List<PostResponseDto.GetPostResultDto> getMyPostListByRange(HttpServletRequest httpServletRequest) {
+
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
+
+        List<Post> posts = postRepository.findByMemberId(loginMemberId);
+        List<PostResponseDto.GetPostResultDto> postResultDtoList = posts.stream()
+                .map(post -> {
+                    MemberResponseDto.GetMemberResultDto writerMemberInfo = memberClient.findMemberByMemberId(post.getMemberId());
+                    String writerNickname = writerMemberInfo.getNickname();
+                    String writerProfileImageUrl = writerMemberInfo.getProfileImageUrl();
+                    boolean isLiked = likeRepository.existsByPostIdAndMemberId(post.getId(), loginMemberId);
+                    return PostConverter.toGetPostResultDto(writerNickname ,writerProfileImageUrl,loginMemberId, post, isLiked);
+                }).collect(Collectors.toList());
+        return postResultDtoList;
+    }
+
+    @Override
     public PostResponseDto.GetPinListResultDto getPinListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2) {
 
         String sql = "SELECT p.post_id, p.latitude, p.longitude, p.post_type " +
@@ -121,6 +138,19 @@ public class PostQueryServiceImpl implements PostQueryService {
 
         MemberResponseDto.GetMemberResultDto dto = memberClient.findMemberByNickname(memberNickname);
         List<Post> posts = postRepository.findByMemberId(dto.getMemberId());
+        List<PostResponseDto.GetPinResultDto> dtoList = posts.stream()
+                .map(PostConverter::toGetPinResultDto).collect(Collectors.toList());
+
+        PostResponseDto.GetPinListResultDto result = new PostResponseDto.GetPinListResultDto(dtoList);
+        return result;
+    }
+
+    @Override
+    public PostResponseDto.GetPinListResultDto getMyPinListByRange(HttpServletRequest httpServletRequest) {
+
+        Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
+
+        List<Post> posts = postRepository.findByMemberId(loginMemberId);
         List<PostResponseDto.GetPinResultDto> dtoList = posts.stream()
                 .map(PostConverter::toGetPinResultDto).collect(Collectors.toList());
 

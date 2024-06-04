@@ -60,12 +60,21 @@ public class PostRestController {
         return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE, PostConverter.toGetPostListResultDto(getPostResultDtoList));
     }
 
-    @Operation(summary = "게시글(Daily, History) 목록을 사용자 정보로 조회 API", description = "마이맵 화면에서 게시글 목록을 조회하기 위한 API 입니다. PathVariable 으로 사용자 정보(닉네임)를 전송해주세요.")
+    @Operation(summary = "[다른 사용자의 마이맵용] 게시글(Daily, History) 목록을 사용자 정보로 조회 API", description = "다른 사용자의 마이맵 화면에서 게시글 목록을 조회하기 위한 API 입니다. PathVariable 으로 사용자 정보(닉네임)를 전송해주세요.")
     @GetMapping("/list/{memberNickname}")
     public ApiResponse<PostResponseDto.GetPostListResultDto> getPersonalPostsByRange(HttpServletRequest httpServletRequest,
                                                                                      @PathVariable(name = "memberNickname") String memberNickname) {
 
         List<PostResponseDto.GetPostResultDto> getPostResultDtoList = postQueryService.getPersonalPostListByRange(httpServletRequest, memberNickname);
+
+        return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE_PERSONAL, PostConverter.toGetPostListResultDto(getPostResultDtoList));
+    }
+
+    @Operation(summary = "[마이맵용] 게시글(Daily, History) 목록을 사용자 정보로 조회 API", description = "로그인 되어있는 사용자의 마이맵 화면에서 게시글 목록을 조회하기 위한 API 입니다.")
+    @GetMapping("/list/my-map")
+    public ApiResponse<PostResponseDto.GetPostListResultDto> getMyPostsByRange(HttpServletRequest httpServletRequest) {
+
+        List<PostResponseDto.GetPostResultDto> getPostResultDtoList = postQueryService.getMyPostListByRange(httpServletRequest);
 
         return ApiResponse.of(SuccessStatus.POSTS_FOUND_BY_RANGE_PERSONAL, PostConverter.toGetPostListResultDto(getPostResultDtoList));
     }
@@ -82,7 +91,7 @@ public class PostRestController {
     }
 
 
-    @Operation(summary = "핀 목록을 범위, 사용자 정보를 사용하여 조회 API", description = "마이맵의 지도에 핀을 띄우기 위한 API 입니다. PathVariable 으로 사용자 정보(닉네임)를 전송해주세요.")
+    @Operation(summary = "[다른 사용자의 마이맵용] 핀 목록을 범위, 사용자 정보를 사용하여 조회 API", description = "다른 사용자의 마이맵에 핀을 띄우기 위한 API 입니다. PathVariable 으로 사용자 정보(닉네임)를 전송해주세요.")
     @GetMapping("/pin/{memberNickname}")
     public ApiResponse<PostResponseDto.GetPinListResultDto> getPersonalPinsByRange(@PathVariable(name = "memberNickname") String memberNickname) {
 
@@ -90,10 +99,18 @@ public class PostRestController {
         return ApiResponse.of(SuccessStatus.PINS_FOUND_BY_RANGE_PERSONAL, pinList);
     }
 
+    @Operation(summary = "[마이맵용] 핀 목록을 범위, 사용자 정보를 사용하여 조회 API", description = "로그인된 사용자의 마이맵에 핀을 띄우기 위한 API 입니다.")
+    @GetMapping("/pin/my-map")
+    public ApiResponse<PostResponseDto.GetPinListResultDto> getMyPinsByRange(HttpServletRequest httpServletRequest) {
+        PostResponseDto.GetPinListResultDto pinList = postQueryService.getMyPinListByRange(httpServletRequest);
+        return ApiResponse.of(SuccessStatus.PINS_FOUND_BY_RANGE_PERSONAL, pinList);
+    }
+
     @Operation(summary = "게시글(Daily, History) 좋아요 기능 API", description = "게시글에 좋아요/좋아요 취소 기능을 하는 API 입니다. PathVariable 으로 좋아요 처리를 할 게시글의 postId 를 전송해주세요.")
     @PostMapping("/like/{postId}")
     public ApiResponse<LikeResponseDto.LikeResultDto> likePost(HttpServletRequest httpServletRequest,
                                                                @PathVariable(name = "postId") Long postId) {
+
         Boolean isLiked = likeCommandService.likePost(httpServletRequest, postId);
         LikeResponseDto.LikeResultDto dto = new LikeResponseDto.LikeResultDto(postId, likeQueryService.countLikes(postId));
 

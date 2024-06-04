@@ -13,11 +13,15 @@ public interface PostQueryService {
 
     List<PostResponseDto.GetPostResultDto> getPostListByRange(HttpServletRequest httpServletRequest, Double longitude1, Double latitude1, Double longitude2, Double latitude2);
 
-    List<PostResponseDto.GetPostResultDto> getPersonalPostListByRange(HttpServletRequest httpServletRequest,String memberNickname);
+    List<PostResponseDto.GetPostResultDto> getPersonalPostListByRange(HttpServletRequest httpServletRequest, String memberNickname);
+
+    List<PostResponseDto.GetPostResultDto> getMyPostListByRange(HttpServletRequest httpServletRequest);
 
     PostResponseDto.GetPinListResultDto getPinListByRange(Double longitude1, Double latitude1, Double longitude2, Double latitude2);
 
     PostResponseDto.GetPinListResultDto getPersonalPinListByRange(String memberNickname);
+
+    PostResponseDto.GetPinListResultDto getMyPinListByRange(HttpServletRequest httpServletRequest);
 
     PostResponseDto.GetPostCountDto getPostCount(Long memberId);
 }
