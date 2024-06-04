@@ -109,7 +109,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
     @Override
     @Transactional(readOnly = true)
     public Page<History> findHistoryByTitle(Integer page, String title) {
-        Page<History> historyPage = historyRepository.findByTitleContaining(PageRequest.of(page, 10), title);
+        Page<History> historyPage = historyRepository.findByTitleContaining(PageRequest.of(page, 6), title);
 
         return historyPage;
     }
@@ -117,7 +117,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
     @Transactional(readOnly = true)
     public Page<History> findHistoryByBody(Integer page, String body) {
 
-        Page<History> historyPage = historyRepository.findByBodyContaining(PageRequest.of(page, 10), body);
+        Page<History> historyPage = historyRepository.findByBodyContaining(PageRequest.of(page, 6), body);
 
         return historyPage;
     }
