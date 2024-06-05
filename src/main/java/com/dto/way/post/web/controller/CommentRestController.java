@@ -111,7 +111,7 @@ public class CommentRestController {
             MemberResponseDto.GetMemberResultDto targetMemberResultDto = memberClient.findMemberByMemberId(targetMemberId);
             String targetMemberNickname = targetMemberResultDto.getNickname();
 
-            message = String.format("%s님이 회원님의 \"%s\" 댓글에 좋아요를 눌렀습니다.", loginMemberNickname, targetObject);
+            message = String.format("%s님이 \"%s\" 댓글에 좋아요를 눌렀습니다.", loginMemberNickname, targetObject);
 
             NotificationMessage notificationMessage = notificationService.createNotificationMessage(targetMemberId, targetMemberNickname, message);
 
