@@ -13,6 +13,7 @@ public class Reply extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reply_id")
     private Long id;
 
     private String body;
