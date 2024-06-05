@@ -52,6 +52,7 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
         List<ReplyResponseDto.GetReplyResultDto> replyResultDtoList = replyList.stream()
                 .map(reply -> {
                     ReplyResponseDto.GetReplyResultDto dto = new ReplyResponseDto.GetReplyResultDto();
+                    dto.setReplyId(reply.getId());
                     dto.setBody(reply.getBody());
                     Boolean isOwned = reply.getMemberId().equals(loginMemberId);
                     dto.setIsOwned(isOwned);

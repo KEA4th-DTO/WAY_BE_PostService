@@ -41,6 +41,7 @@ public class ReplyResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class GetReplyResultDto{
+        private Long replyId;
         private String writerNickname;
         private String writerProfileImageUrl;
         private String body;
