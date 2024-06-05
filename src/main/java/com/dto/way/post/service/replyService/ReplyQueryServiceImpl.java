@@ -57,7 +57,7 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
                     Boolean isOwned = reply.getMemberId().equals(loginMemberId);
                     dto.setIsOwned(isOwned);
                     dto.setCreatedAt(reply.getCreatedAt());
-                    MemberResponseDto.GetMemberResultDto writerMemberInfo = memberClient.findMemberByMemberId(comment.getMemberId());
+                    MemberResponseDto.GetMemberResultDto writerMemberInfo = memberClient.findMemberByMemberId(reply.getMemberId());
                     dto.setWriterNickname(writerMemberInfo.getNickname());
                     dto.setWriterProfileImageUrl(writerMemberInfo.getProfileImageUrl());
 
