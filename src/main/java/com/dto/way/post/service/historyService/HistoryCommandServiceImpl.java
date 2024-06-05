@@ -119,14 +119,21 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
 
         Long loginMemberId = jwtUtils.getMemberIdFromRequest(httpServletRequest);
         History history = historyRepository.findById(postId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.HISTORY_NOT_FOUND));
+        String updatedThumbnailImageUrl;
         if (loginMemberId.equals(history.getPost().getMemberId())) {
             // s3에 업로드 되어있는 기존 데이터들을 제거
             s3Manager.deleteFile(history.getThumbnailImageUrl());
 
             // 수정한 내용을 s3에 업로드
-            String updatedThumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(),
-                    loginMemberId + UUID.randomUUID().toString(),
-                    thumbnailImage);
+            if (thumbnailImage != null) {
+                updatedThumbnailImageUrl = s3Manager.uploadFileToDirectory(amazonConfig.getHistoryThumbnailPath(),
+                        loginMemberId + UUID.randomUUID().toString(),
+                        thumbnailImage);
+            } else {
+                updatedThumbnailImageUrl = history.getThumbnailImageUrl();
+            }
+
+            history.updateThumbnailImageUrl(updatedThumbnailImageUrl);
 
             if (updateHistoryDto.getAddress() != null) {
                 history.getPost().updateAddress(updateHistoryDto.getAddress());
@@ -143,7 +150,6 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
             if (updateHistoryDto.getBodyPreview() != null) {
                 history.updateBodyPreview(updateHistoryDto.getBodyPreview());
             }
-            history.updateThumbnailImageUrl(updatedThumbnailImageUrl);
         } else {
             throw new ExceptionHandler(ErrorStatus._FORBIDDEN);
         }
