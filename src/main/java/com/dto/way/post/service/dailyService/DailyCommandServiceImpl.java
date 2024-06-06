@@ -71,7 +71,7 @@ public class DailyCommandServiceImpl implements DailyCommandService {
 
         Daily createDaily = dailyRepository.save(daily);
         Long count = postRepository.countByMemberId(loginMemberId);
-        boolean captureFlag = (count > 0) && (count % 15 == 0);
+        boolean captureFlag = (count > 0) && (count % 10 == 0);
 
         return DailyResponseDto.CreateDailyResultDto.builder()
                 .postType(PostType.DAILY)

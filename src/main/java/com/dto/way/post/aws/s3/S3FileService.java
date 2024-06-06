@@ -37,7 +37,7 @@ public class S3FileService {
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
         this.bucketName = bucketName;
-        this.maxQueueSize = 15;
+        this.maxQueueSize = 10;
     }
 
     @Async

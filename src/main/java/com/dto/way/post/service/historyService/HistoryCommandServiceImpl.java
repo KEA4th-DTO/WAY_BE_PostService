@@ -82,7 +82,7 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
         });
 
         // 캡처 플래그 설정
-        boolean captureFlag = (count > 0) && (count % 15 == 0);
+        boolean captureFlag = (count > 0) && (count % 10 == 0);
 
         return HistoryResponseDto.CreateHistoryResultDto.builder()
                 .postType(PostType.HISTORY)
