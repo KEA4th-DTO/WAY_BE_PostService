@@ -44,10 +44,10 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
         if (targetObject.length() > 10) {
             targetObject = targetObject.substring(0, 10);
         }
-        Long targetMemberId = reply.getMemberId();
+        Long targetMemberId = comment.getMemberId();
         MemberResponseDto.GetMemberResultDto targetMemberResultDto = memberClient.findMemberByMemberId(targetMemberId);
         String targetMemberNickname = targetMemberResultDto.getNickname();
-        String noticeMessage = loginMemberNickname + "님이 회원님의 \"" + targetObject + "\"에 대댓글을 남겼습니다.";
+        String noticeMessage = loginMemberNickname + "님이 \"" + targetObject + "\"에 답글을 남겼습니다.";
 
         NotificationMessage notificationMessage = notificationService.createNotificationMessage(targetMemberId, targetMemberNickname, noticeMessage);
 
