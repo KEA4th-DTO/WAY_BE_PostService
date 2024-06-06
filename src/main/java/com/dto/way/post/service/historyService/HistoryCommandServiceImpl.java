@@ -150,6 +150,9 @@ public class HistoryCommandServiceImpl implements HistoryCommandService {
             if (updateHistoryDto.getBodyPreview() != null) {
                 history.updateBodyPreview(updateHistoryDto.getBodyPreview());
             }
+            if (updateHistoryDto.getBody() != null) {
+                history.updateBody(updateHistoryDto.getBody());
+            }
         } else {
             throw new ExceptionHandler(ErrorStatus._FORBIDDEN);
         }
