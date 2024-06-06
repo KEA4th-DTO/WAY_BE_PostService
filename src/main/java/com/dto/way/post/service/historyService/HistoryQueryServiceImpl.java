@@ -52,6 +52,7 @@ public class HistoryQueryServiceImpl implements HistoryQueryService{
 
         return HistoryResponseDto.GetHistoryResultDto.builder()
                 .postId(history.getPostId())
+                .thumbnailImageUrl(history.getThumbnailImageUrl())
                 .address(history.getPost().getAddress())
                 .title(history.getTitle())
                 .bodyPreview(history.getBodyPreview())

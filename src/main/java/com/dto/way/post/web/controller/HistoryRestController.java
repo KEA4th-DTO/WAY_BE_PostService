@@ -51,7 +51,7 @@ public class HistoryRestController {
     @PatchMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<HistoryResponseDto.UpdateHistoryResultDto> updateHistory(HttpServletRequest httpServletRequest,
                                                                                 @PathVariable(name = "postId") Long postId,
-                                                                                @RequestPart(value = "thumbnailImage") MultipartFile thumbnailImage,
+                                                                                @RequestPart(value = "thumbnailImage",required = false) MultipartFile thumbnailImage,
                                                                                 @Valid @RequestPart(value = "updateHistoryDto", required = true) HistoryRequestDto.UpdateHistoryDto request) throws IOException {
         History history = historyCommandService.updateHistory(httpServletRequest, postId, thumbnailImage, request);
         return ApiResponse.of(SuccessStatus.HISTORY_UPDATE, HistoryConverter.toUpdateHistoryResponseDto(history));
