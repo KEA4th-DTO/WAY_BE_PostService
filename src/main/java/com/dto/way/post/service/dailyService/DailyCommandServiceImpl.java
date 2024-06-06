@@ -55,7 +55,9 @@ public class DailyCommandServiceImpl implements DailyCommandService {
                 image);
 
         //  AI 분석 데이터를 위해 daily 본문 내용을 S3 파일에 저장한다.
-        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(requestDto.getBody(), amazonConfig.getAiText() + "/" + "text_member_id_" + loginMemberId);
+        CompletableFuture<String> future = s3FileService.saveOrUpdateFileAsync(
+                requestDto.getBody(),
+                amazonConfig.getAiText() + "/" + "text_member_id_" + loginMemberId + ".txt");
 
         // 위도, 경도를 Point로 변환하여 저장.
         Double latitude = requestDto.getLatitude();
