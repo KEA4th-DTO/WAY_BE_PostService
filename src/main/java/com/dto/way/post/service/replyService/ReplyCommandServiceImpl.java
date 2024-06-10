@@ -40,7 +40,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
         Reply reply = replyRepository.save(ReplyConverter.toReply(loginMemberId, comment, createReplyDto));
 
         // 알림을 위한 데이터 세팅
-        String targetObject = reply.getBody();
+        String targetObject = comment.getBody();
         if (targetObject.length() > 10) {
             targetObject = targetObject.substring(0, 10);
         }
