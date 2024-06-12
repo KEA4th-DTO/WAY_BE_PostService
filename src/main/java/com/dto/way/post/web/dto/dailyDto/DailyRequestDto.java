@@ -3,6 +3,7 @@ package com.dto.way.post.web.dto.dailyDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 public class DailyRequestDto {
 
     @Getter
+    @Builder
     public static class CreateDailyDto {
 
         @NotBlank(message = "제목을 입력해주세요.")
@@ -34,6 +36,7 @@ public class DailyRequestDto {
     }
 
     @Getter
+    @Builder
     public static class UpdateDailyDto {
 
 

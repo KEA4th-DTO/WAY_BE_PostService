@@ -3,11 +3,13 @@ package com.dto.way.post.web.dto.historyDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 
 public class HistoryRequestDto {
 
     @Getter
+    @Builder
     public static class CreateHistoryDto {
 
         @Size(max = 50)
@@ -34,6 +36,7 @@ public class HistoryRequestDto {
     }
 
     @Getter
+    @Builder
     public static class UpdateHistoryDto {
 
         @Size(max = 50)
